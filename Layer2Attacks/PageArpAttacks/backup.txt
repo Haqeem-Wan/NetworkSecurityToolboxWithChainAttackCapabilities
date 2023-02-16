@@ -9,8 +9,8 @@ def startArp(terminalContentFrame, wiresharkContentFrame, errorOutputContentFram
 
     global is_running, arp_th
 
+    arp_th = threading.Thread(target = arpLoop)
     is_running = False
-    arp_th = threading.Thread(target = lambda : arpLoop(targetIp, defaultGatewayIp))
 
     terminalLabel = Label(terminalContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
     wiresharkLabel = Label(wiresharkContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
@@ -31,43 +31,33 @@ def startArp(terminalContentFrame, wiresharkContentFrame, errorOutputContentFram
         restore(targetIp, defaultGatewayIp)
         print("Process Stopped!")'''
     
-    print("1. is running ? : ", is_running )
-    runArpAttack(targetIp, defaultGatewayIp)
+    runArpAttack()
     
     terminalLabel.pack(anchor = NW)
     errorOutputLabel.pack(anchor = NW)
 
-def stopArp(targetIp, defaultGatewayIp) :
+def stopArp() :
     global arp_th, is_running
     try:
         is_running = False
         arp_th.join(0)
         arp_th = None
-        #restore(defaultGatewayIp, targetIp)
-        #restore(targetIp, defaultGatewayIp)
     except (AttributeError, RuntimeError):
         pass
 
-def runArpAttack(targetIp, defaultGatewayIp):
-    global arp_th, is_running
-    print("2. is running ? : ", is_running )
+def runArpAttack():
+    global is_running
     is_running = True
-    print("3. is running ? : ", is_running )
-    # arp_th = threading.Thread(target = arpLoop(targetIp, defaultGatewayIp))
+    #arp_th = threading.Thread(target = arpLoop)
     arp_th.start()
 
-def arpLoop(targetIp, defaultGatewayIp):
-    print("Starting ArpLoop")
-    print("4. is running ? : ", is_running )
-
+def arpLoop():
     count = 3
     while is_running == True and count != 0:
-        #spoof(targetIp, defaultGatewayIp)
-        #spoof(defaultGatewayIp, targetIp)
         print("Running..")
         time.sleep(2)
         count -= 1
-
+        
     print("STOPPED..")
 
 def get_mac(targetIp):

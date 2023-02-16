@@ -15,9 +15,8 @@ class NavMenu:
         self.navMenuFrame = navMenuFrame
         self.contentFrame = contentFrame
 
-
-        self.closedNavMenuImg = PIL.Image.open("fypcode/img/Closed_Box.png")
-        self.openNavMenuImg = PIL.Image.open("fypcode/img/Open_Box.png")
+        self.closedNavMenuImg = PIL.Image.open("NetworkSecurityToolboxWithChainAttackCapabilities/img/Closed_Box.png")
+        self.openNavMenuImg = PIL.Image.open("NetworkSecurityToolboxWithChainAttackCapabilities/img/Open_Box.png")
 
         self.closedNavMenuImg = self.closedNavMenuImg.resize((30,30))
         self.openNavMenuImg = self.openNavMenuImg.resize((35,30))
