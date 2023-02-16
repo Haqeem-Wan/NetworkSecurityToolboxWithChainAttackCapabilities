@@ -9,16 +9,19 @@ import traceback
 
 from tkinter import *
 
-def startArp(terminalContentFrame, wiresharkContentFrame, errorOutputContentFrame, targetIp, defaultGatewayIp) :
+def startArp(terminalContentFrame, wiresharkContentFrame, errorOutputContentFrame, targetIp, defaultGatewayIp, colorConfig = "#252525") :
 
-    global is_running, arp_th, terminalLabel, wiresharkLabel, errorOutputLabel
+    global arpIsrunning, arpThreads, terminalLabel, wiresharkLabel, errorOutputLabel
 
-    is_running = False
-    arp_th = threading.Thread(target = lambda : arpLoop(targetIp, defaultGatewayIp))
+    arpIsrunning = False
+    arpThreads = threading.Thread(target = lambda : arpLoop(targetIp, defaultGatewayIp))
 
     terminalLabel = Label(terminalContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
     wiresharkLabel = Label(wiresharkContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
     errorOutputLabel = Label(errorOutputContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
+    terminalLabel.configure(bg = colorConfig) 
+    wiresharkLabel.configure(bg = colorConfig)
+    errorOutputLabel.configure(bg = colorConfig)
     
     terminalLabel["text"] += "$ Target IP = " + targetIp + "\n"
     terminalLabel["text"] += "$ Default Gateway IP = " + defaultGatewayIp + "\n"
@@ -30,13 +33,13 @@ def startArp(terminalContentFrame, wiresharkContentFrame, errorOutputContentFram
     errorOutputLabel.pack(anchor = NW)
 
 def stopArp(targetIp, defaultGatewayIp) :
-    global arp_th, is_running
+    global arpThreads, arpIsrunning
     try:
         terminalLabel["text"] += "$ Stopping Arp Poisoning Attack...\n"
         terminalLabel["text"] += "$ Restoring default ARP values...\n"
-        is_running = False
-        arp_th.join(0)
-        arp_th = None
+        arpIsrunning = False
+        arpThreads.join(0)
+        arpThreads = None
         restore(defaultGatewayIp, targetIp)
         restore(targetIp, defaultGatewayIp)
         terminalLabel["text"] += "$ ARP Poisoning Attack successfully stopped!\n"
@@ -46,13 +49,13 @@ def stopArp(targetIp, defaultGatewayIp) :
         errorOutputLabel["text"] += "ERROR : \n" + e + "\n"
 
 def runArpAttack(targetIp, defaultGatewayIp):
-    global arp_th, is_running
-    is_running = True
-    arp_th.start()
+    global arpThreads, arpIsrunning
+    arpIsrunning = True
+    arpThreads.start()
 
 def arpLoop(targetIp, defaultGatewayIp):
     try :
-        while is_running == True:
+        while arpIsrunning == True:
             spoof(targetIp, defaultGatewayIp)
             spoof(defaultGatewayIp, targetIp)
             time.sleep(2)
@@ -92,3 +95,6 @@ def restore(destination_ip, source_ip):
         scapy.send(packet, verbose = False)
     except Exception as e:
         errorOutputLabel["text"] += "ERROR : \n" + str(e) + "\n"
+
+def testLink():
+    print("Link successful")
