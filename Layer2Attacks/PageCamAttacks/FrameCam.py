@@ -12,8 +12,13 @@ class FrameCam:
         self.targetIpEntry = Entry(self.attackFrame, width = 40, font="bahnschrift 15", fg="#ffffff", bg="#252525")
         self.targetIpEntry.place(x = 435, y = 20)
 
+        self.targetMacLabel = Label(self.attackFrame,   text="Target MAC Address            :", fg="#ffffff", bg="#454545", font="bahnschrift 15")
+        self.targetMacLabel.place(x = 85, y = 70)
+
+        self.targetMacEntry = Entry(self.attackFrame, width = 40, font="bahnschrift 15", fg="#ffffff", bg="#252525")
+        self.targetMacEntry.place(x = 435, y = 70)
+
         self.portFrame = Frame(self.attackFrame, width=500, height=300, background="#08CA22")
-        self.terminalFrame = Frame()
 
         self.separator = Separator(self.attackFrame, orient="horizontal")
         self.separator.pack(fill = X, expand = TRUE, pady = 125)
@@ -45,4 +50,54 @@ class FrameCam:
         self.terminalScrollCanvas.create_window((0,0), window = self.terminalContentFrame, anchor = NW)
         self.terminalContentFrame.bind("<Configure>", lambda e : self.terminalScrollCanvas.configure(scrollregion=self.terminalScrollCanvas.bbox("all")))
 
-        self.portFrame.place(x = 50, y = 50)
+        #self.portFrame.place(x = 50, y = 50)
+
+
+
+
+        self.wiresharkFrame = Frame(self.attackFrame, width=500, height=260, background="#252525", highlightbackground="#ffffff", highlightthickness=2)
+        self.wiresharkFrame.pack_propagate(False)
+        self.wiresharkFrame.place(x = 690, y = 160)
+
+        self.wiresharkScrollCanvas = Canvas(self.wiresharkFrame, background="#252525", highlightbackground="#ffffff", yscrollincrement=8)
+        self.wiresharkScrollCanvas.pack(side = LEFT, fill = BOTH, expand = 1)
+       
+        self.wiresharkScrollbar = Scrollbar(self.wiresharkFrame, orient=VERTICAL, command = self.wiresharkScrollCanvas.yview)
+        self.wiresharkScrollbar.pack(side = RIGHT, fill = Y)
+
+        self.wiresharkScrollCanvas.configure(yscrollcommand=self.wiresharkScrollbar.set)
+        self.wiresharkScrollCanvas.bind("<Configure>", lambda e : self.wiresharkScrollCanvas.configure(scrollregion=self.wiresharkScrollCanvas.bbox("all")))
+        self.wiresharkFrame.bind_all("<MouseWheel>", lambda e : self.wiresharkScrollCanvas.yview_scroll(-1, "units"))
+
+        self.wiresharkContentFrame = Frame(self.wiresharkScrollCanvas, background="#252525", highlightbackground="#ffffff")
+        self.wiresharkScrollCanvas.create_window((0,0), window = self.wiresharkContentFrame, anchor = NW)
+        self.wiresharkContentFrame.bind("<Configure>", lambda e : self.wiresharkScrollCanvas.configure(scrollregion=self.wiresharkScrollCanvas.bbox("all")))
+
+
+
+
+        self.errorOutputFrame = Frame(self.attackFrame, width=500, height=100, background="#252525", highlightbackground="#ffffff", highlightthickness=2)
+        self.errorOutputFrame.pack_propagate(False)
+        self.errorOutputFrame.place(x = 390, y = 465)
+
+        self.errorOutputScrollCanvas = Canvas(self.errorOutputFrame, background="#252525", highlightbackground="#ffffff", yscrollincrement=8)
+        self.errorOutputScrollCanvas.pack(side = LEFT, fill = BOTH, expand = 1)
+       
+        self.errorOutputScrollbar = Scrollbar(self.errorOutputFrame, orient=VERTICAL, command = self.errorOutputScrollCanvas.yview)
+        self.errorOutputScrollbar.pack(side = RIGHT, fill = Y)
+
+        self.errorOutputScrollCanvas.configure(yscrollcommand=self.errorOutputScrollbar.set)
+        self.errorOutputScrollCanvas.bind("<Configure>", lambda e : self.errorOutputScrollCanvas.configure(scrollregion=self.errorOutputScrollCanvas.bbox("all")))
+        self.errorOutputFrame.bind_all("<MouseWheel>", lambda e : self.errorOutputScrollCanvas.yview_scroll(-1, "units"))
+
+        self.errorOutputContentFrame = Frame(self.errorOutputScrollCanvas, background="#252525", highlightbackground="#ffffff")
+        self.errorOutputScrollCanvas.create_window((0,0), window = self.errorOutputContentFrame, anchor = NW)
+        self.errorOutputContentFrame.bind("<Configure>", lambda e : self.errorOutputScrollCanvas.configure(scrollregion=self.errorOutputScrollCanvas.bbox("all")))
+
+
+
+
+        self.startButton = Button(self.attackFrame, height=3, width=5, font="bahnschrift 15", text="Start", fg="#ffffff", bg="#252525", 
+                                  command=lambda : startCam(self.terminalContentFrame, self.wiresharkContentFrame, self.errorOutputContentFrame, 
+                                  self.targetIpEntry.get(), self.targetMacEntry.get()))
+        self.startButton.place(x = 1010, y = 18)
