@@ -5,6 +5,7 @@ from Layer2Attacks.PageCamAttacks.funcFrameCam import *
 class FrameCam:
     def __init__ (self, frame):
         self.attackFrame = frame
+<<<<<<< HEAD
 
         self.targetIpLabel = Label(self.attackFrame, text="Target IP Address             :", fg="#ffffff", bg="#454545", font="bahnschrift 15")
         self.targetIpLabel.place(x = 85, y = 20)
@@ -20,6 +21,18 @@ class FrameCam:
 
         self.portFrame = Frame(self.attackFrame, width=500, height=300, background="#08CA22")
 
+=======
+
+        self.targetIpLabel = Label(self.attackFrame, text="Target IP Address             :", fg="#ffffff", bg="#454545", font="bahnschrift 15")
+        self.targetIpLabel.place(x = 85, y = 20)
+
+        self.targetIpEntry = Entry(self.attackFrame, width = 40, font="bahnschrift 15", fg="#ffffff", bg="#252525")
+        self.targetIpEntry.place(x = 435, y = 20)
+
+        self.portFrame = Frame(self.attackFrame, width=500, height=300, background="#08CA22")
+        self.terminalFrame = Frame()
+
+>>>>>>> 1f2a826 (090523 - Save)
         self.separator = Separator(self.attackFrame, orient="horizontal")
         self.separator.pack(fill = X, expand = TRUE, pady = 125)
 
@@ -50,6 +63,7 @@ class FrameCam:
         self.terminalScrollCanvas.create_window((0,0), window = self.terminalContentFrame, anchor = NW)
         self.terminalContentFrame.bind("<Configure>", lambda e : self.terminalScrollCanvas.configure(scrollregion=self.terminalScrollCanvas.bbox("all")))
 
+<<<<<<< HEAD
         #self.portFrame.place(x = 50, y = 50)
 
 
@@ -101,3 +115,6 @@ class FrameCam:
                                   command=lambda : startCam(self.terminalContentFrame, self.wiresharkContentFrame, self.errorOutputContentFrame, 
                                   self.targetIpEntry.get(), self.targetMacEntry.get()))
         self.startButton.place(x = 1010, y = 18)
+=======
+        self.portFrame.place(x = 50, y = 50)
+>>>>>>> 1f2a826 (090523 - Save)
