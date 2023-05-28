@@ -20,13 +20,6 @@ def startCam(terminalContentFrame, wiresharkContentFrame, errorOutputContentFram
     wiresharkLabel.configure(bg = colorConfig)
     errorOutputLabel.configure(bg = colorConfig)
 
-    terminalLabel = Label(terminalContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
-    wiresharkLabel = Label(wiresharkContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
-    errorOutputLabel = Label(errorOutputContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
-    terminalLabel.configure(bg = colorConfig) 
-    wiresharkLabel.configure(bg = colorConfig)
-    errorOutputLabel.configure(bg = colorConfig)
-    
     terminalLabel["text"] += "$ Target IP = " + targetIp + "\n"
     terminalLabel["text"] += "$ Target MAC = " + targetMac + "\n"
     terminalLabel["text"] += "$ Running CAM Overflow Attack...\n"

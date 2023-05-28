@@ -15,7 +15,7 @@ class PageDnsAttacks:
         self.showFrameDnsHijacking]
         for i in range(len(self.navDnsAttacksOptions)):
             button = Button(self.navDnsAttacksFrame, text=self.navDnsAttacksOptions[i], height=100, width = 29, font="BahnschriftLight 12", bg="#333333", fg="#ffffff", 
-            activebackground="#333333", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3,relief="raised", 
+            activebackground="#333333", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3,relief="raised*-*/////////////////////////////////////////////////", 
             command=self.navDnsAttacksLinks[i])
             button.pack(side=LEFT)
 
