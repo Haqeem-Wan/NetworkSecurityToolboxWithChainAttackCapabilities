@@ -18,7 +18,6 @@ class FrameCam:
         self.targetMacEntry = Entry(self.attackFrame, width = 40, font="bahnschrift 15", fg="#ffffff", bg="#252525")
         self.targetMacEntry.place(x = 435, y = 70)
 
-        self.portFrame = Frame(self.attackFrame, width=500, height=300, background="#08CA22")
 
         self.separator = Separator(self.attackFrame, orient="horizontal")
         self.separator.pack(fill = X, expand = TRUE, pady = 125)
@@ -50,7 +49,7 @@ class FrameCam:
         self.terminalScrollCanvas.create_window((0,0), window = self.terminalContentFrame, anchor = NW)
         self.terminalContentFrame.bind("<Configure>", lambda e : self.terminalScrollCanvas.configure(scrollregion=self.terminalScrollCanvas.bbox("all")))
 
-        #self.portFrame.place(x = 50, y = 50)
+
 
         self.wiresharkFrame = Frame(self.attackFrame, width=500, height=260, background="#252525", highlightbackground="#ffffff", highlightthickness=2)
         self.wiresharkFrame.pack_propagate(False)

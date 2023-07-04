@@ -7,17 +7,17 @@ from DnsAttacks.PageDnsHijacking.FrameDnsHijacking import *
 class PageDnsAttacks:
     def __init__ (self, frame):
         self.dnsAttacksFrame = frame
-        self.navDnsAttacksFrame = Frame(self.dnsAttacksFrame, width=1280, height=40, background="#454545")
-        self.attackFrame = Frame(self.dnsAttacksFrame, width=1280, height=580, background="#454545")
+        self.navDnsAttacksFrame = Frame(self.dnsAttacksFrame, width=1280, height=40, background="#620387")
+        self.attackFrame = Frame(self.dnsAttacksFrame, width=1280, height=580, background="#620387")
 
-        self.dnsAmpButton = Button(self.navDnsAttacksFrame, height=100, width = 29, font="BahnschriftLight 12", bg="#333333", fg="#ffffff", 
-                            activebackground="#333333", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3, relief="raised")
-        self.dnsTunButton = Button(self.navDnsAttacksFrame, height=100, width = 29, font="BahnschriftLight 12", bg="#333333", fg="#ffffff", 
-                            activebackground="#333333", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3, relief="raised")
-        self.dnsSpoButton = Button(self.navDnsAttacksFrame, height=100, width = 29, font="BahnschriftLight 12", bg="#333333", fg="#ffffff", 
-                            activebackground="#333333", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3, relief="raised")
-        self.dnsHijButton = Button(self.navDnsAttacksFrame, height=100, width = 29, font="BahnschriftLight 12", bg="#333333", fg="#ffffff", 
-                            activebackground="#333333", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3, relief="raised")
+        self.dnsAmpButton = Button(self.navDnsAttacksFrame, height=100, width = 29, font="BahnschriftLight 12", bg="#8104b3", fg="#ffffff", 
+                            activebackground="#8104b3", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3, relief="raised")
+        self.dnsTunButton = Button(self.navDnsAttacksFrame, height=100, width = 29, font="BahnschriftLight 12", bg="#8104b3", fg="#ffffff", 
+                            activebackground="#8104b3", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3, relief="raised")
+        self.dnsSpoButton = Button(self.navDnsAttacksFrame, height=100, width = 29, font="BahnschriftLight 12", bg="#8104b3", fg="#ffffff", 
+                            activebackground="#8104b3", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3, relief="raised")
+        self.dnsHijButton = Button(self.navDnsAttacksFrame, height=100, width = 29, font="BahnschriftLight 12", bg="#8104b3", fg="#ffffff", 
+                            activebackground="#8104b3", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3, relief="raised")
 
         self.navDnsAttacksOptions = ["DNS Amplification", "DNS Tunneling", "DNS Spoofing", "DNS Hijacking"]
         self.navDnsAttacksLinks = [self.showFrameDnsAmplification, self.showFrameDnsTunneling, self.showFrameDnsSpoofing, 
@@ -39,7 +39,7 @@ class PageDnsAttacks:
 
     def showFrameDnsAmplification(self):
         self.deletePages()
-        self.dnsAmplificationFrame = Frame(self.attackFrame, width=1280, height=580, background="#454545")
+        self.dnsAmplificationFrame = Frame(self.attackFrame, width=1280, height=580, background="#620387")
         self.dnsAmplificationContents = FrameDnsAmplification(self.attackFrame)
         self.dnsAmplificationFrame.pack()
 
@@ -47,7 +47,7 @@ class PageDnsAttacks:
     
     def showFrameDnsTunneling(self) :
         self.deletePages()
-        self.dnsTunnelingFrame = Frame(self.attackFrame, width=1280, height=580, background="#454545")
+        self.dnsTunnelingFrame = Frame(self.attackFrame, width=1280, height=580, background="#620387")
         self.dnsTunnelingContents = FrameDnsTunneling(self.attackFrame)
         self.dnsTunnelingFrame.pack()
 
@@ -55,7 +55,7 @@ class PageDnsAttacks:
 
     def showFrameDnsSpoofing(self) :
         self.deletePages()
-        self.dnsSpoofingFrame = Frame(self.attackFrame, width=1280, height=580, background="#454545")
+        self.dnsSpoofingFrame = Frame(self.attackFrame, width=1280, height=580, background="#620387")
         self.dnsSpoofingContents = FrameDnsSpoofing(self.attackFrame)
         self.dnsSpoofingFrame.pack()
 
@@ -63,7 +63,7 @@ class PageDnsAttacks:
     
     def showFrameDnsHijacking(self):
         self.deletePages()
-        self.dnsHijackingFrame = Frame(self.attackFrame, width=1280, height=580, background="#454545")
+        self.dnsHijackingFrame = Frame(self.attackFrame, width=1280, height=580, background="#620387")
         self.dnsHijackingContents = FrameDnsHijacking(self.attackFrame)
         self.dnsHijackingFrame.pack()
 

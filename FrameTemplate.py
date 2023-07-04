@@ -1,29 +1,36 @@
 from tkinter import *
 from tkinter.ttk import Separator
-from Layer2Attacks.PageMacAttacks.funcFrameMac import *
+#from TcpIpAttacks.PageSynFlooding.funcFrameSynFlooding import *
 
-class FrameMac:
+class FrameATTACK:
     def __init__ (self, frame):
-
-        self.enteredMacAddress = ""
-
         self.attackFrame = frame
 
-        
+        self.targetIpLabel = Label(self.attackFrame, text="Target IP Address            :", fg="#ffffff", bg="#295543", font="bahnschrift 15")
+        self.targetIpLabel.place(x = 85, y = 20)
+
+        self.targetIpEntry = Entry(self.attackFrame, width = 40, font="bahnschrift 15", fg="#ffffff", bg="#252525")
+        self.targetIpEntry.place(x = 435, y = 20)
+
+        self.targetPortLabel = Label(self.attackFrame, text="Target Port                       :", fg="#ffffff", bg="#295543", font="bahnschrift 15")
+        self.targetPortLabel.place(x = 85, y = 70)
+
+        self.targetPortEntry = Entry(self.attackFrame, width = 40, font="bahnschrift 15", fg="#ffffff", bg="#252525")
+        self.targetPortEntry.place(x = 435, y = 70)
+
+
 
         self.separator = Separator(self.attackFrame, orient="horizontal")
         self.separator.pack(fill = X, expand = TRUE, pady = 125)
 
-        self.terminalLabel = Label(self.attackFrame, text="Terminal", fg="#ffffff", bg="#454545", font="bahnschrift 15")
+        self.terminalLabel = Label(self.attackFrame, text="Terminal", fg="#ffffff", bg="#295543", font="bahnschrift 15")
         self.terminalLabel.place(x = 285, y = 130)
 
-        self.wiresharkLabel = Label(self.attackFrame, text="Wireshark", fg="#ffffff", bg="#454545", font="bahnschrift 15")
+        self.wiresharkLabel = Label(self.attackFrame, text="Wireshark", fg="#ffffff", bg="#295543", font="bahnschrift 15")
         self.wiresharkLabel.place(x = 890, y = 130)
 
-        self.errorNotesLabel = Label(self.attackFrame, text="Errors and Notes", fg="#ffffff", bg="#454545", font="bahnschrift 15")
+        self.errorNotesLabel = Label(self.attackFrame, text="Errors and Notes", fg="#ffffff", bg="#295543", font="bahnschrift 15")
         self.errorNotesLabel.place(x = 550, y = 430)
-
-
 
         self.terminalFrame = Frame(self.attackFrame, width=500, height=260, background="#252525", highlightbackground="#ffffff", highlightthickness=2)
         self.terminalFrame.pack_propagate(False)
@@ -64,7 +71,7 @@ class FrameMac:
         self.wiresharkContentFrame.bind("<Configure>", lambda e : self.wiresharkScrollCanvas.configure(scrollregion=self.wiresharkScrollCanvas.bbox("all")))
 
 
-        
+
         self.errorOutputFrame = Frame(self.attackFrame, width=500, height=100, background="#252525", highlightbackground="#ffffff", highlightthickness=2)
         self.errorOutputFrame.pack_propagate(False)
         self.errorOutputFrame.place(x = 390, y = 465)
@@ -104,7 +111,7 @@ class FrameMac:
             self.stopButton.config(relief = "raised")
             self.stopButton.config(state = "normal")
 
-            startMac(self.terminalContentFrame, self.wiresharkContentFrame, self.errorOutputContentFrame)
+            #startATTACK(self.targetIpEntry.get(), self.targetPortEntry.get(), self.terminalContentFrame, self.wiresharkContentFrame, self.errorOutputContentFrame)
 
         elif(whichButton == "Stop") :
             self.startButton.config(relief = "raised")
@@ -112,4 +119,4 @@ class FrameMac:
             self.stopButton.config(relief = "sunken")
             self.stopButton.config(state = "disabled")
 
-            stopMac()
+            #stopATTACK()
