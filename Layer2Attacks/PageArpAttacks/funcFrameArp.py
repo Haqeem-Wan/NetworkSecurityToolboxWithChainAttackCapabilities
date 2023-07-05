@@ -95,6 +95,3 @@ def restore(destination_ip, source_ip):
         scapy.send(packet, verbose = False)
     except Exception as e:
         errorOutputLabel["text"] += "ERROR : \n" + str(e) + "\n"
-
-def testLink():
-    print("Link successful")

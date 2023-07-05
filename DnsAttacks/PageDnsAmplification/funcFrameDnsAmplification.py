@@ -1,4 +1,3 @@
-import scapy.all as scapy
 import threading
 import traceback
 import subprocess
@@ -52,4 +51,5 @@ def sendDnsPackets(targetIp, dnsPackets):
     global process
     terminalLabel["text"] += "$ Target IP : " + targetIp + "\n"
     terminalLabel["text"] += "$ Amount of DNS Packets : " + dnsPackets + "\n"
-    process = subprocess.Popen(["./dnsdrdos.o", "-f", "dnsList.txt", "-s", targetIp, "-l", dnsPackets])
+    process = subprocess.Popen(["./dnsdrdos", "-f", "dnsList.txt", "-s", targetIp, "-l", dnsPackets])
+    

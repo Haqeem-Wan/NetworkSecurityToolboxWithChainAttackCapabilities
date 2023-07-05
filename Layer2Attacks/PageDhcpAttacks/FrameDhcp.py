@@ -6,7 +6,7 @@ class FrameDhcp:
     def __init__ (self, frame):
         self.attackFrame = frame
 
-        self.targetMacLabel = Label(self.attackFrame, text="Target MAC Address            :", fg="#ffffff", bg="#454545", font="bahnschrift 15")
+        self.targetMacLabel = Label(self.attackFrame, text="Target MAC Address            :", fg="#ffffff", bg="#0029b0", font="bahnschrift 15")
         self.targetMacLabel.place(x = 85, y = 20)
 
         self.targetMacEntry = Entry(self.attackFrame, width = 40, font="bahnschrift 15", fg="#ffffff", bg="#252525")
@@ -15,13 +15,13 @@ class FrameDhcp:
         self.separator = Separator(self.attackFrame, orient="horizontal")
         self.separator.pack(fill = X, expand = TRUE, pady = 125)
 
-        self.terminalLabel = Label(self.attackFrame, text="Terminal", fg="#ffffff", bg="#454545", font="bahnschrift 15")
+        self.terminalLabel = Label(self.attackFrame, text="Terminal", fg="#ffffff", bg="#0029b0", font="bahnschrift 15")
         self.terminalLabel.place(x = 285, y = 130)
 
-        self.wiresharkLabel = Label(self.attackFrame, text="Wireshark", fg="#ffffff", bg="#454545", font="bahnschrift 15")
+        self.wiresharkLabel = Label(self.attackFrame, text="Wireshark", fg="#ffffff", bg="#0029b0", font="bahnschrift 15")
         self.wiresharkLabel.place(x = 890, y = 130)
 
-        self.errorNotesLabel = Label(self.attackFrame, text="Errors and Notes", fg="#ffffff", bg="#454545", font="bahnschrift 15")
+        self.errorNotesLabel = Label(self.attackFrame, text="Errors and Notes", fg="#ffffff", bg="#0029b0", font="bahnschrift 15")
         self.errorNotesLabel.place(x = 550, y = 430)
 
 
