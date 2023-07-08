@@ -7,34 +7,36 @@ class FrameDnsAmplification:
         self.attackFrame = frame
 
         self.targetIpLabel = Label(self.attackFrame, text="Target IP Address                 :", fg="#ffffff", bg="#620387", font="bahnschrift 15")
-        self.targetIpLabel.place(x = 85, y = 20)
+        self.targetIpLabel.place(x = 85, y = 45)
 
         self.targetIpEntry = Entry(self.attackFrame, width = 40, font="bahnschrift 15", fg="#ffffff", bg="#252525")
-        self.targetIpEntry.place(x = 435, y = 20)
+        self.targetIpEntry.place(x = 435, y = 45)
 
         self.dnsPacketAmountLabel = Label(self.attackFrame, text="DNS Packet Amount (Int)    :", fg="#ffffff", bg="#620387", font="bahnschrift 15")
-        self.dnsPacketAmountLabel.place(x = 85, y = 70)
+        self.dnsPacketAmountLabel.place(x = 85, y = 95)
 
         self.dnsPacketAmountEntry = Entry(self.attackFrame, width = 40, font="bahnschrift 15", fg="#ffffff", bg="#252525")
-        self.dnsPacketAmountEntry.place(x = 435, y = 70)
+        self.dnsPacketAmountEntry.place(x = 435, y = 95)
 
 
 
         self.separator = Separator(self.attackFrame, orient="horizontal")
-        self.separator.pack(fill = X, expand = TRUE, pady = 125)
+        self.separator.pack(fill = X, expand = TRUE, pady = 175)
 
         self.terminalLabel = Label(self.attackFrame, text="Terminal", fg="#ffffff", bg="#620387", font="bahnschrift 15")
-        self.terminalLabel.place(x = 285, y = 130)
+        self.terminalLabel.place(x = 285, y = 180)
 
         self.wiresharkLabel = Label(self.attackFrame, text="Wireshark", fg="#ffffff", bg="#620387", font="bahnschrift 15")
-        self.wiresharkLabel.place(x = 890, y = 130)
+        self.wiresharkLabel.place(x = 890, y = 180)
 
         self.errorNotesLabel = Label(self.attackFrame, text="Errors and Notes", fg="#ffffff", bg="#620387", font="bahnschrift 15")
-        self.errorNotesLabel.place(x = 550, y = 430)
+        self.errorNotesLabel.place(x = 550, y = 480)
+
+
 
         self.terminalFrame = Frame(self.attackFrame, width=500, height=260, background="#252525", highlightbackground="#ffffff", highlightthickness=2)
         self.terminalFrame.pack_propagate(False)
-        self.terminalFrame.place(x = 90, y = 160)
+        self.terminalFrame.place(x = 90, y = 210)
 
         self.terminalScrollCanvas = Canvas(self.terminalFrame, background="#252525", highlightbackground="#ffffff", yscrollincrement=8)
         self.terminalScrollCanvas.pack(side = LEFT, fill = BOTH, expand = 1)
@@ -54,7 +56,7 @@ class FrameDnsAmplification:
 
         self.wiresharkFrame = Frame(self.attackFrame, width=500, height=260, background="#252525", highlightbackground="#ffffff", highlightthickness=2)
         self.wiresharkFrame.pack_propagate(False)
-        self.wiresharkFrame.place(x = 690, y = 160)
+        self.wiresharkFrame.place(x = 690, y = 210)
 
         self.wiresharkScrollCanvas = Canvas(self.wiresharkFrame, background="#252525", highlightbackground="#ffffff", yscrollincrement=8)
         self.wiresharkScrollCanvas.pack(side = LEFT, fill = BOTH, expand = 1)
@@ -74,7 +76,7 @@ class FrameDnsAmplification:
 
         self.errorOutputFrame = Frame(self.attackFrame, width=500, height=100, background="#252525", highlightbackground="#ffffff", highlightthickness=2)
         self.errorOutputFrame.pack_propagate(False)
-        self.errorOutputFrame.place(x = 390, y = 465)
+        self.errorOutputFrame.place(x = 390, y = 515)
 
         self.errorOutputScrollCanvas = Canvas(self.errorOutputFrame, background="#252525", highlightbackground="#ffffff", yscrollincrement=8)
         self.errorOutputScrollCanvas.pack(side = LEFT, fill = BOTH, expand = 1)
@@ -94,11 +96,11 @@ class FrameDnsAmplification:
 
         self.startButton = Button(self.attackFrame, height=3, width=5, font="bahnschrift 15", text="Start", fg="#ffffff", bg="#252525", 
                                   command=lambda : self.switch_button_mode("Start"))
-        self.startButton.place(x = 1010, y = 18)
+        self.startButton.place(x = 1010, y = 43)
 
         self.stopButton = Button(self.attackFrame, height=3, width=5, font="bahnschrift 15", text="Stop", fg="#ffffff", bg="#252525", 
                                  command=lambda : self.switch_button_mode("Stop"))
-        self.stopButton.place(x = 1102, y = 18)
+        self.stopButton.place(x = 1102, y = 43)
 
         self.stopButton.config(relief = "sunken")
         self.stopButton.config(state = "disabled")

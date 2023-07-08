@@ -7,7 +7,7 @@ class Header:
         self.headerFrame = headerFrame
         self.contentFrame = contentFrame
 
-        self.navMenuFrame = Frame(self.root, bg="#333333", height=670, width=300)
+        self.navMenuFrame = Frame(self.root, bg="#333333", height=720, width=300)
         self.navMenuFrame.place(x=-300, y=0)
         Label(self.navMenuFrame, font="Bahnschrift 15", bg="#333333", fg="#454545", height=2, width=300, padx=20).place(x=0, y=0)
 

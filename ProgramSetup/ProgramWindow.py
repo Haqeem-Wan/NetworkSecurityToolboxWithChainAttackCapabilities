@@ -5,7 +5,7 @@ from ProgramSetup.Footer import Footer
 class ProgramWindow :
     def __init__ (self):
         self.root = Tk()
-        self.root.geometry("1280x720")
+        self.root.geometry("1280x770")
         self.root.resizable(width = False, height = False)
         self.root.title("1191102618 - Network Security Toolbox With Chain Attack Capabilities")
         
@@ -16,7 +16,7 @@ class ProgramWindow :
 
 
         self.headerFrame = Frame(self.root,width=1280,height=50,background="#333333",borderwidth=3,relief="raised")
-        self.contentFrame = Frame(self.root, width=1280, height=620, background="#454545")
+        self.contentFrame = Frame(self.root, width=1280, height=670, background="#454545")
         self.footerFrame = Frame(self.root,width=1280,height=50,background="#333333",borderwidth=3,relief="raised")
 
         self.headerContents = Header(self.root, self.headerFrame, self.contentFrame)

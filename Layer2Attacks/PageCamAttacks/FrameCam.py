@@ -6,34 +6,36 @@ class FrameCam:
     def __init__ (self, frame):
         self.attackFrame = frame
 
-        self.targetIpLabel = Label(self.attackFrame, text="Target IP Address             :", fg="#ffffff", bg="#0029b0", font="bahnschrift 15")
-        self.targetIpLabel.place(x = 85, y = 20)
+        self.targetIpLabel = Label(self.attackFrame, text="Target IP Address                    :", fg="#ffffff", bg="#0078bd", font="bahnschrift 15")
+        self.targetIpLabel.place(x = 85, y = 45)
 
         self.targetIpEntry = Entry(self.attackFrame, width = 40, font="bahnschrift 15", fg="#ffffff", bg="#252525")
-        self.targetIpEntry.place(x = 435, y = 20)
+        self.targetIpEntry.place(x = 435, y = 45)
 
-        self.targetMacLabel = Label(self.attackFrame,   text="Target MAC Address            :", fg="#ffffff", bg="#0029b0", font="bahnschrift 15")
-        self.targetMacLabel.place(x = 85, y = 70)
+        self.packetNumberLabel = Label(self.attackFrame, text="Number of Packets to send     :", fg="#ffffff", bg="#0078bd", font="bahnschrift 15")
+        self.packetNumberLabel.place(x = 85, y = 95)
 
-        self.targetMacEntry = Entry(self.attackFrame, width = 40, font="bahnschrift 15", fg="#ffffff", bg="#252525")
-        self.targetMacEntry.place(x = 435, y = 70)
+        self.packetNumberEntry = Entry(self.attackFrame, width = 40, font="bahnschrift 15", fg="#ffffff", bg="#252525")
+        self.packetNumberEntry.place(x = 435, y = 95)
 
 
         self.separator = Separator(self.attackFrame, orient="horizontal")
-        self.separator.pack(fill = X, expand = TRUE, pady = 125)
+        self.separator.pack(fill = X, expand = TRUE, pady = 175)
 
-        self.terminalLabel = Label(self.attackFrame, text="Terminal", fg="#ffffff", bg="#0029b0", font="bahnschrift 15")
-        self.terminalLabel.place(x = 285, y = 130)
+        self.terminalLabel = Label(self.attackFrame, text="Terminal", fg="#ffffff", bg="#0078bd", font="bahnschrift 15")
+        self.terminalLabel.place(x = 285, y = 180)
 
-        self.wiresharkLabel = Label(self.attackFrame, text="Wireshark", fg="#ffffff", bg="#0029b0", font="bahnschrift 15")
-        self.wiresharkLabel.place(x = 890, y = 130)
+        self.wiresharkLabel = Label(self.attackFrame, text="Wireshark", fg="#ffffff", bg="#0078bd", font="bahnschrift 15")
+        self.wiresharkLabel.place(x = 890, y = 180)
 
-        self.errorNotesLabel = Label(self.attackFrame, text="Errors and Notes", fg="#ffffff", bg="#0029b0", font="bahnschrift 15")
-        self.errorNotesLabel.place(x = 550, y = 430)
+        self.errorNotesLabel = Label(self.attackFrame, text="Errors and Notes", fg="#ffffff", bg="#0078bd", font="bahnschrift 15")
+        self.errorNotesLabel.place(x = 550, y = 480)
+
+
 
         self.terminalFrame = Frame(self.attackFrame, width=500, height=260, background="#252525", highlightbackground="#ffffff", highlightthickness=2)
         self.terminalFrame.pack_propagate(False)
-        self.terminalFrame.place(x = 90, y = 160)
+        self.terminalFrame.place(x = 90, y = 210)
 
         self.terminalScrollCanvas = Canvas(self.terminalFrame, background="#252525", highlightbackground="#ffffff", yscrollincrement=8)
         self.terminalScrollCanvas.pack(side = LEFT, fill = BOTH, expand = 1)
@@ -53,7 +55,7 @@ class FrameCam:
 
         self.wiresharkFrame = Frame(self.attackFrame, width=500, height=260, background="#252525", highlightbackground="#ffffff", highlightthickness=2)
         self.wiresharkFrame.pack_propagate(False)
-        self.wiresharkFrame.place(x = 690, y = 160)
+        self.wiresharkFrame.place(x = 690, y = 210)
 
         self.wiresharkScrollCanvas = Canvas(self.wiresharkFrame, background="#252525", highlightbackground="#ffffff", yscrollincrement=8)
         self.wiresharkScrollCanvas.pack(side = LEFT, fill = BOTH, expand = 1)
@@ -71,10 +73,9 @@ class FrameCam:
 
 
 
-
         self.errorOutputFrame = Frame(self.attackFrame, width=500, height=100, background="#252525", highlightbackground="#ffffff", highlightthickness=2)
         self.errorOutputFrame.pack_propagate(False)
-        self.errorOutputFrame.place(x = 390, y = 465)
+        self.errorOutputFrame.place(x = 390, y = 515)
 
         self.errorOutputScrollCanvas = Canvas(self.errorOutputFrame, background="#252525", highlightbackground="#ffffff", yscrollincrement=8)
         self.errorOutputScrollCanvas.pack(side = LEFT, fill = BOTH, expand = 1)
@@ -93,7 +94,6 @@ class FrameCam:
 
 
 
-        self.startButton = Button(self.attackFrame, height=3, width=5, font="bahnschrift 15", text="Start", fg="#ffffff", bg="#252525", 
-                                  command=lambda : startCam(self.terminalContentFrame, self.wiresharkContentFrame, self.errorOutputContentFrame, 
-                                  self.targetIpEntry.get(), self.targetMacEntry.get()))
-        self.startButton.place(x = 1010, y = 18)
+        self.startButton = Button(self.attackFrame, height=3, width=10, font="bahnschrift 15", text="Start", fg="#ffffff", bg="#252525", 
+                                  command=lambda : startCam(self.targetIpEntry.get(), self.packetNumberEntry.get(), self.terminalContentFrame, self.wiresharkContentFrame, self.errorOutputContentFrame))
+        self.startButton.place(x = 1010, y = 43)

@@ -10,7 +10,7 @@ class PageTcpIpAttacks:
     def __init__ (self, frame):
         self.tcpIpFrame = frame
         self.navTcpIpFrame = Frame(self.tcpIpFrame, width=1280, height=40, background="#295543")
-        self.attackFrame = Frame(self.tcpIpFrame, width=1280, height=580, background="#295543")
+        self.attackFrame = Frame(self.tcpIpFrame, width=1280, height=630, background="#295543")
 
         self.synFloodButton = Button(self.navTcpIpFrame, height=100, width = 19, font="BahnschriftLight 12", bg="#2E6E53", fg="#ffffff", 
                                      activebackground="#295543", activeforeground="#1A3329", highlightthickness=0, bd=0, borderwidth=3,relief="raised")

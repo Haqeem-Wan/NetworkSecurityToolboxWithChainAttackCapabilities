@@ -8,7 +8,7 @@ class PageDnsAttacks:
     def __init__ (self, frame):
         self.dnsAttacksFrame = frame
         self.navDnsAttacksFrame = Frame(self.dnsAttacksFrame, width=1280, height=40, background="#620387")
-        self.attackFrame = Frame(self.dnsAttacksFrame, width=1280, height=580, background="#620387")
+        self.attackFrame = Frame(self.dnsAttacksFrame, width=1280, height=630, background="#620387")
 
         self.dnsAmpButton = Button(self.navDnsAttacksFrame, height=100, width = 29, font="BahnschriftLight 12", bg="#8104b3", fg="#ffffff", 
                             activebackground="#8104b3", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3, relief="raised")

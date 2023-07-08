@@ -32,13 +32,13 @@ class NavMenu:
 
         self.showPageHome()
 
-        y = 80
+        y = 88
         self.mainMenuOptions = ["Home", "Layer 2 Attacks", "TCP / IP Attacks", "DNS Attacks", "HTTP Attacks", "Wifi Hacking"]
         self.mainMenuLinks = [self.showPageHome, self.showPageLayer2Attacks, self.showPageTcpIpAttacks, self.showPageDnsAttacks, self.showPageHttpAttacks, self.showPageWifiHacking]
         for i in range(len(self.mainMenuOptions)):
             Button(self.navMenuFrame, text=self.mainMenuOptions[i], font="BahnschriftLight 15", bg="#333333", fg="#ffffff", 
             activebackground="#333333", activeforeground="#9e9e9e", highlightthickness=0, bd=0, command=self.mainMenuLinks[i]).place(x=25,y=y)
-            y += 100
+            y += 110
 
         self.closeNavMenuButton = Button(self.navMenuFrame, image=self.openNavMenuIcon, bg="#333333", 
         activebackground="#333333", padx=20, highlightthickness=0, command=self.toggleNavMenu)

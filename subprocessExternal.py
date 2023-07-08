@@ -2,6 +2,7 @@ import subprocess
 import threading
 import signal
 import time
+import re
 
 # This function reads the process' output
 def reader(proc):
@@ -11,6 +12,19 @@ def reader(proc):
             break
         if output:
             print(output.strip())
+
+'''
+# This function reads the process' output
+def reader(proc):
+    ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+    while True:
+        output = proc.stdout.readline().decode('utf8', errors='strict')
+        if output == '' and proc.poll() is not None:
+            break
+        if output:
+            ansiStripOutput = ansi_escape.sub('', output)
+            terminalLabel["text"] += "$ " + ansiStripOutput.strip() + "\n"
+'''         
 
 # Start your subprocess
 process = subprocess.Popen(["bettercap", "-iface", "eth0"], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
@@ -28,6 +42,7 @@ for command in commands:
     process.stdin.flush()
     # Give it some time to process the command and generate output
     time.sleep(2)
+    
 
 # To end the process, send a KeyboardInterrupt
 print("Stopping bettercap")

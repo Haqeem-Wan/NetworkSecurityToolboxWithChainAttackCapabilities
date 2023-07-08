@@ -9,21 +9,21 @@ from Layer2Attacks.PageVlanAttacks.FrameVlan import *
 class PageLayer2Attacks:
     def __init__ (self, frame):
         self.layer2Frame = frame
-        self.navLayer2Frame = Frame(self.layer2Frame, width=1280, height=40, background="#0029b0")
-        self.attackFrame = Frame(self.layer2Frame, width=1280, height=580, background="#0029b0")
+        self.navLayer2Frame = Frame(self.layer2Frame, width=1280, height=40, background="#0078bd")
+        self.attackFrame = Frame(self.layer2Frame, width=1280, height=630, background="#0078bd")
 
-        self.camButton = Button(self.navLayer2Frame, height=100, width = 19, font="BahnschriftLight 12", bg="#0037eb", fg="#ffffff", 
-                                activebackground="#0037eb", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3,relief="raised")
-        self.vlanButton = Button(self.navLayer2Frame, height=100, width = 19, font="BahnschriftLight 12", bg="#0037eb", fg="#ffffff", 
-                                activebackground="#0037eb", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3,relief="raised")
-        self.arpButton = Button(self.navLayer2Frame, height=100, width = 19, font="BahnschriftLight 12", bg="#0037eb", fg="#ffffff", 
-                                activebackground="#0037eb", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3,relief="raised")
-        self.dhcpButton = Button(self.navLayer2Frame, height=100, width = 19, font="BahnschriftLight 12", bg="#0037eb", fg="#ffffff", 
-                                activebackground="#0037eb", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3,relief="raised")
-        self.macButton = Button(self.navLayer2Frame, height=100, width = 19, font="BahnschriftLight 12", bg="#0037eb", fg="#ffffff", 
-                                activebackground="#0037eb", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3,relief="raised")
-        self.stpButton = Button(self.navLayer2Frame, height=100, width = 19, font="BahnschriftLight 12", bg="#0037eb", fg="#ffffff", 
-                                activebackground="#0037eb", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3,relief="raised")
+        self.camButton = Button(self.navLayer2Frame, height=100, width = 19, font="BahnschriftLight 12", bg="#0973de", fg="#ffffff", 
+                                activebackground="#0973de", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3,relief="raised")
+        self.vlanButton = Button(self.navLayer2Frame, height=100, width = 19, font="BahnschriftLight 12", bg="#0973de", fg="#ffffff", 
+                                activebackground="#0973de", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3,relief="raised")
+        self.arpButton = Button(self.navLayer2Frame, height=100, width = 19, font="BahnschriftLight 12", bg="#0973de", fg="#ffffff", 
+                                activebackground="#0973de", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3,relief="raised")
+        self.dhcpButton = Button(self.navLayer2Frame, height=100, width = 19, font="BahnschriftLight 12", bg="#0973de", fg="#ffffff", 
+                                activebackground="#0973de", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3,relief="raised")
+        self.macButton = Button(self.navLayer2Frame, height=100, width = 19, font="BahnschriftLight 12", bg="#0973de", fg="#ffffff", 
+                                activebackground="#0973de", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3,relief="raised")
+        self.stpButton = Button(self.navLayer2Frame, height=100, width = 19, font="BahnschriftLight 12", bg="#0973de", fg="#ffffff", 
+                                activebackground="#0973de", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3,relief="raised")
 
         self.navLayer2Options = ["CAM Table Overflow", "VLAN Hopping", "DHCP Attack", "ARP Poisoning Attack", "MAC Address Spoofing", "STP Attack"]
         self.navLayer2Links = [self.showFrameCam, self.showFrameVlan, self.showFrameDhcp, self.showFrameArp, self.showFrameMac, self.showFrameStp]
@@ -41,7 +41,7 @@ class PageLayer2Attacks:
 
     def showFrameCam(self):
         self.deletePages()
-        self.camFrame = Frame(self.attackFrame, width=1280, height=580, background="#0029b0")
+        self.camFrame = Frame(self.attackFrame, width=1280, height=580, background="#0078bd")
         self.camContents = FrameCam(self.attackFrame)
         self.camFrame.pack()
         self.navLayer2Frame.update_idletasks()
@@ -50,7 +50,7 @@ class PageLayer2Attacks:
     
     def showFrameVlan(self) :
         self.deletePages()
-        self.vlanFrame = Frame(self.attackFrame, width=1280, height=580, background="#0029b0")
+        self.vlanFrame = Frame(self.attackFrame, width=1280, height=580, background="#0078bd")
         self.vlanContents = FrameVlan(self.attackFrame)
         self.vlanFrame.pack()
 
@@ -58,7 +58,7 @@ class PageLayer2Attacks:
 
     def showFrameArp(self) :
         self.deletePages()
-        self.arpFrame = Frame(self.attackFrame, width=1280, height=580, background="#0029b0")
+        self.arpFrame = Frame(self.attackFrame, width=1280, height=580, background="#0078bd")
         self.arpContents = FrameArp(self.attackFrame)
         self.arpFrame.pack()
 
@@ -66,7 +66,7 @@ class PageLayer2Attacks:
     
     def showFrameDhcp(self):
         self.deletePages()
-        self.dhcpFrame = Frame(self.attackFrame, width=1280, height=580, background="#0029b0")
+        self.dhcpFrame = Frame(self.attackFrame, width=1280, height=580, background="#0078bd")
         self.dhcpContents = FrameDhcp(self.attackFrame)
         self.dhcpFrame.pack()
 
@@ -74,7 +74,7 @@ class PageLayer2Attacks:
 
     def showFrameMac(self) :
         self.deletePages()
-        self.macFrame = Frame(self.attackFrame, width=1280, height=580, background="#0029b0")
+        self.macFrame = Frame(self.attackFrame, width=1280, height=580, background="#0078bd")
         self.macContents = FrameMac(self.attackFrame)
         self.macFrame.pack()
 
@@ -82,7 +82,7 @@ class PageLayer2Attacks:
     
     def showFrameStp(self) :
         self.deletePages()
-        self.stpFrame = Frame(self.attackFrame, width=1280, height=580, background="#0029b0")
+        self.stpFrame = Frame(self.attackFrame, width=1280, height=580, background="#0078bd")
         self.stpContents = FrameStp(self.attackFrame)
         self.stpFrame.pack()
 

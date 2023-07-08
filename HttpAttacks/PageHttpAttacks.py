@@ -8,7 +8,7 @@ class PageHttpAttacks:
     def __init__ (self, frame):
         self.httpAttacksFrame = frame
         self.navHttpAttacksFrame = Frame(self.httpAttacksFrame, width=1280, height=40, background="#454545")
-        self.attackFrame = Frame(self.httpAttacksFrame, width=1280, height=580, background="#454545")
+        self.attackFrame = Frame(self.httpAttacksFrame, width=1280, height=630, background="#454545")
 
         self.sqlInjectButton = Button(self.navHttpAttacksFrame, height=100, width = 29, font="BahnschriftLight 12", bg="#333333", fg="#ffffff", 
                                       activebackground="#333333", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3, relief="raised")
