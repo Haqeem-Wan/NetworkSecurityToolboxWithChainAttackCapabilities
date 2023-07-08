@@ -28,7 +28,6 @@ def reader(proc):
 
 # Start your subprocess
 process = subprocess.Popen(["bettercap", "-iface", "eth0"], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-print("Started bettercap")
 
 # Start the reader function in a separate thread
 thread = threading.Thread(target=reader, args=(process,))

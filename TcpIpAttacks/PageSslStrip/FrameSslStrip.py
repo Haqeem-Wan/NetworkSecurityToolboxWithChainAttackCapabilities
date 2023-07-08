@@ -93,10 +93,9 @@ class FrameSslStrip:
 
 
         self.startButton = Button(self.attackFrame, height=3, width=5, font="bahnschrift 15", text="Start", fg="#ffffff", bg="#1A3329", activebackground="#89C9AE", 
-                                  command=lambda : startSsl(self.terminalContentFrame, self.wiresharkContentFrame, self.errorOutputContentFrame, 
-                                  self.targetIpEntry.get(), self.targetDefaultGateEntry.get()))
+                                  command=lambda : startSslStrip(self.terminalContentFrame, self.wiresharkContentFrame, self.errorOutputContentFrame))
         self.startButton.place(x = 1010, y = 43)
 
         self.stopButton = Button(self.attackFrame, height=3, width=5, font="bahnschrift 15", text="Stop", fg="#ffffff", bg="#1A3329", activebackground="#89C9AE", 
-                                 command=lambda : stopSsl(self.targetIpEntry.get(), self.targetDefaultGateEntry.get()))
+                                 command=lambda : stopSslStrip())
         self.stopButton.place(x = 1102, y = 43)

@@ -55,13 +55,6 @@ def runDnsSpoofing() :
 def dnsSpoofHub(interface, victimIp, victimDomains):
     global process, runBettercapThread
 
-    '''
-    USER INPUT NEEDED : 
-        a) Interface : Eth0, Wlan0
-        b) Victim IP
-        c) Domains
-    '''
-
     spoofTargets = "set arp.spoof.targets " + victimIp
     spoofDomains = "set dns.spoof.domains " + victimDomains
 
