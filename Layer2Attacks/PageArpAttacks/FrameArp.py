@@ -93,10 +93,30 @@ class FrameArp:
 
 
         self.startButton = Button(self.attackFrame, height=3, width=5, font="bahnschrift 15", text="Start", fg="#ffffff", bg="#252525", 
-                                  command=lambda : startArp(self.terminalContentFrame, self.wiresharkContentFrame, self.errorOutputContentFrame, 
-                                  self.targetIpEntry.get(), self.targetDefaultGateEntry.get()))
-        self.startButton.place(x = 1010, y = 43)
+                                  command=lambda : self.switch_button_mode("Start"))
+        self.startButton.place(x = 1010, y = 18)
 
         self.stopButton = Button(self.attackFrame, height=3, width=5, font="bahnschrift 15", text="Stop", fg="#ffffff", bg="#252525", 
-                                 command=lambda : stopArp(self.targetIpEntry.get(), self.targetDefaultGateEntry.get()))
-        self.stopButton.place(x = 1102, y = 43)
+                                 command=lambda : self.switch_button_mode("Stop"))
+        self.stopButton.place(x = 1102, y = 18)
+
+        self.stopButton.config(relief = "sunken")
+        self.stopButton.config(state = "disabled")
+
+    def switch_button_mode(self, whichButton) :
+
+        if(whichButton == "Start") :
+            self.startButton.config(relief = "sunken")
+            self.startButton.config(state = "disabled")
+            self.stopButton.config(relief = "raised")
+            self.stopButton.config(state = "normal")
+
+            startArp(self.targetIpEntry.get(), self.targetDefaultGateEntry.get(), self.terminalContentFrame, self.wiresharkContentFrame, self.errorOutputContentFrame)
+
+        elif(whichButton == "Stop") :
+            self.startButton.config(relief = "raised")
+            self.startButton.config(state = "normal")
+            self.stopButton.config(relief = "sunken")
+            self.stopButton.config(state = "disabled")
+
+            stopArp(self.targetIpEntry.get(), self.targetDefaultGateEntry.get())

@@ -9,7 +9,7 @@ import traceback
 
 from tkinter import *
 
-def startArp(terminalContentFrame, wiresharkContentFrame, errorOutputContentFrame, targetIp, defaultGatewayIp, colorConfig = "#252525") :
+def startArp(targetIp, defaultGatewayIp, terminalContentFrame, wiresharkContentFrame, errorOutputContentFrame, colorConfig = "#252525") :
 
     global arpIsrunning, arpThreads, terminalLabel, wiresharkLabel, errorOutputLabel
 

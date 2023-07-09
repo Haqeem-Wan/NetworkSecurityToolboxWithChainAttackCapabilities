@@ -1,3 +1,5 @@
+# DOES NOT WORK SINCE PYTHON3 DOES NOT SUPPORT SSLSTRIP ANYMORE
+
 from tkinter import *
 from tkinter.ttk import Separator
 from TcpIpAttacks.PageSslStrip.funcFrameSslStrip import *
@@ -17,6 +19,8 @@ class FrameSslStrip:
 
         self.targetDefaultGateEntry = Entry(self.attackFrame, width = 40, font="bahnschrift 15", fg="#ffffff", bg="#1A3329")
         self.targetDefaultGateEntry.place(x = 435, y = 95)
+
+
 
         self.separator = Separator(self.attackFrame, orient="horizontal")
         self.separator.pack(fill = X, expand = TRUE, pady = 175)
@@ -92,10 +96,31 @@ class FrameSslStrip:
 
 
 
-        self.startButton = Button(self.attackFrame, height=3, width=5, font="bahnschrift 15", text="Start", fg="#ffffff", bg="#1A3329", activebackground="#89C9AE", 
-                                  command=lambda : startSslStrip(self.terminalContentFrame, self.wiresharkContentFrame, self.errorOutputContentFrame))
-        self.startButton.place(x = 1010, y = 43)
+        self.startButton = Button(self.attackFrame, height=3, width=5, font="bahnschrift 15", text="Start", fg="#ffffff", bg="#252525", 
+                                  command=lambda : self.switch_button_mode("Start"))
+        self.startButton.place(x = 1010, y = 18)
 
-        self.stopButton = Button(self.attackFrame, height=3, width=5, font="bahnschrift 15", text="Stop", fg="#ffffff", bg="#1A3329", activebackground="#89C9AE", 
-                                 command=lambda : stopSslStrip())
-        self.stopButton.place(x = 1102, y = 43)
+        self.stopButton = Button(self.attackFrame, height=3, width=5, font="bahnschrift 15", text="Stop", fg="#ffffff", bg="#252525", 
+                                 command=lambda : self.switch_button_mode("Stop"))
+        self.stopButton.place(x = 1102, y = 18)
+
+        self.stopButton.config(relief = "sunken")
+        self.stopButton.config(state = "disabled")
+
+    def switch_button_mode(self, whichButton) :
+
+        if(whichButton == "Start") :
+            self.startButton.config(relief = "sunken")
+            self.startButton.config(state = "disabled")
+            self.stopButton.config(relief = "raised")
+            self.stopButton.config(state = "normal")
+
+            startSslStrip(self.targetIpEntry.get(), self.targetDefaultGateEntry.get(), self.terminalContentFrame, self.wiresharkContentFrame, self.errorOutputContentFrame)
+
+        elif(whichButton == "Stop") :
+            self.startButton.config(relief = "raised")
+            self.startButton.config(state = "normal")
+            self.stopButton.config(relief = "sunken")
+            self.stopButton.config(state = "disabled")
+
+            stopSslStrip()
