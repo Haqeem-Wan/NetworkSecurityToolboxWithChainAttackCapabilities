@@ -5,18 +5,16 @@ from random import randint
 
 from tkinter import *
 
-def startCam(targetIp, packetNumber, terminalContentFrame, wiresharkContentFrame, errorOutputContentFrame, colorConfig = "#252525") :
+def startCam(targetIp, packetNumber, terminalContentFrame, errorOutputContentFrame, colorConfig = "#252525") :
 
-    global camIsRunning, camThreads, terminalLabel, wiresharkLabel, errorOutputLabel
+    global camIsRunning, camThreads, terminalLabel, errorOutputLabel
 
     camIsRunning = False
     camThreads = threading.Thread(target = lambda : camAttackHub(targetIp, packetNumber))
 
     terminalLabel = Label(terminalContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
-    wiresharkLabel = Label(wiresharkContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
     errorOutputLabel = Label(errorOutputContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
     terminalLabel.configure(bg = colorConfig) 
-    wiresharkLabel.configure(bg = colorConfig)
     errorOutputLabel.configure(bg = colorConfig)
 
     terminalLabel["text"] += "$ Target IP = " + targetIp + "\n"

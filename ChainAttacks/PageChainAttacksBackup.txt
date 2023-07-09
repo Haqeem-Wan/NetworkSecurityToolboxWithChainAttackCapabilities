@@ -1,0 +1,170 @@
+from tkinter import *
+from tkinter.ttk import Separator, Combobox, Style
+
+class PageChainAttacks :
+    def __init__ (self, frame) :
+        self.chainAttacksFrame = frame
+        self.attackDirectoryFrame = Frame(self.chainAttacksFrame, width=1280, height=110, background="#833301", borderwidth=3, relief="raised")
+        self.attacksFrame = Frame(self.chainAttacksFrame, width=1280, height = 600, background="#AC4201")
+
+        self.attacksScrollCanvas = Canvas(self.attacksFrame, width=500, height=600, background="#AC4201", yscrollincrement=8)
+        self.attacksScrollCanvas.pack(side=LEFT, fill=BOTH, expand=1)
+        
+        # Create Attack Directory Dropdown
+        self.attackDirectoryStyle = Style()
+        if not self.attackDirectoryStyle.theme_names().__contains__("attackDirectoryTheme") :
+            self.attackDirectoryStyle.theme_create("attackDirectoryTheme", parent="alt",
+                                                settings = {"TCombobox" : {
+                                                        "configure" : {
+                                                            "selectbackground" : "transparent",
+                                                            "fieldbackground" : "#E0986B",
+                                                            "background" : "#612601",
+                                                            "selectforeground" : "#000000"
+                                                }}})
+        self.attackDirectoryStyle.theme_use("attackDirectoryTheme")
+        
+        self.attackDirectorySelected = StringVar()
+        
+        self.attackDirectoryDropdown = Combobox(self.attackDirectoryFrame, width=25, 
+                                                textvariable=self.attackDirectorySelected, justify="center")
+        self.attackDirectoryDropdown["state"] = "readonly"
+        self.attackDirectoryDropdown.bind("<<ComboboxSelected>>", self.switchAttackTypes)
+        
+        self.attackDirectoryDropdown['values'] = (
+            "Layer 2 Attacks",
+            "TCP / IP attacks",
+            "DNS Attacks",
+            "HTTP Attacks",
+            "Wifi Hacking"
+            )
+        
+        # Create Attack Type Dropdown
+        self.attackTypeSelected = StringVar()
+        
+        self.attackTypeDropdown = Combobox(self.attackDirectoryFrame, width=25, 
+                                                      textvariable=self.attackTypeSelected, justify="center")
+        self.attackTypeDropdown["state"] = "readonly"
+        
+        self.attackTypeDropdown['values'] = (
+            "CAM Table Overflow",
+            "VLAN Hopping",
+            "DHCP Attack",
+            "ARP Poisoning Attack",
+            "MAC Address Spoofing",
+            "STP Attack"
+            )
+        
+        self.addAttackTypeButton = Button(self.attackDirectoryFrame, height=2, width=5, font="bahnschrift 15", 
+                                          text="Add", fg="#ffffff", bg="#612601", command=lambda : self.addAttackTypeFrame(self.attackTypeDropdown.get()))
+
+        # Create Scrollbar for Attack Type Frame
+        self.attackTypeScrollbar = Scrollbar(self.attacksFrame, orient=VERTICAL, command=self.attacksScrollCanvas.yview)
+        self.attackTypeScrollbar.pack(side = RIGHT, fill = Y)
+
+        self.attacksScrollCanvas.configure(yscrollcommand=self.attackTypeScrollbar.set)
+        self.attacksScrollCanvas.bind("<Configure>", lambda e : self.attacksScrollCanvas.configure(scrollregion=self.attacksScrollCanvas.bbox("all")))
+        self.attacksScrollCanvas.bind_all("<MouseWheel>", lambda e : self.attacksScrollCanvas.yview_scroll(-1, "units"))
+
+        self.attacksScrollFrame = Frame(self.attacksScrollCanvas, background="#252525", highlightbackground="#ffffff")
+        self.attacksScrollCanvas.create_window((0,0), window = self.attacksScrollFrame, anchor = NW)
+        self.attacksScrollFrame.bind("<Configure>", lambda e : self.attacksScrollCanvas.configure(scrollregion=self.attacksScrollCanvas.bbox("all")))
+
+        self.chosenAttackTypes = []
+
+        self.executeChainAttackButton = Button(self.attacksScrollFrame, height=2, width=96, font="bahnschrift 15", 
+                                          text="Execute Chain Attack!", fg="#ffffff", bg="#771902", command = lambda : self.executeChainAttack())
+        self.executeChainAttackButton.pack(side=BOTTOM, fill = X)
+
+        self.attackDirectoryDropdown.current(0)
+        self.attackDirectoryDropdown.place(x=300, y=40)
+
+        self.attackTypeDropdown.current(0)
+        self.attackTypeDropdown.place(x=600, y=40)
+
+        self.addAttackTypeButton.place(x=900, y=20)
+
+        self.attackDirectoryFrame.pack_propagate(0)
+        self.attackDirectoryFrame.pack()
+        self.attacksFrame.pack_propagate(0)
+        self.attacksFrame.pack()
+
+    def switchAttackTypes(self, event) :
+        self.chosenDirectory = self.attackDirectoryDropdown.get()
+        if self.chosenDirectory == "Layer 2 Attacks" :
+            self.attackTypeDropdown['values'] = (
+                "CAM Table Overflow",
+                "VLAN Hopping",
+                "DHCP Attack",
+                "ARP Poisoning Attack",
+                "MAC Address Spoofing",
+                "STP Attack"
+            )
+            self.attackTypeDropdown.current(0)
+        elif self.chosenDirectory == "TCP / IP attacks" :
+            self.attackTypeDropdown['values'] = (
+                "Syn Flooding",
+                "ICMP Attack",
+                "SeqNum. Predic. Attack",
+                "TCP Session Hijacking",
+                "IP Spoofing",
+                "SSL Strip"
+            )
+            self.attackTypeDropdown.current(0)
+        elif self.chosenDirectory == "DNS Attacks" :
+            self.attackTypeDropdown['values'] = (
+                "DNS Amplification",
+                "DNS Tunneling",
+                "DNS Spoofing",
+                "DNS Hijacking"
+            )
+            self.attackTypeDropdown.current(0)
+        elif self.chosenDirectory == "HTTP Attacks" :
+            self.attackTypeDropdown['values'] = (
+                "SQL Injection",
+                "Broken Authentication",
+                "Sensitive Data Exposure",
+                "Cross-Site Scripting (XSS)"
+            )
+            self.attackTypeDropdown.current(0)
+        elif self.chosenDirectory == "Wifi Hacking" :
+            self.attackTypeDropdown['values'] = (
+                "Denial of Service (DoS)",
+                "Evil Twin Attack",
+                "SeqNum. Predic. Attack",
+                "WPA / WPA2 Cracking"
+            )
+            self.attackTypeDropdown.current(0)
+
+    def addAttackTypeFrame(self, chosenAttackType) :
+        if chosenAttackType == "CAM Table Overflow" :
+            self.camFrame = Frame(self.attacksScrollFrame, width=1280, height=200, background="#612601", borderwidth=3, relief="raised")
+
+            self.camLabel = Label(self.camFrame, text=" CAM Table Overflow ", fg="#ffffff", bg="#2E1201", font="bahnschrift 12")
+            self.camLabel.place(x=0, y=0)
+
+            self.camTargetIpLabel = Label(self.camFrame, text="Target IP Address                    :", fg="#ffffff", bg="#612601", font="bahnschrift 12")
+            self.camTargetIpLabel.place(x = 10, y = 70)
+
+            self.camTargetIpEntry = Entry(self.camFrame, width = 20, font="bahnschrift 12", fg="#ffffff", bg="#252525")
+            self.camTargetIpEntry.place(x = 300, y = 70)
+
+            self.camPacketNumberLabel = Label(self.camFrame, text="Number of Packets to send     :", fg="#ffffff", bg="#612601", font="bahnschrift 12")
+            self.camPacketNumberLabel.place(x = 10, y = 120)
+
+            self.camPacketNumberEntry = Entry(self.camFrame, width = 20, font="bahnschrift 12", fg="#ffffff", bg="#252525")
+            self.camPacketNumberEntry.place(x = 300, y = 120)
+
+            '''
+            # Cannot get it to delete multiple iterations of the same attack
+            self.removeCamButton = Button(self.camFrame, height=1, width=1, font="bahnschrift 15", 
+                                          text="X", fg="#ffffff", bg="#612601", command=lambda : self.deleteFrame(self.camFrame))
+            self.removeCamButton.place(x=1222,y=155)
+            '''
+            self.camFrame.pack()
+
+        self.chosenAttackTypes.append(chosenAttackType)
+
+    def executeChainAttack(self) :
+        print(self.chosenAttackTypes)
+
+            

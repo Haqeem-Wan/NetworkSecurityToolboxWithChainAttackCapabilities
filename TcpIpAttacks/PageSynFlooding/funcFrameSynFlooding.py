@@ -4,16 +4,14 @@ import signal
 import threading
 import subprocess
 
-def startSynFlood(targetIp, port,terminalContentFrame, wiresharkContentFrame, errorOutputContentFrame, colorConfig = "#252525") :
+def startSynFlood(targetIp, port,terminalContentFrame, errorOutputContentFrame, colorConfig = "#252525") :
     global synFloodThreads, terminalLabel, wiresharkLabel, errorOutputLabel
 
     synFloodThreads = threading.Thread(target = lambda : sendSynPackets(targetIp, port))
 
     terminalLabel = Label(terminalContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
-    wiresharkLabel = Label(wiresharkContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
     errorOutputLabel = Label(errorOutputContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
     terminalLabel.configure(bg = colorConfig) 
-    wiresharkLabel.configure(bg = colorConfig)
     errorOutputLabel.configure(bg = colorConfig)
 
     terminalLabel["text"] += "$ Running Syn Flood Attack...\n"

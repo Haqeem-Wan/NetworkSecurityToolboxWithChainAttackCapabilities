@@ -95,5 +95,5 @@ class FrameCam:
 
 
         self.startButton = Button(self.attackFrame, height=3, width=10, font="bahnschrift 15", text="Start", fg="#ffffff", bg="#252525", 
-                                  command=lambda : startCam(self.targetIpEntry.get(), self.packetNumberEntry.get(), self.terminalContentFrame, self.wiresharkContentFrame, self.errorOutputContentFrame))
+                                  command=lambda : startCam(self.targetIpEntry.get(), self.packetNumberEntry.get(), self.terminalContentFrame, self.errorOutputContentFrame))
         self.startButton.place(x = 1010, y = 43)

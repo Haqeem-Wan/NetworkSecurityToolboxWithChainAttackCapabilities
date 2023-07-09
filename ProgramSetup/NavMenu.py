@@ -2,6 +2,7 @@ from tkinter import *
 import PIL.Image
 import PIL.ImageTk
 from Home.PageHome import *
+from ChainAttacks.PageChainAttacks import *
 from Layer2Attacks.PageLayer2Attacks import *
 from TcpIpAttacks.PageTcpIpAttacks import *
 from DnsAttacks.PageDnsAttacks import *
@@ -32,13 +33,13 @@ class NavMenu:
 
         self.showPageHome()
 
-        y = 88
-        self.mainMenuOptions = ["Home", "Layer 2 Attacks", "TCP / IP Attacks", "DNS Attacks", "HTTP Attacks", "Wifi Hacking"]
-        self.mainMenuLinks = [self.showPageHome, self.showPageLayer2Attacks, self.showPageTcpIpAttacks, self.showPageDnsAttacks, self.showPageHttpAttacks, self.showPageWifiHacking]
+        y = 80
+        self.mainMenuOptions = ["Home", "Chain Attacks", "Layer 2 Attacks", "TCP / IP Attacks", "DNS Attacks", "HTTP Attacks", "Wifi Hacking"]
+        self.mainMenuLinks = [self.showPageHome, self.showPageChainAttacks, self.showPageLayer2Attacks, self.showPageTcpIpAttacks, self.showPageDnsAttacks, self.showPageHttpAttacks, self.showPageWifiHacking]
         for i in range(len(self.mainMenuOptions)):
             Button(self.navMenuFrame, text=self.mainMenuOptions[i], font="BahnschriftLight 15", bg="#333333", fg="#ffffff", 
             activebackground="#333333", activeforeground="#9e9e9e", highlightthickness=0, bd=0, command=self.mainMenuLinks[i]).place(x=25,y=y)
-            y += 110
+            y += 95
 
         self.closeNavMenuButton = Button(self.navMenuFrame, image=self.openNavMenuIcon, bg="#333333", 
         activebackground="#333333", padx=20, highlightthickness=0, command=self.toggleNavMenu)
@@ -59,11 +60,17 @@ class NavMenu:
 
             self.navMenuOpen = True
 
-    def showPageHome(self):
+    def showPageHome(self) :
         self.deletePages()
         self.homeFrame = Frame(self.contentFrame, width=1280, height=300, background="#454545")
         self.homeContents = PageHome(self.homeFrame)
         self.homeFrame.pack()
+
+    def showPageChainAttacks(self) :
+        self.deletePages()
+        self.chainAttacksFrame = Frame(self.contentFrame, width=1280, height=620, background="#454545")
+        self.chainAttacksContents = PageChainAttacks(self.chainAttacksFrame)
+        self.chainAttacksFrame.pack()
     
     def showPageLayer2Attacks(self) :
         self.deletePages()

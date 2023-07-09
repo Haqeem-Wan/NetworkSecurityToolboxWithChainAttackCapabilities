@@ -5,17 +5,15 @@ import signal
 
 from tkinter import *
 
-def startDnsAmplification(targetIp, dnsPackets, terminalContentFrame, wiresharkContentFrame, errorOutputContentFrame, colorConfig = "#252525") :
+def startDnsAmplification(targetIp, dnsPackets, terminalContentFrame, errorOutputContentFrame, colorConfig = "#252525") :
     global dnsAmplificationIsRunning, dnsAmplificationThreads, terminalLabel, wiresharkLabel, errorOutputLabel
 
     dnsAmplificationIsRunning = False
     dnsAmplificationThreads = threading.Thread(target = lambda : sendDnsPackets(targetIp, dnsPackets))
 
     terminalLabel = Label(terminalContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
-    wiresharkLabel = Label(wiresharkContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
     errorOutputLabel = Label(errorOutputContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
     terminalLabel.configure(bg = colorConfig) 
-    wiresharkLabel.configure(bg = colorConfig)
     errorOutputLabel.configure(bg = colorConfig)
 
     terminalLabel["text"] += "$ Running DNS Amplification Attack...\n\n"

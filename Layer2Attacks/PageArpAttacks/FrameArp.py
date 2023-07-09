@@ -111,7 +111,7 @@ class FrameArp:
             self.stopButton.config(relief = "raised")
             self.stopButton.config(state = "normal")
 
-            startArp(self.targetIpEntry.get(), self.targetDefaultGateEntry.get(), self.terminalContentFrame, self.wiresharkContentFrame, self.errorOutputContentFrame)
+            startArp(self.targetIpEntry.get(), self.targetDefaultGateEntry.get(), self.terminalContentFrame, self.errorOutputContentFrame)
 
         elif(whichButton == "Stop") :
             self.startButton.config(relief = "raised")
