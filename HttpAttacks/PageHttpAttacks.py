@@ -1,5 +1,5 @@
 from tkinter import *
-from HttpAttacks.PageSqlInjection.FrameSqlInjection import *
+from HttpAttacks.PageHttpSessionHijacking.FrameHttpSessionHijacking import *
 from HttpAttacks.PageBrokenAuth.FrameBrokenAuth import *
 from HttpAttacks.PageSensitiveDataExpo.FrameSensitiveDataExpo import *
 from HttpAttacks.PageXss.FrameXss import *
@@ -10,7 +10,7 @@ class PageHttpAttacks:
         self.navHttpAttacksFrame = Frame(self.httpAttacksFrame, width=1280, height=40, background="#454545")
         self.attackFrame = Frame(self.httpAttacksFrame, width=1280, height=630, background="#454545")
 
-        self.sqlInjectButton = Button(self.navHttpAttacksFrame, height=100, width = 29, font="BahnschriftLight 12", bg="#333333", fg="#ffffff", 
+        self.httpSessionHijackingButton = Button(self.navHttpAttacksFrame, height=100, width = 29, font="BahnschriftLight 12", bg="#333333", fg="#ffffff", 
                                       activebackground="#333333", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3, relief="raised")
         self.brokenAuthButton = Button(self.navHttpAttacksFrame, height=100, width = 29, font="BahnschriftLight 12", bg="#333333", fg="#ffffff", 
                                        activebackground="#333333", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3, relief="raised")
@@ -19,10 +19,10 @@ class PageHttpAttacks:
         self.xssButton = Button(self.navHttpAttacksFrame, height=100, width = 29, font="BahnschriftLight 12", bg="#333333", fg="#ffffff", 
                                 activebackground="#333333", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3, relief="raised")
 
-        self.navHttpAttacksOptions = ["SQL Injection", "Broken Auth.", "Sensitive Data Expo.", "Cross-Site Scripting (XSS)"]
-        self.navHttpAttacksLinks = [self.showFrameSqlInjection, self.showFrameBrokenAuth, 
+        self.navHttpAttacksOptions = ["HTTP Session Hijacking", "Broken Auth.", "Sensitive Data Expo.", "Cross-Site Scripting (XSS)"]
+        self.navHttpAttacksLinks = [self.showFrameHttpSessionHijacking, self.showFrameBrokenAuth, 
         self.showFrameSensitiveDataExpo, self.showFrameXss]
-        self.navHttpAttackButtons = [self.sqlInjectButton, self.brokenAuthButton, self.senDataExpButton, self.xssButton]
+        self.navHttpAttackButtons = [self.httpSessionHijackingButton, self.brokenAuthButton, self.senDataExpButton, self.xssButton]
         
         for i in range(len(self.navHttpAttacksOptions)):
             self.navHttpAttackButtons[i].config(text=self.navHttpAttacksOptions[i])
@@ -34,13 +34,13 @@ class PageHttpAttacks:
         self.attackFrame.pack_propagate(0)
         self.attackFrame.pack()
 
-    def showFrameSqlInjection(self):
+    def showFrameHttpSessionHijacking(self):
         self.deletePages()
-        self.synFloodingFrame = Frame(self.attackFrame, width=1280, height=580, background="#454545")
-        self.synFloodingContents = FrameSqlInjection(self.attackFrame)
-        self.synFloodingFrame.pack()
+        self.httpSessionHijackingFrame = Frame(self.attackFrame, width=1280, height=580, background="#454545")
+        self.httpSessionHijackingContents = FrameHttpSessionHijacking(self.attackFrame)
+        self.httpSessionHijackingFrame.pack()
 
-        self.configureButtons("SQL Injection")
+        self.configureButtons("HTTP Session Hijacking")
     
     def showFrameBrokenAuth(self) :
         self.deletePages()

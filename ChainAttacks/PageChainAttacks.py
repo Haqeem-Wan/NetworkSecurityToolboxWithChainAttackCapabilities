@@ -10,8 +10,10 @@ from DnsAttacks.PageDnsAmplification.FrameDnsAmplification import *
 class PageChainAttacks :
     def __init__ (self, frame) :
         self.chainAttacksFrame = frame
-        self.attackDirectoryFrame = Frame(self.chainAttacksFrame, width=1280, height=110, background="#833301", borderwidth=3, relief="raised")
-        self.attacksFrame = Frame(self.chainAttacksFrame, width=1280, height = 600, background="#AC4201")
+        self.attackDirectoryFrame = Frame(self.chainAttacksFrame, width=1280, height=110, 
+                                          background="#833301", borderwidth=3, relief="raised")
+        self.attacksFrame = Frame(self.chainAttacksFrame, width=1280, height = 600, 
+                                  background="#AC4201")
 
         self.attacksScrollCanvas = Canvas(self.attacksFrame, width=500, height=600, background="#AC4201", yscrollincrement=8)
         self.attacksScrollCanvas.pack(side=LEFT, fill=BOTH, expand=1)

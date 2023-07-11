@@ -1,5 +1,11 @@
 from tkinter import *
-from tkinter.ttk import Separator, Combobox, Style
+from tkinter.ttk import Combobox, Style
+import threading
+
+from Layer2Attacks.PageCamAttacks.FrameCam import *
+from Layer2Attacks.PageArpAttacks.FrameArp import *
+from TcpIpAttacks.PageSynFlooding.FrameSynFlooding import *
+from DnsAttacks.PageDnsAmplification.FrameDnsAmplification import *
 
 class PageChainAttacks :
     def __init__ (self, frame) :
@@ -73,6 +79,11 @@ class PageChainAttacks :
 
         self.executeChainAttackButton = Button(self.attacksScrollFrame, height=2, width=96, font="bahnschrift 15", 
                                           text="Execute Chain Attack!", fg="#ffffff", bg="#771902", command = lambda : self.executeChainAttack())
+
+        self.terminateChainAttackButton = Button(self.attacksScrollFrame, height=2, width=96, font="bahnschrift 15", 
+                                          text="Terminate Chain Attack!", fg="#ffffff", bg="#771902", command = lambda : self.terminateChainAttack())
+        
+        self.terminateChainAttackButton.pack(side=BOTTOM, fill = X)
         self.executeChainAttackButton.pack(side=BOTTOM, fill = X)
 
         self.attackDirectoryDropdown.current(0)
@@ -138,6 +149,7 @@ class PageChainAttacks :
     def addAttackTypeFrame(self, chosenAttackType) :
         if chosenAttackType == "CAM Table Overflow" :
             self.camFrame = Frame(self.attacksScrollFrame, width=1280, height=200, background="#612601", borderwidth=3, relief="raised")
+            self.camFrame.pack()
 
             self.camLabel = Label(self.camFrame, text=" CAM Table Overflow ", fg="#ffffff", bg="#2E1201", font="bahnschrift 12")
             self.camLabel.place(x=0, y=0)
@@ -154,17 +166,332 @@ class PageChainAttacks :
             self.camPacketNumberEntry = Entry(self.camFrame, width = 20, font="bahnschrift 12", fg="#ffffff", bg="#252525")
             self.camPacketNumberEntry.place(x = 300, y = 120)
 
+
+
+            self.camTerminalLabel = Label(self.camFrame, text="Terminal", fg="#ffffff", bg="#612601", font="bahnschrift 15")
+            self.camTerminalLabel.place(x = 660, y = 20)
+
+            self.camTerminalFrame = Frame(self.camFrame, width=300, height=120, background="#252525", highlightbackground="#ffffff", highlightthickness=2)
+            self.camTerminalFrame.pack_propagate(False)
+            self.camTerminalFrame.place(x = 555, y = 55)
+
+            self.camTerminalScrollCanvas = Canvas(self.camTerminalFrame, background="#252525", highlightbackground="#ffffff", yscrollincrement=8)
+            self.camTerminalScrollCanvas.pack(side = LEFT, fill = BOTH, expand = 1)
+        
+            self.camTerminalVerticalScrollbar = Scrollbar(self.camTerminalScrollCanvas, orient=VERTICAL, command = self.camTerminalScrollCanvas.yview)
+            self.camTerminalVerticalScrollbar.pack(side = RIGHT, fill = Y)
+
+            self.camTerminalHorizontalScrollbar = Scrollbar(self.camTerminalScrollCanvas, orient=HORIZONTAL, command = self.camTerminalScrollCanvas.xview)
+            self.camTerminalHorizontalScrollbar.pack(side = BOTTOM, fill = X)
+
+            self.camTerminalScrollCanvas.configure(yscrollcommand=self.camTerminalVerticalScrollbar.set)
+            self.camTerminalScrollCanvas.bind("<Configure>", lambda e : self.camTerminalScrollCanvas.configure(scrollregion=self.camTerminalScrollCanvas.bbox("all")))
+            self.camTerminalScrollCanvas.bind_all("<MouseWheel>", lambda e : self.camTerminalScrollCanvas.yview_scroll(-1, "units"))
+
+            self.camTerminalScrollCanvas.configure(xscrollcommand=self.camTerminalHorizontalScrollbar.set)
+            self.camTerminalScrollCanvas.bind("<Configure>", lambda e : self.camTerminalScrollCanvas.configure(scrollregion=self.camTerminalScrollCanvas.bbox("all")))
+            self.camTerminalScrollCanvas.bind_all("<MouseWheel>", lambda e : self.camTerminalScrollCanvas.xview_scroll(-1, "units"))
+
+            self.camTerminalContentFrame = Frame(self.camTerminalScrollCanvas, background="#252525", highlightbackground="#ffffff")
+            self.camTerminalScrollCanvas.create_window((0,0), window = self.camTerminalContentFrame, anchor = NW)
+            self.camTerminalContentFrame.bind("<Configure>", lambda e : self.camTerminalScrollCanvas.configure(scrollregion=self.camTerminalScrollCanvas.bbox("all")))
+
+
+
+            self.camErrorLabel = Label(self.camFrame, text="Errors", fg="#ffffff", bg="#612601", font="bahnschrift 15")
+            self.camErrorLabel.place(x = 1035, y = 20)
+
+            self.camErrorOutputFrame = Frame(self.camFrame, width=300, height=120, background="#252525", highlightbackground="#ffffff", highlightthickness=2)
+            self.camErrorOutputFrame.pack_propagate(False)
+            self.camErrorOutputFrame.place(x = 915, y = 55)
+
+            self.camErrorOutputScrollCanvas = Canvas(self.camErrorOutputFrame, background="#252525", highlightbackground="#ffffff", yscrollincrement=8)
+            self.camErrorOutputScrollCanvas.pack(side = LEFT, fill = BOTH, expand=1)
+        
+            self.camErrorOutputVerticalScrollbar = Scrollbar(self.camErrorOutputScrollCanvas, orient=VERTICAL, command = self.camErrorOutputScrollCanvas.yview)
+            self.camErrorOutputVerticalScrollbar.pack(side = RIGHT, fill = Y)
+
+            self.camErrorOutputHorizontalScrollbar = Scrollbar(self.camErrorOutputScrollCanvas, orient=HORIZONTAL, command = self.camErrorOutputScrollCanvas.xview)
+            self.camErrorOutputHorizontalScrollbar.pack(side = BOTTOM, fill = X)
+
+            self.camErrorOutputScrollCanvas.configure(yscrollcommand=self.camErrorOutputVerticalScrollbar.set)
+            self.camErrorOutputScrollCanvas.bind("<Configure>", lambda e : self.camErrorOutputScrollCanvas.configure(scrollregion=self.camErrorOutputScrollCanvas.bbox("all")))
+            self.camErrorOutputFrame.bind_all("<MouseWheel>", lambda e : self.camErrorOutputScrollCanvas.yview_scroll(-1, "units"))
+
+            self.camErrorOutputScrollCanvas.configure(xscrollcommand=self.camErrorOutputHorizontalScrollbar.set)
+            self.camErrorOutputScrollCanvas.bind("<Configure>", lambda e : self.camErrorOutputScrollCanvas.configure(scrollregion=self.camErrorOutputScrollCanvas.bbox("all")))
+            self.camErrorOutputFrame.bind_all("<MouseWheel>", lambda e : self.camErrorOutputScrollCanvas.xview_scroll(-1, "units"))
+
+            self.camErrorOutputContentFrame = Frame(self.camErrorOutputScrollCanvas, background="#252525", highlightbackground="#ffffff")
+            self.camErrorOutputScrollCanvas.create_window((0,0), window = self.camErrorOutputContentFrame, anchor = NW)
+            self.camErrorOutputContentFrame.bind("<Configure>", lambda e : self.camErrorOutputScrollCanvas.configure(scrollregion=self.camErrorOutputScrollCanvas.bbox("all")))
             '''
             # Cannot get it to delete multiple iterations of the same attack
             self.removeCamButton = Button(self.camFrame, height=1, width=1, font="bahnschrift 15", 
                                           text="X", fg="#ffffff", bg="#612601", command=lambda : self.deleteFrame(self.camFrame))
             self.removeCamButton.place(x=1222,y=155)
             '''
-            self.camFrame.pack()
+            #self.camFrame.pack()
+        
+        elif chosenAttackType == "ARP Poisoning Attack" :
+            self.arpPoisonFrame = Frame(self.attacksScrollFrame, width=1280, height=200, background="#612601", borderwidth=3, relief="raised")
+            self.arpPoisonFrame.pack()
 
+            self.arpPoisonLabel = Label(self.arpPoisonFrame, text=" ARP Poisoning Attack ", fg="#ffffff", bg="#2E1201", font="bahnschrift 12")
+            self.arpPoisonLabel.place(x=0, y=0)
+
+            self.arpPoisonTargetIpLabel = Label(self.arpPoisonFrame, text="Target IP Address                    :", fg="#ffffff", bg="#612601", font="bahnschrift 12")
+            self.arpPoisonTargetIpLabel.place(x = 10, y = 70)
+
+            self.arpPoisonTargetIpEntry = Entry(self.arpPoisonFrame, width = 20, font="bahnschrift 12", fg="#ffffff", bg="#252525")
+            self.arpPoisonTargetIpEntry.place(x = 300, y = 70)
+
+            self.arpPoisonDefaultGateLabel = Label(self.arpPoisonFrame, text="Target Default Gateway   :", fg="#ffffff", bg="#612601", font="bahnschrift 12")
+            self.arpPoisonDefaultGateLabel.place(x = 10, y = 120)
+
+            self.arpPoisonDefaultGateEntry = Entry(self.arpPoisonFrame, width = 20, font="bahnschrift 12", fg="#ffffff", bg="#252525")
+            self.arpPoisonDefaultGateEntry.place(x = 300, y = 120)
+
+
+
+            self.arpPoisonTerminalLabel = Label(self.arpPoisonFrame, text="Terminal", fg="#ffffff", bg="#612601", font="bahnschrift 15")
+            self.arpPoisonTerminalLabel.place(x = 660, y = 20)
+
+            self.arpPoisonTerminalFrame = Frame(self.arpPoisonFrame, width=300, height=120, background="#252525", highlightbackground="#ffffff", highlightthickness=2)
+            self.arpPoisonTerminalFrame.pack_propagate(False)
+            self.arpPoisonTerminalFrame.place(x = 555, y = 55)
+
+            self.arpPoisonTerminalScrollCanvas = Canvas(self.arpPoisonTerminalFrame, background="#252525", highlightbackground="#ffffff", yscrollincrement=8)
+            self.arpPoisonTerminalScrollCanvas.pack(side = LEFT, fill = BOTH, expand = 1)
+        
+            self.arpPoisonTerminalVerticalScrollbar = Scrollbar(self.arpPoisonTerminalScrollCanvas, orient=VERTICAL, command = self.arpPoisonTerminalScrollCanvas.yview)
+            self.arpPoisonTerminalVerticalScrollbar.pack(side = RIGHT, fill = Y)
+
+            self.arpPoisonTerminalHorizontalScrollbar = Scrollbar(self.arpPoisonTerminalScrollCanvas, orient=HORIZONTAL, command = self.arpPoisonTerminalScrollCanvas.xview)
+            self.arpPoisonTerminalHorizontalScrollbar.pack(side = BOTTOM, fill = X)
+
+            self.arpPoisonTerminalScrollCanvas.configure(yscrollcommand=self.arpPoisonTerminalVerticalScrollbar.set)
+            self.arpPoisonTerminalScrollCanvas.bind("<Configure>", lambda e : self.arpPoisonTerminalScrollCanvas.configure(scrollregion=self.arpPoisonTerminalScrollCanvas.bbox("all")))
+            self.arpPoisonTerminalScrollCanvas.bind_all("<MouseWheel>", lambda e : self.arpPoisonTerminalScrollCanvas.yview_scroll(-1, "units"))
+
+            self.arpPoisonTerminalScrollCanvas.configure(xscrollcommand=self.arpPoisonTerminalHorizontalScrollbar.set)
+            self.arpPoisonTerminalScrollCanvas.bind("<Configure>", lambda e : self.arpPoisonTerminalScrollCanvas.configure(scrollregion=self.arpPoisonTerminalScrollCanvas.bbox("all")))
+            self.arpPoisonTerminalScrollCanvas.bind_all("<MouseWheel>", lambda e : self.arpPoisonTerminalScrollCanvas.xview_scroll(-1, "units"))
+
+            self.arpPoisonTerminalContentFrame = Frame(self.arpPoisonTerminalScrollCanvas, background="#252525", highlightbackground="#ffffff")
+            self.arpPoisonTerminalScrollCanvas.create_window((0,0), window = self.arpPoisonTerminalContentFrame, anchor = NW)
+            self.arpPoisonTerminalContentFrame.bind("<Configure>", lambda e : self.arpPoisonTerminalScrollCanvas.configure(scrollregion=self.arpPoisonTerminalScrollCanvas.bbox("all")))
+
+
+
+            self.arpPoisonErrorLabel = Label(self.arpPoisonFrame, text="Errors", fg="#ffffff", bg="#612601", font="bahnschrift 15")
+            self.arpPoisonErrorLabel.place(x = 1035, y = 20)
+
+            self.arpPoisonErrorOutputFrame = Frame(self.arpPoisonFrame, width=300, height=120, background="#252525", highlightbackground="#ffffff", highlightthickness=2)
+            self.arpPoisonErrorOutputFrame.pack_propagate(False)
+            self.arpPoisonErrorOutputFrame.place(x = 915, y = 55)
+
+            self.arpPoisonErrorOutputScrollCanvas = Canvas(self.arpPoisonErrorOutputFrame, background="#252525", highlightbackground="#ffffff", yscrollincrement=8)
+            self.arpPoisonErrorOutputScrollCanvas.pack(side = LEFT, fill = BOTH, expand=1)
+        
+            self.arpPoisonErrorOutputVerticalScrollbar = Scrollbar(self.arpPoisonErrorOutputScrollCanvas, orient=VERTICAL, command = self.arpPoisonErrorOutputScrollCanvas.yview)
+            self.arpPoisonErrorOutputVerticalScrollbar.pack(side = RIGHT, fill = Y)
+
+            self.arpPoisonErrorOutputHorizontalScrollbar = Scrollbar(self.arpPoisonErrorOutputScrollCanvas, orient=HORIZONTAL, command = self.arpPoisonErrorOutputScrollCanvas.xview)
+            self.arpPoisonErrorOutputHorizontalScrollbar.pack(side = BOTTOM, fill = X)
+
+            self.arpPoisonErrorOutputScrollCanvas.configure(yscrollcommand=self.arpPoisonErrorOutputVerticalScrollbar.set)
+            self.arpPoisonErrorOutputScrollCanvas.bind("<Configure>", lambda e : self.arpPoisonErrorOutputScrollCanvas.configure(scrollregion=self.arpPoisonErrorOutputScrollCanvas.bbox("all")))
+            self.arpPoisonErrorOutputFrame.bind_all("<MouseWheel>", lambda e : self.arpPoisonErrorOutputScrollCanvas.yview_scroll(-1, "units"))
+
+            self.arpPoisonErrorOutputScrollCanvas.configure(xscrollcommand=self.arpPoisonErrorOutputHorizontalScrollbar.set)
+            self.arpPoisonErrorOutputScrollCanvas.bind("<Configure>", lambda e : self.arpPoisonErrorOutputScrollCanvas.configure(scrollregion=self.arpPoisonErrorOutputScrollCanvas.bbox("all")))
+            self.arpPoisonErrorOutputFrame.bind_all("<MouseWheel>", lambda e : self.arpPoisonErrorOutputScrollCanvas.xview_scroll(-1, "units"))
+
+            self.arpPoisonErrorOutputContentFrame = Frame(self.arpPoisonErrorOutputScrollCanvas, background="#252525", highlightbackground="#ffffff")
+            self.arpPoisonErrorOutputScrollCanvas.create_window((0,0), window = self.arpPoisonErrorOutputContentFrame, anchor = NW)
+            self.arpPoisonErrorOutputContentFrame.bind("<Configure>", lambda e : self.arpPoisonErrorOutputScrollCanvas.configure(scrollregion=self.arpPoisonErrorOutputScrollCanvas.bbox("all")))
+        
+        elif chosenAttackType == "Syn Flooding" :
+            self.synFloodFrame = Frame(self.attacksScrollFrame, width=1280, height=200, background="#612601", borderwidth=3, relief="raised")
+            self.synFloodFrame.pack()
+
+            self.synFloodLabel = Label(self.synFloodFrame, text=" Syn Flooding ", fg="#ffffff", bg="#2E1201", font="bahnschrift 12")
+            self.synFloodLabel.place(x=0, y=0)
+
+            self.synFloodTargetIpLabel = Label(self.synFloodFrame, text="Target IP Address                    :", fg="#ffffff", bg="#612601", font="bahnschrift 12")
+            self.synFloodTargetIpLabel.place(x = 10, y = 70)
+
+            self.synFloodTargetIpEntry = Entry(self.synFloodFrame, width = 20, font="bahnschrift 12", fg="#ffffff", bg="#252525")
+            self.synFloodTargetIpEntry.place(x = 300, y = 70)
+
+            self.synFloodPortLabel = Label(self.synFloodFrame, text="Target Port      :", fg="#ffffff", bg="#612601", font="bahnschrift 12")
+            self.synFloodPortLabel.place(x = 10, y = 120)
+
+            self.synFloodPortEntry = Entry(self.synFloodFrame, width = 20, font="bahnschrift 12", fg="#ffffff", bg="#252525")
+            self.synFloodPortEntry.place(x = 300, y = 120)
+
+
+
+            self.synFloodTerminalLabel = Label(self.synFloodFrame, text="Terminal", fg="#ffffff", bg="#612601", font="bahnschrift 15")
+            self.synFloodTerminalLabel.place(x = 660, y = 20)
+
+            self.synFloodTerminalFrame = Frame(self.synFloodFrame, width=300, height=120, background="#252525", highlightbackground="#ffffff", highlightthickness=2)
+            self.synFloodTerminalFrame.pack_propagate(False)
+            self.synFloodTerminalFrame.place(x = 555, y = 55)
+
+            self.synFloodTerminalScrollCanvas = Canvas(self.synFloodTerminalFrame, background="#252525", highlightbackground="#ffffff", yscrollincrement=8)
+            self.synFloodTerminalScrollCanvas.pack(side = LEFT, fill = BOTH, expand = 1)
+        
+            self.synFloodTerminalVerticalScrollbar = Scrollbar(self.synFloodTerminalScrollCanvas, orient=VERTICAL, command = self.synFloodTerminalScrollCanvas.yview)
+            self.synFloodTerminalVerticalScrollbar.pack(side = RIGHT, fill = Y)
+
+            self.synFloodTerminalHorizontalScrollbar = Scrollbar(self.synFloodTerminalScrollCanvas, orient=HORIZONTAL, command = self.synFloodTerminalScrollCanvas.xview)
+            self.synFloodTerminalHorizontalScrollbar.pack(side = BOTTOM, fill = X)
+
+            self.synFloodTerminalScrollCanvas.configure(yscrollcommand=self.synFloodTerminalVerticalScrollbar.set)
+            self.synFloodTerminalScrollCanvas.bind("<Configure>", lambda e : self.synFloodTerminalScrollCanvas.configure(scrollregion=self.synFloodTerminalScrollCanvas.bbox("all")))
+            self.synFloodTerminalScrollCanvas.bind_all("<MouseWheel>", lambda e : self.synFloodTerminalScrollCanvas.yview_scroll(-1, "units"))
+
+            self.synFloodTerminalScrollCanvas.configure(xscrollcommand=self.synFloodTerminalHorizontalScrollbar.set)
+            self.synFloodTerminalScrollCanvas.bind("<Configure>", lambda e : self.synFloodTerminalScrollCanvas.configure(scrollregion=self.synFloodTerminalScrollCanvas.bbox("all")))
+            self.synFloodTerminalScrollCanvas.bind_all("<MouseWheel>", lambda e : self.synFloodTerminalScrollCanvas.xview_scroll(-1, "units"))
+
+            self.synFloodTerminalContentFrame = Frame(self.synFloodTerminalScrollCanvas, background="#252525", highlightbackground="#ffffff")
+            self.synFloodTerminalScrollCanvas.create_window((0,0), window = self.synFloodTerminalContentFrame, anchor = NW)
+            self.synFloodTerminalContentFrame.bind("<Configure>", lambda e : self.synFloodTerminalScrollCanvas.configure(scrollregion=self.synFloodTerminalScrollCanvas.bbox("all")))
+
+
+
+            self.synFloodErrorLabel = Label(self.synFloodFrame, text="Errors", fg="#ffffff", bg="#612601", font="bahnschrift 15")
+            self.synFloodErrorLabel.place(x = 1035, y = 20)
+
+            self.synFloodErrorOutputFrame = Frame(self.synFloodFrame, width=300, height=120, background="#252525", highlightbackground="#ffffff", highlightthickness=2)
+            self.synFloodErrorOutputFrame.pack_propagate(False)
+            self.synFloodErrorOutputFrame.place(x = 915, y = 55)
+
+            self.synFloodErrorOutputScrollCanvas = Canvas(self.synFloodErrorOutputFrame, background="#252525", highlightbackground="#ffffff", yscrollincrement=8)
+            self.synFloodErrorOutputScrollCanvas.pack(side = LEFT, fill = BOTH, expand=1)
+        
+            self.synFloodErrorOutputVerticalScrollbar = Scrollbar(self.synFloodErrorOutputScrollCanvas, orient=VERTICAL, command = self.synFloodErrorOutputScrollCanvas.yview)
+            self.synFloodErrorOutputVerticalScrollbar.pack(side = RIGHT, fill = Y)
+
+            self.synFloodErrorOutputHorizontalScrollbar = Scrollbar(self.synFloodErrorOutputScrollCanvas, orient=HORIZONTAL, command = self.synFloodErrorOutputScrollCanvas.xview)
+            self.synFloodErrorOutputHorizontalScrollbar.pack(side = BOTTOM, fill = X)
+
+            self.synFloodErrorOutputScrollCanvas.configure(yscrollcommand=self.synFloodErrorOutputVerticalScrollbar.set)
+            self.synFloodErrorOutputScrollCanvas.bind("<Configure>", lambda e : self.synFloodErrorOutputScrollCanvas.configure(scrollregion=self.synFloodErrorOutputScrollCanvas.bbox("all")))
+            self.synFloodErrorOutputFrame.bind_all("<MouseWheel>", lambda e : self.synFloodErrorOutputScrollCanvas.yview_scroll(-1, "units"))
+
+            self.synFloodErrorOutputScrollCanvas.configure(xscrollcommand=self.synFloodErrorOutputHorizontalScrollbar.set)
+            self.synFloodErrorOutputScrollCanvas.bind("<Configure>", lambda e : self.synFloodErrorOutputScrollCanvas.configure(scrollregion=self.synFloodErrorOutputScrollCanvas.bbox("all")))
+            self.synFloodErrorOutputFrame.bind_all("<MouseWheel>", lambda e : self.synFloodErrorOutputScrollCanvas.xview_scroll(-1, "units"))
+
+            self.synFloodErrorOutputContentFrame = Frame(self.synFloodErrorOutputScrollCanvas, background="#252525", highlightbackground="#ffffff")
+            self.synFloodErrorOutputScrollCanvas.create_window((0,0), window = self.synFloodErrorOutputContentFrame, anchor = NW)
+            self.synFloodErrorOutputContentFrame.bind("<Configure>", lambda e : self.synFloodErrorOutputScrollCanvas.configure(scrollregion=self.synFloodErrorOutputScrollCanvas.bbox("all")))
+        
+        elif chosenAttackType == "DNS Amplification" :
+            self.dnsAmpFrame = Frame(self.attacksScrollFrame, width=1280, height=200, background="#612601", borderwidth=3, relief="raised")
+            self.dnsAmpFrame.pack()
+
+            self.dnsAmpLabel = Label(self.dnsAmpFrame, text=" DNS Amplification ", fg="#ffffff", bg="#2E1201", font="bahnschrift 12")
+            self.dnsAmpLabel.place(x=0, y=0)
+
+            self.dnsAmpTargetIpLabel = Label(self.dnsAmpFrame, text="Target IP Address                    :", fg="#ffffff", bg="#612601", font="bahnschrift 12")
+            self.dnsAmpTargetIpLabel.place(x = 10, y = 70)
+
+            self.dnsAmpTargetIpEntry = Entry(self.dnsAmpFrame, width = 20, font="bahnschrift 12", fg="#ffffff", bg="#252525")
+            self.dnsAmpTargetIpEntry.place(x = 300, y = 70)
+
+            self.dnsAmpPacketLabel = Label(self.dnsAmpFrame, text="DNS Packet Amount (Int)    :", fg="#ffffff", bg="#612601", font="bahnschrift 12")
+            self.dnsAmpPacketLabel.place(x = 10, y = 120)
+
+            self.dnsAmpPacketEntry = Entry(self.dnsAmpFrame, width = 20, font="bahnschrift 12", fg="#ffffff", bg="#252525")
+            self.dnsAmpPacketEntry.place(x = 300, y = 120)
+
+
+
+            self.dnsAmpTerminalLabel = Label(self.dnsAmpFrame, text="Terminal", fg="#ffffff", bg="#612601", font="bahnschrift 15")
+            self.dnsAmpTerminalLabel.place(x = 660, y = 20)
+
+            self.dnsAmpTerminalFrame = Frame(self.dnsAmpFrame, width=300, height=120, background="#252525", highlightbackground="#ffffff", highlightthickness=2)
+            self.dnsAmpTerminalFrame.pack_propagate(False)
+            self.dnsAmpTerminalFrame.place(x = 555, y = 55)
+
+            self.dnsAmpTerminalScrollCanvas = Canvas(self.dnsAmpTerminalFrame, background="#252525", highlightbackground="#ffffff", yscrollincrement=8)
+            self.dnsAmpTerminalScrollCanvas.pack(side = LEFT, fill = BOTH, expand = 1)
+        
+            self.dnsAmpTerminalVerticalScrollbar = Scrollbar(self.dnsAmpTerminalScrollCanvas, orient=VERTICAL, command = self.dnsAmpTerminalScrollCanvas.yview)
+            self.dnsAmpTerminalVerticalScrollbar.pack(side = RIGHT, fill = Y)
+
+            self.dnsAmpTerminalHorizontalScrollbar = Scrollbar(self.dnsAmpTerminalScrollCanvas, orient=HORIZONTAL, command = self.dnsAmpTerminalScrollCanvas.xview)
+            self.dnsAmpTerminalHorizontalScrollbar.pack(side = BOTTOM, fill = X)
+
+            self.dnsAmpTerminalScrollCanvas.configure(yscrollcommand=self.dnsAmpTerminalVerticalScrollbar.set)
+            self.dnsAmpTerminalScrollCanvas.bind("<Configure>", lambda e : self.dnsAmpTerminalScrollCanvas.configure(scrollregion=self.dnsAmpTerminalScrollCanvas.bbox("all")))
+            self.dnsAmpTerminalScrollCanvas.bind_all("<MouseWheel>", lambda e : self.dnsAmpTerminalScrollCanvas.yview_scroll(-1, "units"))
+
+            self.dnsAmpTerminalScrollCanvas.configure(xscrollcommand=self.dnsAmpTerminalHorizontalScrollbar.set)
+            self.dnsAmpTerminalScrollCanvas.bind("<Configure>", lambda e : self.dnsAmpTerminalScrollCanvas.configure(scrollregion=self.dnsAmpTerminalScrollCanvas.bbox("all")))
+            self.dnsAmpTerminalScrollCanvas.bind_all("<MouseWheel>", lambda e : self.dnsAmpTerminalScrollCanvas.xview_scroll(-1, "units"))
+
+            self.dnsAmpTerminalContentFrame = Frame(self.dnsAmpTerminalScrollCanvas, background="#252525", highlightbackground="#ffffff")
+            self.dnsAmpTerminalScrollCanvas.create_window((0,0), window = self.dnsAmpTerminalContentFrame, anchor = NW)
+            self.dnsAmpTerminalContentFrame.bind("<Configure>", lambda e : self.dnsAmpTerminalScrollCanvas.configure(scrollregion=self.dnsAmpTerminalScrollCanvas.bbox("all")))
+
+
+
+            self.dnsAmpErrorLabel = Label(self.dnsAmpFrame, text="Errors", fg="#ffffff", bg="#612601", font="bahnschrift 15")
+            self.dnsAmpErrorLabel.place(x = 1035, y = 20)
+
+            self.dnsAmpErrorOutputFrame = Frame(self.dnsAmpFrame, width=300, height=120, background="#252525", highlightbackground="#ffffff", highlightthickness=2)
+            self.dnsAmpErrorOutputFrame.pack_propagate(False)
+            self.dnsAmpErrorOutputFrame.place(x = 915, y = 55)
+
+            self.dnsAmpErrorOutputScrollCanvas = Canvas(self.dnsAmpErrorOutputFrame, background="#252525", highlightbackground="#ffffff", yscrollincrement=8)
+            self.dnsAmpErrorOutputScrollCanvas.pack(side = LEFT, fill = BOTH, expand=1)
+        
+            self.dnsAmpErrorOutputVerticalScrollbar = Scrollbar(self.dnsAmpErrorOutputScrollCanvas, orient=VERTICAL, command = self.dnsAmpErrorOutputScrollCanvas.yview)
+            self.dnsAmpErrorOutputVerticalScrollbar.pack(side = RIGHT, fill = Y)
+
+            self.dnsAmpErrorOutputHorizontalScrollbar = Scrollbar(self.dnsAmpErrorOutputScrollCanvas, orient=HORIZONTAL, command = self.dnsAmpErrorOutputScrollCanvas.xview)
+            self.dnsAmpErrorOutputHorizontalScrollbar.pack(side = BOTTOM, fill = X)
+
+            self.dnsAmpErrorOutputScrollCanvas.configure(yscrollcommand=self.dnsAmpErrorOutputVerticalScrollbar.set)
+            self.dnsAmpErrorOutputScrollCanvas.bind("<Configure>", lambda e : self.dnsAmpErrorOutputScrollCanvas.configure(scrollregion=self.dnsAmpErrorOutputScrollCanvas.bbox("all")))
+            self.dnsAmpErrorOutputFrame.bind_all("<MouseWheel>", lambda e : self.dnsAmpErrorOutputScrollCanvas.yview_scroll(-1, "units"))
+
+            self.dnsAmpErrorOutputScrollCanvas.configure(xscrollcommand=self.dnsAmpErrorOutputHorizontalScrollbar.set)
+            self.dnsAmpErrorOutputScrollCanvas.bind("<Configure>", lambda e : self.dnsAmpErrorOutputScrollCanvas.configure(scrollregion=self.dnsAmpErrorOutputScrollCanvas.bbox("all")))
+            self.dnsAmpErrorOutputFrame.bind_all("<MouseWheel>", lambda e : self.dnsAmpErrorOutputScrollCanvas.xview_scroll(-1, "units"))
+
+            self.dnsAmpErrorOutputContentFrame = Frame(self.dnsAmpErrorOutputScrollCanvas, background="#252525", highlightbackground="#ffffff")
+            self.dnsAmpErrorOutputScrollCanvas.create_window((0,0), window = self.dnsAmpErrorOutputContentFrame, anchor = NW)
+            self.dnsAmpErrorOutputContentFrame.bind("<Configure>", lambda e : self.dnsAmpErrorOutputScrollCanvas.configure(scrollregion=self.dnsAmpErrorOutputScrollCanvas.bbox("all")))
         self.chosenAttackTypes.append(chosenAttackType)
 
     def executeChainAttack(self) :
+        for attackTypes in self.chosenAttackTypes :
+            if attackTypes == "CAM Table Overflow" :
+                self.camThreads = threading.Thread(target = lambda : startCam(self.camTargetIpEntry.get(), self.camPacketNumberEntry.get(), self.camTerminalContentFrame, self.camErrorOutputContentFrame))
+                self.camThreads.start()
+            elif attackTypes == "ARP Poisoning Attack" :
+                self.arpPoisonThreads = threading.Thread(target = lambda : startArp(self.arpPoisonTargetIpEntry.get(), self.arpPoisonDefaultGateEntry.get(), self.arpPoisonTerminalContentFrame, self.arpPoisonErrorOutputContentFrame))
+                self.arpPoisonThreads.start()
+            elif attackTypes == "Syn Flooding" :
+                self.synFloodThreads = threading.Thread(target = lambda : startSynFlood(self.synFloodTargetIpEntry.get(), self.synFloodPortEntry.get(), self.synFloodTerminalContentFrame, self.synFloodErrorOutputContentFrame))
+                self.synFloodThreads.start()
+            elif attackTypes == "DNS Amplification" :
+                self.dnsAmpThreads = threading.Thread(target = lambda : startDnsAmplification(self.dnsAmpTargetIpEntry.get(), self.dnsAmpPacketEntry.get(), self.dnsAmpTerminalContentFrame, self.dnsAmpErrorOutputContentFrame))
+                self.dnsAmpThreads.start()
         print(self.chosenAttackTypes)
 
-            
+    def terminateChainAttack(self) :
+        for attackTypes in self.chosenAttackTypes :
+            if attackTypes == "CAM Table Overflow" :
+                pass
+                #self.camThreads
+            elif attackTypes == "ARP Poisoning Attack" :
+                arpPoisonThreads = threading.Thread(target = lambda : startArp(self.arpPoisonTargetIpEntry.get(), self.arpPoisonDefaultGateEntry.get(), self.arpPoisonTerminalContentFrame, self.arpPoisonErrorOutputContentFrame))
+                arpPoisonThreads.start()    
