@@ -1,5 +1,8 @@
 from tkinter import *
 from tkinter.ttk import Separator
+from PIL import ImageTk, Image
+from GeneralTools.funcGeneralTools import *
+from ProgramSetup.Footer import *
 
 class PageHome:
     def __init__ (self, frame):
@@ -30,7 +33,7 @@ class PageHome:
         self.projDetFrame = Frame(self.homeScrollFrame, width=1280, height=385,
                                          background="#383838", borderwidth=2, relief="groove")
         
-        self.projDetTitleLabel = Label(self.projDetFrame, text="PROJECT DETAILS", fg="#CFCFCF", 
+        self.projDetTitleLabel = Label(self.projDetFrame, text="FINAL YEAR PROJECT DETAILS", fg="#CFCFCF", 
                                         bg="#383838", font="bahnschrift 15 bold")
         self.projDetTitleLabel.place(x=10, y=10)
 
@@ -134,19 +137,121 @@ class PageHome:
         self.projDetStudentEmailTextLabel.place(x=300, y=345)
 
         # How-To-Use Frame
-        self.howToUseFrame = Frame(self.homeScrollFrame, width=1280, height=600,
+        self.howToUseFrame = Frame(self.homeScrollFrame, width=1280, height=785,
                                          background="#444444", borderwidth=2, relief="groove")
         
-        self.howToUseTitleLabel = Label(self.howToUseFrame, text="HOW TO USE", fg="#CFCFCF", 
+        self.howToUseTitleLabel = Label(self.howToUseFrame, text="HOW TO USE THIS PROGRAM", fg="#CFCFCF", 
                                         bg="#444444", font="bahnschrift 15 bold")
         self.howToUseTitleLabel.place(x=10, y=10)
 
         self.howToUseSeparator = Separator(self.howToUseFrame, orient="horizontal")
         self.howToUseSeparator.place(y=45, relwidth=1)
-    
+
+        self.howToUseOneImage = PhotoImage(file = "img/howToUse_1.png")
+        self.howToUseOneImageLabel = Label(self.howToUseFrame, image=self.howToUseOneImage) 
+        self.howToUseOneImageLabel.place(x=50, y=60)
+
+        self.howToUseOneImageLabel = Label(self.howToUseFrame, text="Click this box to access the Navigation Menu!", fg="#CFCFCF", 
+                                            bg="#444444", font="bahnschrift 18")
+        self.howToUseOneImageLabel.place(x=650, y=220)
+
+        self.howToUseTwoImage = PhotoImage(file = "img/howToUse_2.png")
+        self.howToUseTwoImageLabel = Label(self.howToUseFrame, image=self.howToUseTwoImage) 
+        self.howToUseTwoImageLabel.place(x=655, y=425)
+
+        self.howToUseOneImageLabel = Label(self.howToUseFrame, text="Click these to access the various Attack Pages!", fg="#CFCFCF", 
+                                            bg="#444444", font="bahnschrift 18")
+        self.howToUseOneImageLabel.place(x=40, y=575)
+
+        # General Tools Frame
+        self.generalToolsFrame = Frame(self.homeScrollFrame, width=1280, height=725,
+                                        background="#535353", borderwidth=2, relief="groove")
+        
+        self.generalToolsTitleLabel = Label(self.generalToolsFrame, text="GENERAL TOOLS", fg="#CFCFCF", 
+                                        bg="#535353", font="bahnschrift 15 bold")
+        self.generalToolsTitleLabel.place(x=10, y=10)
+
+        self.generalToolsSeparator = Separator(self.generalToolsFrame, orient="horizontal")
+        self.generalToolsSeparator.place(y=45, relwidth=1)
+
+        # Get IP Address
+        self.generalToolsIpAddrTitleLabel = Label(self.generalToolsFrame, text="Get your IP Address!", fg="#CFCFCF", 
+                                            bg="#535353", font="bahnschrift 15 bold")
+        self.generalToolsIpAddrTitleLabel.place(x=50, y=65)
+
+        self.generalToolsIpAddrEntry = Entry(self.generalToolsFrame, width = 10, font="bahnschrift 15", fg="#ffffff", bg="#252525")
+        self.generalToolsIpAddrEntry.insert(0, "Interface")
+        self.generalToolsIpAddrEntry.bind("<FocusIn>", self.on_click_ipaddr)
+        self.generalToolsIpAddrEntry.bind("<FocusOut>", self.on_leave_ipaddr)
+        self.generalToolsIpAddrEntry.place(x=500, y=65)
+
+        self.generalToolsIpAddrButton = Button(self.generalToolsFrame, text="Get!", width=5, 
+                                               command=lambda : self.getIpAddr(self.generalToolsIpAddrEntry.get()))
+        self.generalToolsIpAddrButton.place(x=650, y=65)
+
+        # Port Scan
+        self.generalToolsPortScanTitleLabel = Label(self.generalToolsFrame, text="Port Scan", fg="#CFCFCF", 
+                                            bg="#535353", font="bahnschrift 15 bold")
+        self.generalToolsPortScanTitleLabel.place(x=50, y=120)
+
+        self.generalToolsPortScanEntry = Entry(self.generalToolsFrame, width = 10, font="bahnschrift 15", fg="#ffffff", bg="#252525")
+        self.generalToolsPortScanEntry.insert(0, "Target IP")
+        self.generalToolsPortScanEntry.bind("<FocusIn>", self.on_click_portScan)
+        self.generalToolsPortScanEntry.bind("<FocusOut>", self.on_leave_portScan)
+        self.generalToolsPortScanEntry.place(x=500, y=120)
+
+        # Create a Frame + Scrollbar for Port Scan Results
+        self.terminalFrame = Frame(self.generalToolsFrame, width=665, height=525, background="#252525", highlightbackground="#ffffff", highlightthickness=2)
+        self.terminalFrame.pack_propagate(False)
+        self.terminalFrame.place(x = 50, y = 175)
+
+        self.terminalScrollCanvas = Canvas(self.terminalFrame, background="#252525", highlightbackground="#ffffff", yscrollincrement=8)
+        self.terminalScrollCanvas.pack(side = LEFT, fill = BOTH, expand = 1)
+       
+        self.terminalScrollbar = Scrollbar(self.terminalFrame, orient=VERTICAL, command = self.terminalScrollCanvas.yview)
+        self.terminalScrollbar.pack(side = RIGHT, fill = Y)
+
+        self.terminalScrollCanvas.configure(yscrollcommand=self.terminalScrollbar.set)
+        self.terminalScrollCanvas.bind("<Configure>", lambda e : self.terminalScrollCanvas.configure(scrollregion=self.terminalScrollCanvas.bbox("all")))
+        self.terminalScrollCanvas.bind_all("<MouseWheel>", lambda e : self.terminalScrollCanvas.yview_scroll(-1, "units"))
+
+        self.terminalContentFrame = Frame(self.terminalScrollCanvas, background="#252525", highlightbackground="#ffffff")
+        self.terminalScrollCanvas.create_window((0,0), window = self.terminalContentFrame, anchor = NW)
+        self.terminalContentFrame.bind("<Configure>", lambda e : self.terminalScrollCanvas.configure(scrollregion=self.terminalScrollCanvas.bbox("all")))
+
+        self.generalToolsPortScanButton = Button(self.generalToolsFrame, text="Scan!", width=5, 
+                                               command=lambda : self.executePortScan(self.generalToolsPortScanEntry.get(), self.terminalContentFrame))
+        self.generalToolsPortScanButton.place(x=650, y=120)
+
         self.homeTitleFrame.pack_propagate(0)
         self.homeTitleFrame.pack()
         self.projDetFrame.pack_propagate(0)
         self.projDetFrame.pack()
         self.howToUseFrame.pack_propagate(0)
         self.howToUseFrame.pack()
+        self.generalToolsFrame.pack_propagate(0)
+        self.generalToolsFrame.pack()
+
+    def on_click_ipaddr(self, *args) :
+        if(self.generalToolsIpAddrEntry.get() == "Interface") :
+            self.generalToolsIpAddrEntry.delete(0, "end")
+    
+    def on_leave_ipaddr(self, *args) :
+        if(self.generalToolsIpAddrEntry.get() == "") :
+            self.generalToolsIpAddrEntry.insert(0, "Interface")
+
+    def on_click_portScan(self, *args) :
+        if(self.generalToolsPortScanEntry.get() == "Target IP") :
+            self.generalToolsPortScanEntry.delete(0, "end")
+    
+    def on_leave_portScan(self, *args) :
+        if(self.generalToolsPortScanEntry.get() == "") :
+            self.generalToolsPortScanEntry.insert(0, "Target IP")
+
+    def getIpAddr(self, interface) :
+        self.ipAddress = getIpAddress(interface)
+        Footer.addIpAddr(self.ipAddress)
+
+    def executePortScan(self, targetIp, canvas) :
+        portScanner(targetIp, canvas)
+        

@@ -10,7 +10,7 @@ class ProgramWindow :
         self.root.title("1191102618 - Network Security Toolbox With Chain Attack Capabilities")
         
         try:
-            self.root.iconphoto(True, PhotoImage(file="/home/haqeem/Desktop/fypCode/NetworkSecurityToolboxWithChainAttackCapabilities/img/ToolboxLogo_White.png"))
+            self.root.iconphoto(True, PhotoImage(file="img/ToolboxLogo_White.png"))
         except:
             print("Error : ToolboxLogo_White.png not found!")
 

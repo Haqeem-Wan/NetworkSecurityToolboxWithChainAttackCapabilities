@@ -40,6 +40,8 @@ class PageTcpIpAttacks:
         self.attackFrame.pack_propagate(0)
         self.attackFrame.pack()
 
+        self.showFrameSynFlooding()
+
     def showFrameSynFlooding(self):
         self.deletePages()
         self.synFloodingFrame = Frame(self.attackFrame, width=1280, height=580, background="#295543")

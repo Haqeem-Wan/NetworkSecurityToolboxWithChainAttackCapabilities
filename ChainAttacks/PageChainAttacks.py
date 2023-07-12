@@ -143,7 +143,6 @@ class PageChainAttacks :
             self.attackTypeDropdown['values'] = (
                 "Denial of Service (DoS)",
                 "Evil Twin Attack",
-                "SeqNum. Predic. Attack",
                 "WPA / WPA2 Cracking"
             )
             self.attackTypeDropdown.current(0)
@@ -474,21 +473,63 @@ class PageChainAttacks :
         self.chosenAttackTypes.append(chosenAttackType)
 
     def executeChainAttack(self) :
+        self.chainAttackThreads = []
         for attackTypes in self.chosenAttackTypes :
             if attackTypes == "CAM Table Overflow" :
-                self.camThreads = threading.Thread(target = lambda : startCam(self.camTargetIpEntry.get(), self.camPacketNumberEntry.get(), self.camTerminalContentFrame, self.camErrorOutputContentFrame))
-                self.camThreads.start()
+                self.chainAttackThreads.append(threading.Thread(target = lambda : startCam(self.camTargetIpEntry.get(), self.camPacketNumberEntry.get(), self.camTerminalContentFrame, self.camErrorOutputContentFrame)))
+            elif attackTypes == "VLAN Hopping" :
+                pass
+            elif attackTypes == "DHCP Attack" :
+                pass
             elif attackTypes == "ARP Poisoning Attack" :
-                self.arpPoisonThreads = threading.Thread(target = lambda : startArp(self.arpPoisonTargetIpEntry.get(), self.arpPoisonDefaultGateEntry.get(), self.arpPoisonTerminalContentFrame, self.arpPoisonErrorOutputContentFrame))
-                self.arpPoisonThreads.start()
+                self.chainAttackThreads.append(threading.Thread(target = lambda : startArp(self.arpPoisonTargetIpEntry.get(), self.arpPoisonDefaultGateEntry.get(), self.arpPoisonTerminalContentFrame, self.arpPoisonErrorOutputContentFrame)))
+            elif attackTypes == "MAC Address Spoofing" :
+                pass
+            elif attackTypes == "STP Attack" :
+                pass
+            
             elif attackTypes == "Syn Flooding" :
-                self.synFloodThreads = threading.Thread(target = lambda : startSynFlood(self.synFloodTargetIpEntry.get(), self.synFloodPortEntry.get(), self.synFloodTerminalContentFrame, self.synFloodErrorOutputContentFrame))
-                self.synFloodThreads.start()
-            elif attackTypes == "DNS Amplification" :
-                self.dnsAmpThreads = threading.Thread(target = lambda : startDnsAmplification(self.dnsAmpTargetIpEntry.get(), self.dnsAmpPacketEntry.get(), self.dnsAmpTerminalContentFrame, self.dnsAmpErrorOutputContentFrame))
-                self.dnsAmpThreads.start()
-        print(self.chosenAttackTypes)
+                self.chainAttackThreads.append(threading.Thread(target = lambda : startSynFlood(self.synFloodTargetIpEntry.get(), self.synFloodPortEntry.get(), self.synFloodTerminalContentFrame, self.synFloodErrorOutputContentFrame)))
+            elif attackTypes == "ICMP Attack" :
+                pass
+            elif attackTypes == "SeqNum. Predic. Attack" :
+                pass
+            elif attackTypes == "TCP Session Hijacking" :
+                pass
+            elif attackTypes == "IP Spoofing" :
+                pass
+            elif attackTypes == "SSL Strip" :
+                pass
 
+            elif attackTypes == "DNS Amplification" :
+                self.chainAttackThreads.append(threading.Thread(target = lambda : startDnsAmplification(self.dnsAmpTargetIpEntry.get(), self.dnsAmpPacketEntry.get(), self.dnsAmpTerminalContentFrame, self.dnsAmpErrorOutputContentFrame)))
+            elif attackTypes == "DNS Tunneling" :
+                pass
+            elif attackTypes == "DNS Spoofing" :
+                pass
+            elif attackTypes == "DNS Hijacking" :
+                pass
+
+            elif attackTypes == "SQL Injection" :
+                pass
+            elif attackTypes == "Broken Authentication" :
+                pass
+            elif attackTypes == "Sensitive Data Exposure" :
+                pass
+            elif attackTypes == "Cross-Site Scripting (XSS)" :
+                pass
+
+            elif attackTypes == "Denial of Service (DoS)" :
+                pass
+            elif attackTypes == "Evil Twin Attack" :
+                pass
+            elif attackTypes == "WPA / WPA2 Cracking" :
+                pass
+        
+        for thread in self.chainAttackThreads :
+            thread.start()
+
+    # FINISH THIS
     def terminateChainAttack(self) :
         for attackTypes in self.chosenAttackTypes :
             if attackTypes == "CAM Table Overflow" :

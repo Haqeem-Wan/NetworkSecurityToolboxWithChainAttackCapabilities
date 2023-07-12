@@ -1,0 +1,23 @@
+import netifaces as ni
+import subprocess
+import re
+from tkinter import *
+
+def getIpAddress(interface) :
+    ipAddr = ni.ifaddresses(interface)[ni.AF_INET][0]['addr']
+    return ipAddr
+
+def portScanner(targetIp, frame) :
+    process = subprocess.Popen(["nmap", targetIp], stdin=subprocess.PIPE, 
+                               stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    
+    stdout, stderr = process.communicate()
+
+    output = stdout.decode()
+
+    portScanLabel = Label(frame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 12", justify = "left", wraplength=480)
+
+    for line in output.splitlines() :
+        portScanLabel["text"] += line + "\n"
+    
+    portScanLabel.pack(anchor=NW)

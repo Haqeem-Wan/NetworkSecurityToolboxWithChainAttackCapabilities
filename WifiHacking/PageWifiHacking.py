@@ -30,6 +30,8 @@ class PageWifiHacking:
         self.attackFrame.pack_propagate(0)
         self.attackFrame.pack()
 
+        self.showFrameDos()
+
     def showFrameDos(self):
         self.deletePages()
         self.dosFrame = Frame(self.attackFrame, width=1280, height=580, background="#454545")

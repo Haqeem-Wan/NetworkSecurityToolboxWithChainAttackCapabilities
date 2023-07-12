@@ -34,8 +34,7 @@ class PageDnsAttacks:
         self.attackFrame.pack_propagate(0)
         self.attackFrame.pack()
 
-        self.testLabel = Label(self.dnsAttacksFrame, text="DNS", fg="#ffffff", font="bahnschrift 15")
-        self.testLabel.pack()
+        self.showFrameDnsAmplification()
 
     def showFrameDnsAmplification(self):
         self.deletePages()

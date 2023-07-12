@@ -39,6 +39,8 @@ class PageLayer2Attacks:
         self.attackFrame.pack_propagate(0)
         self.attackFrame.pack()
 
+        self.showFrameCam()
+
     def showFrameCam(self):
         self.deletePages()
         self.camFrame = Frame(self.attackFrame, width=1280, height=580, background="#0078bd")

@@ -34,6 +34,8 @@ class PageHttpAttacks:
         self.attackFrame.pack_propagate(0)
         self.attackFrame.pack()
 
+        self.showFrameHttpSessionHijacking()
+
     def showFrameHttpSessionHijacking(self):
         self.deletePages()
         self.httpSessionHijackingFrame = Frame(self.attackFrame, width=1280, height=580, background="#454545")
