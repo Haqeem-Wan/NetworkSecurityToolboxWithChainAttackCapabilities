@@ -8,7 +8,7 @@ class FrameDnsSpoofing:
 
 
 
-        self.targetInterfaceLabel = Label(self.attackFrame, text="Target Interface            :", fg="#ffffff", bg="#620387", font="bahnschrift 15")
+        self.targetInterfaceLabel = Label(self.attackFrame, text="Target Interface               :", fg="#ffffff", bg="#620387", font="bahnschrift 15")
         self.targetInterfaceLabel.place(x = 85, y = 20)
 
         self.targetInterfaceEntry = Entry(self.attackFrame, width = 40, font="bahnschrift 15", fg="#ffffff", bg="#252525")
@@ -20,7 +20,7 @@ class FrameDnsSpoofing:
         self.targetIpEntry = Entry(self.attackFrame, width = 40, font="bahnschrift 15", fg="#ffffff", bg="#252525")
         self.targetIpEntry.place(x = 435, y = 70)
 
-        self.targetDomainsLabel = Label(self.attackFrame, text="Target Domains              :", fg="#ffffff", bg="#620387", font="bahnschrift 15")
+        self.targetDomainsLabel = Label(self.attackFrame, text="Target Domains               :", fg="#ffffff", bg="#620387", font="bahnschrift 15")
         self.targetDomainsLabel.place(x = 85, y = 120)
 
         self.targetDomainsEntry = Entry(self.attackFrame, width = 40, font="bahnschrift 15", fg="#ffffff", bg="#252525")

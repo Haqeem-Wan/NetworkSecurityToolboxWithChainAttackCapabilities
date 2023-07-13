@@ -1,7 +1,6 @@
 import warnings
 from cryptography.utils import CryptographyDeprecationWarning
 warnings.filterwarnings("ignore", category=CryptographyDeprecationWarning)
-
 import scapy.all as scapy
 import time
 import threading
@@ -32,6 +31,7 @@ def startArp(targetIp, defaultGatewayIp, terminalContentFrame, errorOutputConten
 
 def stopArp(targetIp, defaultGatewayIp) :
     global arpThreads, arpIsrunning
+
     try:
         terminalLabel["text"] += "$ Stopping Arp Poisoning Attack...\n"
         terminalLabel["text"] += "$ Restoring default ARP values...\n"
@@ -41,10 +41,8 @@ def stopArp(targetIp, defaultGatewayIp) :
         restore(defaultGatewayIp, targetIp)
         restore(targetIp, defaultGatewayIp)
         terminalLabel["text"] += "$ ARP Poisoning Attack successfully stopped!\n"
-    except (AttributeError, RuntimeError):
-        errorOutputLabel["text"] += traceback.format_exc()
     except Exception as e:
-        errorOutputLabel["text"] += "ERROR STOP : \n" + e + "\n"
+        errorOutputLabel["text"] += "ERROR STOP : \n" + str(e) + "\n"
 
 def runArpAttack(targetIp, defaultGatewayIp):
     global arpThreads, arpIsrunning

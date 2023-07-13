@@ -1,5 +1,5 @@
 from tkinter import *
-from HttpAttacks.PageHttpManInTheMIddle.FrameHttpSessionHijacking import *
+from HttpAttacks.PageHttpMitm.FrameHttpMitm import *
 
 class PageHttpAttacks:
     def __init__ (self, frame):
@@ -10,8 +10,8 @@ class PageHttpAttacks:
         self.httpSessionHijackingButton = Button(self.navHttpAttacksFrame, height=100, width = 130, font="BahnschriftLight 12", bg="#bf0d00", fg="#ffffff", 
                                       activebackground="#bf0d00", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3, relief="raised")
 
-        self.navHttpAttacksOptions = ["HTTP Session Hijacking"]
-        self.navHttpAttacksLinks = [self.showFrameHttpSessionHijacking]
+        self.navHttpAttacksOptions = ["HTTP Man-In-The-Middle"]
+        self.navHttpAttacksLinks = [self.showFrameHttpMitm]
         self.navHttpAttackButtons = [self.httpSessionHijackingButton]
         
         for i in range(len(self.navHttpAttacksOptions)):
@@ -24,15 +24,15 @@ class PageHttpAttacks:
         self.attackFrame.pack_propagate(0)
         self.attackFrame.pack()
 
-        self.showFrameHttpSessionHijacking()
+        self.showFrameHttpMitm()
 
-    def showFrameHttpSessionHijacking(self):
+    def showFrameHttpMitm(self):
         self.deletePages()
-        self.httpSessionHijackingFrame = Frame(self.attackFrame, width=1280, height=580, background="#800800")
-        self.httpSessionHijackingContents = FrameHttpSessionHijacking(self.attackFrame)
-        self.httpSessionHijackingFrame.pack()
+        self.httpMitmFrame = Frame(self.attackFrame, width=1280, height=580, background="#800800")
+        self.httpMitmContents = FrameHttpMitm(self.attackFrame)
+        self.httpMitmFrame.pack()
 
-        self.configureButtons("HTTP Session Hijacking")
+        self.configureButtons("HTTP Man-In-The-Middle")
 
     def configureButtons(self, buttonPressed) :
         for i in range(len(self.navHttpAttacksOptions)):

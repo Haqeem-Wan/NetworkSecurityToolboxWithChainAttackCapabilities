@@ -2,27 +2,15 @@ from tkinter import *
 from tkinter.ttk import Separator
 from HttpAttacks.PageHttpMitm.funcFrameHttpMitm import *
 
-class FrameHttpSessionHijacking:
+class FrameHttpMitm:
     def __init__ (self, frame):
         self.attackFrame = frame
 
-        self.targetIpLabel = Label(self.attackFrame, text="Target IP Address         :", fg="#ffffff", bg="#800800", font="bahnschrift 15")
-        self.targetIpLabel.place(x = 85, y = 20)
-
-        self.targetIpEntry = Entry(self.attackFrame, width = 40, font="bahnschrift 15", fg="#ffffff", bg="#252525")
-        self.targetIpEntry.place(x = 435, y = 20)
-
-        self.targetDefaultGatewayLabel = Label(self.attackFrame, text="Default Gateway           :", fg="#ffffff", bg="#800800", font="bahnschrift 15")
-        self.targetDefaultGatewayLabel.place(x = 85, y = 70)
-
-        self.targetDefaultGatewayEntry = Entry(self.attackFrame, width = 40, font="bahnschrift 15", fg="#ffffff", bg="#252525")
-        self.targetDefaultGatewayEntry.place(x = 435, y = 70)
-
         self.interfaceLabel = Label(self.attackFrame, text="Interface                       :", fg="#ffffff", bg="#800800", font="bahnschrift 15")
-        self.interfaceLabel.place(x = 85, y = 120)
+        self.interfaceLabel.place(x = 85, y = 70)
 
         self.interfaceEntry = Entry(self.attackFrame, width = 40, font="bahnschrift 15", fg="#ffffff", bg="#252525")
-        self.interfaceEntry.place(x = 435, y = 120)
+        self.interfaceEntry.place(x = 435, y = 70)
 
 
 
@@ -100,11 +88,11 @@ class FrameHttpSessionHijacking:
 
         self.startButton = Button(self.attackFrame, height=3, width=5, font="bahnschrift 15", text="Start", fg="#ffffff", bg="#252525", 
                                   command=lambda : self.switch_button_mode("Start"))
-        self.startButton.place(x = 1010, y = 18)
+        self.startButton.place(x = 1010, y = 43)
 
         self.stopButton = Button(self.attackFrame, height=3, width=5, font="bahnschrift 15", text="Stop", fg="#ffffff", bg="#252525", 
                                  command=lambda : self.switch_button_mode("Stop"))
-        self.stopButton.place(x = 1102, y = 18)
+        self.stopButton.place(x = 1102, y = 43)
 
         self.stopButton.config(relief = "sunken")
         self.stopButton.config(state = "disabled")
@@ -117,8 +105,7 @@ class FrameHttpSessionHijacking:
             self.stopButton.config(relief = "raised")
             self.stopButton.config(state = "normal")
 
-            startHttpMitm(self.targetIpEntry.get(), self.targetDefaultGatewayEntry.get(), self.interfaceEntry.get(),
-                                      self.terminalContentFrame, self.wiresharkContentFrame, self.errorOutputContentFrame)
+            startHttpMitm(self.interfaceEntry.get(), self.terminalContentFrame, self.wiresharkContentFrame, self.errorOutputContentFrame)
 
         elif(whichButton == "Stop") :
             self.startButton.config(relief = "raised")
@@ -126,4 +113,4 @@ class FrameHttpSessionHijacking:
             self.stopButton.config(relief = "sunken")
             self.stopButton.config(state = "disabled")
 
-            stopHttpMitm(self.targetIpEntry.get(), self.targetDefaultGatewayEntry.get())
+            stopHttpMitm()
