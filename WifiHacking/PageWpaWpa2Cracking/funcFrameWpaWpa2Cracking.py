@@ -5,17 +5,15 @@ import re
 
 from tkinter import *
 
-def startWpaWpa2Cracking(interface, targetBssid, targetChannel, terminalContentFrame, wiresharkContentFrame, errorOutputContentFrame, colorConfig = "#252525") :
-    global wpaWpa2CrackingIsRunning, wpaWpa2CrackingThreads, terminalLabel, wiresharkLabel, errorOutputLabel
+def startWpaWpa2Cracking(interface, targetBssid, targetChannel, terminalContentFrame, errorOutputContentFrame, colorConfig = "#252525") :
+    global wpaWpa2CrackingIsRunning, wpaWpa2CrackingThreads, terminalLabel, errorOutputLabel
 
     wpaWpa2CrackingIsRunning = False
     wpaWpa2CrackingThreads = threading.Thread(target = lambda : wpaWpa2CrackingHub(interface, targetBssid, targetChannel))
 
     terminalLabel = Label(terminalContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=510)
-    wiresharkLabel = Label(wiresharkContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=510)
     errorOutputLabel = Label(errorOutputContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=510)
     terminalLabel.configure(bg = colorConfig) 
-    wiresharkLabel.configure(bg = colorConfig)
     errorOutputLabel.configure(bg = colorConfig)
 
     terminalLabel["text"] += "$ Running WPA / WPA2 Cracking...\n\n"

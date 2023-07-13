@@ -6,17 +6,15 @@ import signal
 
 from tkinter import *
 
-def startHttpMitm(interface, terminalContentFrame, wiresharkContentFrame, errorOutputContentFrame, colorConfig = "#252525") :
-    global httpMitmIsRunning, httpMitmThreads, terminalLabel, wiresharkLabel, errorOutputLabel
+def startHttpMitm(interface, terminalContentFrame, errorOutputContentFrame, colorConfig = "#252525") :
+    global httpMitmIsRunning, httpMitmThreads, terminalLabel, errorOutputLabel
 
     httpMitmIsRunning = False
     httpMitmThreads = threading.Thread(target = lambda : executeHttpMitm(interface))
 
     terminalLabel = Label(terminalContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
-    wiresharkLabel = Label(wiresharkContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
     errorOutputLabel = Label(errorOutputContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
     terminalLabel.configure(bg = colorConfig) 
-    wiresharkLabel.configure(bg = colorConfig)
     errorOutputLabel.configure(bg = colorConfig)
 
     terminalLabel["text"] += "$ Running HTTP Man-In-The-Middle Attack...\n\n"

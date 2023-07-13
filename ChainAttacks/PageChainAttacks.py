@@ -65,7 +65,7 @@ class PageChainAttacks :
         
         self.attackTypeDropdown['values'] = (
             "CAM Table Overflow",
-            "DHCP Attack",
+            "DHCP Starvation Attack",
             "ARP Poisoning Attack",
             "MAC Address Spoofing"
             )
@@ -114,7 +114,7 @@ class PageChainAttacks :
         if self.chosenDirectory == "Layer 2 Attacks" :
             self.attackTypeDropdown['values'] = (
                 "CAM Table Overflow",
-                "DHCP Attack",
+                "DHCP Starvation Attack",
                 "ARP Poisoning Attack",
                 "MAC Address Spoofing",
             )
@@ -222,18 +222,18 @@ class PageChainAttacks :
             camErrorOutputScrollCanvas.create_window((0,0), window = self.camErrorOutputContentFrame, anchor = NW)
             self.camErrorOutputContentFrame.bind("<Configure>", lambda e : camErrorOutputScrollCanvas.configure(scrollregion=camErrorOutputScrollCanvas.bbox("all")))
             
-        elif chosenAttackType == "DHCP Attack" :
+        elif chosenAttackType == "DHCP Starvation Attack" :
             dhcpAttackFrame = Frame(self.attacksScrollFrame, width=1280, height=200, background="#612601", borderwidth=3, relief="raised")
             dhcpAttackFrame.pack()
 
-            dhcpAttackLabel = Label(dhcpAttackFrame, text=" DHCP Attack ", fg="#ffffff", bg="#2E1201", font="bahnschrift 12")
+            dhcpAttackLabel = Label(dhcpAttackFrame, text=" DHCP Starvation Attack ", fg="#ffffff", bg="#2E1201", font="bahnschrift 12")
             dhcpAttackLabel.place(x=0, y=0)
 
-            dhcpAttackTargetMacLabel = Label(dhcpAttackFrame, text="Target MAC Address            :", fg="#ffffff", bg="#612601", font="bahnschrift 12")
-            dhcpAttackTargetMacLabel.place(x = 10, y = 100)
+            dhcpAttackInterfaceLabel = Label(dhcpAttackFrame, text="Interface               :", fg="#ffffff", bg="#612601", font="bahnschrift 12")
+            dhcpAttackInterfaceLabel.place(x = 10, y = 100)
 
-            self.dhcpAttackTargetMacEntry = Entry(dhcpAttackFrame, width = 20, font="bahnschrift 12", fg="#ffffff", bg="#252525")
-            self.dhcpAttackTargetMacEntry.place(x = 300, y = 100)
+            self.dhcpAttackInterfaceEntry = Entry(dhcpAttackFrame, width = 20, font="bahnschrift 12", fg="#ffffff", bg="#252525")
+            self.dhcpAttackInterfaceEntry.place(x = 300, y = 100)
 
 
 
@@ -457,11 +457,11 @@ class PageChainAttacks :
             self.synFloodTargetIpEntry = Entry(synFloodFrame, width = 20, font="bahnschrift 12", fg="#ffffff", bg="#252525")
             self.synFloodTargetIpEntry.place(x = 300, y = 70)
 
-            synFloodDefaultGateLabel = Label(synFloodFrame, text="Target Port                        :", fg="#ffffff", bg="#612601", font="bahnschrift 12")
-            synFloodDefaultGateLabel.place(x = 10, y = 120)
+            synFloodPortLabel = Label(synFloodFrame, text="Target Port                        :", fg="#ffffff", bg="#612601", font="bahnschrift 12")
+            synFloodPortLabel.place(x = 10, y = 120)
 
-            self.synFloodDefaultGateEntry = Entry(synFloodFrame, width = 20, font="bahnschrift 12", fg="#ffffff", bg="#252525")
-            self.synFloodDefaultGateEntry.place(x = 300, y = 120)
+            self.synFloodPortEntry = Entry(synFloodFrame, width = 20, font="bahnschrift 12", fg="#ffffff", bg="#252525")
+            self.synFloodPortEntry.place(x = 300, y = 120)
 
 
 
@@ -926,43 +926,76 @@ class PageChainAttacks :
         self.chainAttackThreads = []
         for attackTypes in self.chosenAttackTypes :
             if attackTypes == "CAM Table Overflow" :
-                self.chainAttackThreads.append(threading.Thread(target = lambda : startCam(self.camTargetIpEntry.get(), self.camPacketNumberEntry.get(), self.camTerminalContentFrame, self.camErrorOutputContentFrame)))
-            
-            # FIX DHCP
-            elif attackTypes == "DHCP Attack" :
-                #self.chainAttackThreads.append(threading.Thread(target = lambda : startDhcp()))
-                pass
-            
+                self.camThreads = threading.Thread(target = lambda : startCam(self.camTargetIpEntry.get(), self.camPacketNumberEntry.get(), self.camTerminalContentFrame, self.camErrorOutputContentFrame))
+                self.chainAttackThreads.append(self.camThreads)
+            elif attackTypes == "DHCP Starvation Attack" :
+                self.dhcpThreads = threading.Thread(target = lambda : startDhcp(self.dhcpAttackInterfaceEntry.get(), self.dhcpAttackTerminalContentFrame, self.dhcpAttackErrorOutputContentFrame))
+                self.chainAttackThreads.append(self.dhcpThreads)
             elif attackTypes == "ARP Poisoning Attack" :
-                self.chainAttackThreads.append(threading.Thread(target = lambda : startArp(self.arpPoisonTargetIpEntry.get(), self.arpPoisonDefaultGateEntry.get(), self.arpPoisonTerminalContentFrame, self.arpPoisonErrorOutputContentFrame)))
+                self.arpPoisonThreads = threading.Thread(target = lambda : startArp(self.arpPoisonTargetIpEntry.get(), self.arpPoisonDefaultGateEntry.get(), self.arpPoisonTerminalContentFrame, self.arpPoisonErrorOutputContentFrame))
+                self.chainAttackThreads.append(self.arpPoisonThreads)
             elif attackTypes == "MAC Address Spoofing" :
-                pass
+                self.macAddressSpoofThreads = threading.Thread(target = lambda : startMac(self.macAddressSpoofTerminalContentFrame, self.macAddressSpoofErrorOutputContentFrame))
+                self.chainAttackThreads.append(self.macAddressSpoofThreads)
 
             elif attackTypes == "Syn Flooding" :
-                pass
+                self.synFloodThreads = threading.Thread(target = lambda : startSynFlood(self.synFloodTargetIpEntry.get(), self.synFloodPortEntry.get(), self.synFloodTerminalContentFrame, self.synFloodErrorOutputContentFrame))
+                self.chainAttackThreads.append(self.synFloodThreads)
             elif attackTypes == "ICMP Attack" :
-                pass
+                self.icmpThreads = threading.Thread(target = lambda : startIcmpAttack(self.icmpAttackTargetIpEntry.get(), self.icmpAttackTerminalContentFrame, self.icmpAttackErrorOutputContentFrame))
+                self.chainAttackThreads.append(self.icmpThreads)
 
             elif attackTypes == "DNS Amplification" :
-                self.chainAttackThreads.append(threading.Thread(target = lambda : startDnsAmplification(self.dnsAmpTargetIpEntry.get(), self.dnsAmpPacketEntry.get(), self.dnsAmpTerminalContentFrame, self.dnsAmpErrorOutputContentFrame)))
+                self.dnsAmpThreads = threading.Thread(target = lambda : startDnsAmplification(self.dnsAmpTargetIpEntry.get(), self.dnsAmpPacketEntry.get(), self.dnsAmpTerminalContentFrame, self.dnsAmpErrorOutputContentFrame))
+                self.chainAttackThreads.append(self.dnsAmpThreads)
             elif attackTypes == "DNS Spoofing" :
-                pass
+                self.dnsSpoofThreads = threading.Thread(target = lambda : startDnsSpoofing(self.dnsSpoofInterfaceEntry, self.dnsSpoofTargetIpEntry.get(), self.dnsSpoofTargetDomainsEntry, self.dnsSpoofTerminalContentFrame, self.dnsSpoofErrorOutputContentFrame))
+                self.chainAttackThreads.append(self.dnsSpoofThreads)
 
             elif attackTypes == "HTTP-Man-In-The-Middle" :
-                pass
+                self.httpMitmThreads = threading.Thread(target = lambda : startHttpMitm(self.httpMitmInterfaceEntry.get(), self.httpMitmTerminalContentFrame, self.httpMitmErrorOutputContentFrame))
+                self.chainAttackThreads.append(self.httpMitmThreads)
 
             elif attackTypes == "WPA/WPA2-Cracking" :
-                pass
+                self.wpaWpa2CrackThreads = threading.Thread(target = lambda : startWpaWpa2Cracking(self.wpaWpa2CrackInterfaceEntry.get(), self.wpaWpa2CrackTargetBssidEntry.get(), self.wpaWpa2CrackTargetChannelEntry.get(), self.wpaWpa2CrackTerminalContentFrame, self.wpaWpa2CrackErrorOutputContentFrame))
+                self.chainAttackThreads.append(self.wpaWpa2CrackThreads)
         
         for thread in self.chainAttackThreads :
             thread.start()
-
-    # FINISH THIS
+    
     def terminateChainAttack(self) :
         for attackTypes in self.chosenAttackTypes :
             if attackTypes == "CAM Table Overflow" :
-                pass
-                #self.camThreads
+                self.camThreads.join(0)
+                self.camThreads = None
+            elif attackTypes == "DHCP Starvation Attack" :
+                self.dhcpThreads.join(0)
+                self.dhcpThreads = None
             elif attackTypes == "ARP Poisoning Attack" :
-                arpPoisonThreads = threading.Thread(target = lambda : startArp(self.arpPoisonTargetIpEntry.get(), self.arpPoisonDefaultGateEntry.get(), self.arpPoisonTerminalContentFrame, self.arpPoisonErrorOutputContentFrame))
-                arpPoisonThreads.start()    
+                self.arpPoisonThreads.join(0)
+                self.arpPoisonThreads = None
+            elif attackTypes == "MAC Address Spoofing" :
+                self.macAddressSpoofThreads.join(0)
+                self.macAddressSpoofThreads = None
+
+            elif attackTypes == "Syn Flooding" :
+                self.synFloodThreads.join(0)
+                self.synFloodThreads = None
+            elif attackTypes == "ICMP Attack" :
+                self.icmpThreads.join(0)
+                self.icmpThreads = None
+
+            elif attackTypes == "DNS Amplification" :
+                self.dnsAmpThreads.join(0)
+                self.dnsAmpThreads = None
+            elif attackTypes == "DNS Spoofing" :
+                self.dnsSpoofThreads.join(0)
+                self.dnsSpoofThreads = None
+
+            elif attackTypes == "HTTP-Man-In-The-Middle" :
+                self.httpMitmThreads.join(0)
+                self.httpMitmThreads = None
+
+            elif attackTypes == "WPA/WPA2-Cracking" :
+                self.wpaWpa2CrackThreads.join(0)
+                self.wpaWpa2CrackThreads = None

@@ -6,7 +6,7 @@ import signal
 from tkinter import *
 
 def startDnsAmplification(targetIp, dnsPackets, terminalContentFrame, errorOutputContentFrame, colorConfig = "#252525") :
-    global dnsAmplificationIsRunning, dnsAmplificationThreads, terminalLabel, wiresharkLabel, errorOutputLabel
+    global dnsAmplificationIsRunning, dnsAmplificationThreads, terminalLabel, errorOutputLabel
 
     dnsAmplificationIsRunning = False
     dnsAmplificationThreads = threading.Thread(target = lambda : sendDnsPackets(targetIp, dnsPackets))

@@ -7,17 +7,15 @@ import re
 
 from tkinter import *
 
-def startDnsSpoofing(interface, victimIp, victimDomains, terminalContentFrame, wiresharkContentFrame, errorOutputContentFrame, colorConfig = "#252525") :
-    global dnsSpoofingIsRunning, dnsSpoofingThreads, terminalLabel, wiresharkLabel, errorOutputLabel
+def startDnsSpoofing(interface, victimIp, victimDomains, terminalContentFrame, errorOutputContentFrame, colorConfig = "#252525") :
+    global dnsSpoofingIsRunning, dnsSpoofingThreads, terminalLabel, errorOutputLabel
 
     dnsSpoofingIsRunning = False
     dnsSpoofingThreads = threading.Thread(target = lambda : dnsSpoofHub(interface, victimIp, victimDomains))
 
     terminalLabel = Label(terminalContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
-    wiresharkLabel = Label(wiresharkContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
     errorOutputLabel = Label(errorOutputContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
     terminalLabel.configure(bg = colorConfig) 
-    wiresharkLabel.configure(bg = colorConfig)
     errorOutputLabel.configure(bg = colorConfig)
 
     terminalLabel["text"] += "$ Running DNS Spoofing Attack...\n\n"

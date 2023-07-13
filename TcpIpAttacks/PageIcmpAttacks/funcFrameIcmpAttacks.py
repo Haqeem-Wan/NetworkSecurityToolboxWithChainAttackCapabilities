@@ -5,17 +5,15 @@ import signal
 
 from tkinter import *
 
-def startIcmpAttack(targetIp, terminalContentFrame, wiresharkContentFrame, errorOutputContentFrame, colorConfig = "#252525") :
-    global icmpAttackIsRunning, icmpAttackThreads, terminalLabel, wiresharkLabel, errorOutputLabel
+def startIcmpAttack(targetIp, terminalContentFrame, errorOutputContentFrame, colorConfig = "#252525") :
+    global icmpAttackIsRunning, icmpAttackThreads, terminalLabel, errorOutputLabel
 
     icmpAttackIsRunning = False
     icmpAttackThreads = threading.Thread(target = lambda : sendIcmpPackets(targetIp))
 
     terminalLabel = Label(terminalContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
-    wiresharkLabel = Label(wiresharkContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
     errorOutputLabel = Label(errorOutputContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
     terminalLabel.configure(bg = colorConfig) 
-    wiresharkLabel.configure(bg = colorConfig)
     errorOutputLabel.configure(bg = colorConfig)
 
     terminalLabel["text"] += "$ Running ICMP Flood Attack...\n\n"

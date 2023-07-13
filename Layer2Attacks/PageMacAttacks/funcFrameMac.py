@@ -8,17 +8,15 @@ import random
 
 from tkinter import *
 
-def startMac(terminalContentFrame, wiresharkContentFrame, errorOutputContentFrame, colorConfig = "#252525") :
-    global macIsRunning, macThreads, terminalLabel, wiresharkLabel, errorOutputLabel
+def startMac(terminalContentFrame, errorOutputContentFrame, colorConfig = "#252525") :
+    global macIsRunning, macThreads, terminalLabel, errorOutputLabel
 
     macIsRunning = False
     macThreads = threading.Thread(target = lambda : spoof_mac_address())
 
     terminalLabel = Label(terminalContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
-    wiresharkLabel = Label(wiresharkContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
     errorOutputLabel = Label(errorOutputContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
     terminalLabel.configure(bg = colorConfig) 
-    wiresharkLabel.configure(bg = colorConfig)
     errorOutputLabel.configure(bg = colorConfig)
 
     terminalLabel["text"] += "$ Running MAC Spoofing Attack...\n\n"
