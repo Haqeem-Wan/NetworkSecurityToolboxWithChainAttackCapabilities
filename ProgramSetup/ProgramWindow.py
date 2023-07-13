@@ -7,7 +7,7 @@ class ProgramWindow :
         self.root = Tk()
         self.root.geometry("1280x770")
         self.root.resizable(width = False, height = False)
-        self.root.title("1191102618 - Network Security Toolbox With Chain Attack Capabilities")
+        self.root.title("HackerBox - Network Security Toolbox With Chain Attack Capabilities - 1191102618")
         
         try:
             self.root.iconphoto(True, PhotoImage(file="img/ToolboxLogo_White.png"))

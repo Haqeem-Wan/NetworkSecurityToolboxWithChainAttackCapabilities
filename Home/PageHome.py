@@ -27,7 +27,7 @@ class PageHome:
                                 background="#2C2B2B", borderwidth=3, relief="raised")
         
         self.homeTitleLabel = Label(self.homeTitleFrame, text="HackerBox", fg="#ffffff", bg="#2C2B2B", font="bahnschrift 30 bold")
-        self.homeTitleLabel.place(x=525, y=20)
+        self.homeTitleLabel.place(x=525, y=16)
         
         # Project Details Frame
         self.projDetFrame = Frame(self.homeScrollFrame, width=1280, height=385,
@@ -249,8 +249,8 @@ class PageHome:
             self.generalToolsPortScanEntry.insert(0, "Target IP")
 
     def getIpAddr(self, interface) :
-        self.ipAddress = getIpAddress(interface)
-        Footer.addIpAddr(self.ipAddress)
+        self.ipAddress, interface = getIpAddress(interface)
+        Footer.addIpAddr(self.ipAddress, interface)
 
     def executePortScan(self, targetIp, canvas) :
         portScanner(targetIp, canvas)

@@ -8,7 +8,8 @@ def getIpAddress(interface) :
         ipAddr = ni.ifaddresses(interface)[ni.AF_INET][0]['addr']
     except Exception as e:
         ipAddr = "Interface Not Found / Running!  "
-    return ipAddr
+        interface = "{Not Found}"
+    return ipAddr, interface
 
 def portScanner(targetIp, frame) :
     process = subprocess.Popen(["nmap", targetIp], stdin=subprocess.PIPE, 

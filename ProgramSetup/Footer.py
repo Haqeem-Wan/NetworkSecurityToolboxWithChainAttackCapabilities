@@ -2,10 +2,11 @@ from tkinter import *
 
 class Footer:
     def __init__ (self, root, footerFrame):
-        global footerFrameSet
+        global footerFrameSet, ipAddressLabel
         self.root = root
         footerFrameSet = footerFrame
-
-    def addIpAddr(ipAddress) :
-        ipAddressLabel = Label(footerFrameSet, text="IP : "+ipAddress, font="bahnschrift 15", fg="#CFCFCF", bg="#333333")
+        ipAddressLabel = Label(footerFrameSet, text="", font="bahnschrift 15", fg="#CFCFCF", bg="#333333")
         ipAddressLabel.pack(side=RIGHT)
+
+    def addIpAddr(ipAddress, interface) :
+        ipAddressLabel.config(text="IP " + interface + " : " + ipAddress)
