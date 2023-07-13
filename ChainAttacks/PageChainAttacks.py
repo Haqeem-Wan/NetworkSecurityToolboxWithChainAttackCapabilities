@@ -4,7 +4,6 @@ import threading
 
 from Layer2Attacks.PageCamAttacks.FrameCam import *
 from Layer2Attacks.PageArpAttacks.FrameArp import *
-from TcpIpAttacks.PageSynFlooding.FrameSynFlooding import *
 from DnsAttacks.PageDnsAmplification.FrameDnsAmplification import *
 
 class PageChainAttacks :
@@ -55,11 +54,9 @@ class PageChainAttacks :
         
         self.attackTypeDropdown['values'] = (
             "CAM Table Overflow",
-            "VLAN Hopping",
             "DHCP Attack",
             "ARP Poisoning Attack",
-            "MAC Address Spoofing",
-            "STP Attack"
+            "MAC Address Spoofing"
             )
         
         self.addAttackTypeButton = Button(self.attackDirectoryFrame, height=2, width=5, font="bahnschrift 15", 
@@ -106,44 +103,31 @@ class PageChainAttacks :
         if self.chosenDirectory == "Layer 2 Attacks" :
             self.attackTypeDropdown['values'] = (
                 "CAM Table Overflow",
-                "VLAN Hopping",
                 "DHCP Attack",
                 "ARP Poisoning Attack",
                 "MAC Address Spoofing",
-                "STP Attack"
             )
             self.attackTypeDropdown.current(0)
         elif self.chosenDirectory == "TCP / IP attacks" :
             self.attackTypeDropdown['values'] = (
                 "Syn Flooding",
                 "ICMP Attack",
-                "SeqNum. Predic. Attack",
-                "TCP Session Hijacking",
-                "IP Spoofing",
-                "SSL Strip"
             )
             self.attackTypeDropdown.current(0)
         elif self.chosenDirectory == "DNS Attacks" :
             self.attackTypeDropdown['values'] = (
                 "DNS Amplification",
-                "DNS Tunneling",
                 "DNS Spoofing",
-                "DNS Hijacking"
             )
             self.attackTypeDropdown.current(0)
         elif self.chosenDirectory == "HTTP Attacks" :
             self.attackTypeDropdown['values'] = (
-                "SQL Injection",
-                "Broken Authentication",
-                "Sensitive Data Exposure",
-                "Cross-Site Scripting (XSS)"
+                "HTTP-Man-In-The-Middle"
             )
             self.attackTypeDropdown.current(0)
         elif self.chosenDirectory == "Wifi Hacking" :
             self.attackTypeDropdown['values'] = (
-                "Denial of Service (DoS)",
-                "Evil Twin Attack",
-                "WPA / WPA2 Cracking"
+                "WPA/WPA2-Cracking"
             )
             self.attackTypeDropdown.current(0)
 
@@ -313,85 +297,6 @@ class PageChainAttacks :
             self.arpPoisonErrorOutputScrollCanvas.create_window((0,0), window = self.arpPoisonErrorOutputContentFrame, anchor = NW)
             self.arpPoisonErrorOutputContentFrame.bind("<Configure>", lambda e : self.arpPoisonErrorOutputScrollCanvas.configure(scrollregion=self.arpPoisonErrorOutputScrollCanvas.bbox("all")))
         
-        elif chosenAttackType == "Syn Flooding" :
-            self.synFloodFrame = Frame(self.attacksScrollFrame, width=1280, height=200, background="#612601", borderwidth=3, relief="raised")
-            self.synFloodFrame.pack()
-
-            self.synFloodLabel = Label(self.synFloodFrame, text=" Syn Flooding ", fg="#ffffff", bg="#2E1201", font="bahnschrift 12")
-            self.synFloodLabel.place(x=0, y=0)
-
-            self.synFloodTargetIpLabel = Label(self.synFloodFrame, text="Target IP Address                    :", fg="#ffffff", bg="#612601", font="bahnschrift 12")
-            self.synFloodTargetIpLabel.place(x = 10, y = 70)
-
-            self.synFloodTargetIpEntry = Entry(self.synFloodFrame, width = 20, font="bahnschrift 12", fg="#ffffff", bg="#252525")
-            self.synFloodTargetIpEntry.place(x = 300, y = 70)
-
-            self.synFloodPortLabel = Label(self.synFloodFrame, text="Target Port      :", fg="#ffffff", bg="#612601", font="bahnschrift 12")
-            self.synFloodPortLabel.place(x = 10, y = 120)
-
-            self.synFloodPortEntry = Entry(self.synFloodFrame, width = 20, font="bahnschrift 12", fg="#ffffff", bg="#252525")
-            self.synFloodPortEntry.place(x = 300, y = 120)
-
-
-
-            self.synFloodTerminalLabel = Label(self.synFloodFrame, text="Terminal", fg="#ffffff", bg="#612601", font="bahnschrift 15")
-            self.synFloodTerminalLabel.place(x = 660, y = 20)
-
-            self.synFloodTerminalFrame = Frame(self.synFloodFrame, width=300, height=120, background="#252525", highlightbackground="#ffffff", highlightthickness=2)
-            self.synFloodTerminalFrame.pack_propagate(False)
-            self.synFloodTerminalFrame.place(x = 555, y = 55)
-
-            self.synFloodTerminalScrollCanvas = Canvas(self.synFloodTerminalFrame, background="#252525", highlightbackground="#ffffff", yscrollincrement=8)
-            self.synFloodTerminalScrollCanvas.pack(side = LEFT, fill = BOTH, expand = 1)
-        
-            self.synFloodTerminalVerticalScrollbar = Scrollbar(self.synFloodTerminalScrollCanvas, orient=VERTICAL, command = self.synFloodTerminalScrollCanvas.yview)
-            self.synFloodTerminalVerticalScrollbar.pack(side = RIGHT, fill = Y)
-
-            self.synFloodTerminalHorizontalScrollbar = Scrollbar(self.synFloodTerminalScrollCanvas, orient=HORIZONTAL, command = self.synFloodTerminalScrollCanvas.xview)
-            self.synFloodTerminalHorizontalScrollbar.pack(side = BOTTOM, fill = X)
-
-            self.synFloodTerminalScrollCanvas.configure(yscrollcommand=self.synFloodTerminalVerticalScrollbar.set)
-            self.synFloodTerminalScrollCanvas.bind("<Configure>", lambda e : self.synFloodTerminalScrollCanvas.configure(scrollregion=self.synFloodTerminalScrollCanvas.bbox("all")))
-            self.synFloodTerminalScrollCanvas.bind_all("<MouseWheel>", lambda e : self.synFloodTerminalScrollCanvas.yview_scroll(-1, "units"))
-
-            self.synFloodTerminalScrollCanvas.configure(xscrollcommand=self.synFloodTerminalHorizontalScrollbar.set)
-            self.synFloodTerminalScrollCanvas.bind("<Configure>", lambda e : self.synFloodTerminalScrollCanvas.configure(scrollregion=self.synFloodTerminalScrollCanvas.bbox("all")))
-            self.synFloodTerminalScrollCanvas.bind_all("<MouseWheel>", lambda e : self.synFloodTerminalScrollCanvas.xview_scroll(-1, "units"))
-
-            self.synFloodTerminalContentFrame = Frame(self.synFloodTerminalScrollCanvas, background="#252525", highlightbackground="#ffffff")
-            self.synFloodTerminalScrollCanvas.create_window((0,0), window = self.synFloodTerminalContentFrame, anchor = NW)
-            self.synFloodTerminalContentFrame.bind("<Configure>", lambda e : self.synFloodTerminalScrollCanvas.configure(scrollregion=self.synFloodTerminalScrollCanvas.bbox("all")))
-
-
-
-            self.synFloodErrorLabel = Label(self.synFloodFrame, text="Errors", fg="#ffffff", bg="#612601", font="bahnschrift 15")
-            self.synFloodErrorLabel.place(x = 1035, y = 20)
-
-            self.synFloodErrorOutputFrame = Frame(self.synFloodFrame, width=300, height=120, background="#252525", highlightbackground="#ffffff", highlightthickness=2)
-            self.synFloodErrorOutputFrame.pack_propagate(False)
-            self.synFloodErrorOutputFrame.place(x = 915, y = 55)
-
-            self.synFloodErrorOutputScrollCanvas = Canvas(self.synFloodErrorOutputFrame, background="#252525", highlightbackground="#ffffff", yscrollincrement=8)
-            self.synFloodErrorOutputScrollCanvas.pack(side = LEFT, fill = BOTH, expand=1)
-        
-            self.synFloodErrorOutputVerticalScrollbar = Scrollbar(self.synFloodErrorOutputScrollCanvas, orient=VERTICAL, command = self.synFloodErrorOutputScrollCanvas.yview)
-            self.synFloodErrorOutputVerticalScrollbar.pack(side = RIGHT, fill = Y)
-
-            self.synFloodErrorOutputHorizontalScrollbar = Scrollbar(self.synFloodErrorOutputScrollCanvas, orient=HORIZONTAL, command = self.synFloodErrorOutputScrollCanvas.xview)
-            self.synFloodErrorOutputHorizontalScrollbar.pack(side = BOTTOM, fill = X)
-
-            self.synFloodErrorOutputScrollCanvas.configure(yscrollcommand=self.synFloodErrorOutputVerticalScrollbar.set)
-            self.synFloodErrorOutputScrollCanvas.bind("<Configure>", lambda e : self.synFloodErrorOutputScrollCanvas.configure(scrollregion=self.synFloodErrorOutputScrollCanvas.bbox("all")))
-            self.synFloodErrorOutputFrame.bind_all("<MouseWheel>", lambda e : self.synFloodErrorOutputScrollCanvas.yview_scroll(-1, "units"))
-
-            self.synFloodErrorOutputScrollCanvas.configure(xscrollcommand=self.synFloodErrorOutputHorizontalScrollbar.set)
-            self.synFloodErrorOutputScrollCanvas.bind("<Configure>", lambda e : self.synFloodErrorOutputScrollCanvas.configure(scrollregion=self.synFloodErrorOutputScrollCanvas.bbox("all")))
-            self.synFloodErrorOutputFrame.bind_all("<MouseWheel>", lambda e : self.synFloodErrorOutputScrollCanvas.xview_scroll(-1, "units"))
-
-            self.synFloodErrorOutputContentFrame = Frame(self.synFloodErrorOutputScrollCanvas, background="#252525", highlightbackground="#ffffff")
-            self.synFloodErrorOutputScrollCanvas.create_window((0,0), window = self.synFloodErrorOutputContentFrame, anchor = NW)
-            self.synFloodErrorOutputContentFrame.bind("<Configure>", lambda e : self.synFloodErrorOutputScrollCanvas.configure(scrollregion=self.synFloodErrorOutputScrollCanvas.bbox("all")))
-        
         elif chosenAttackType == "DNS Amplification" :
             self.dnsAmpFrame = Frame(self.attacksScrollFrame, width=1280, height=200, background="#612601", borderwidth=3, relief="raised")
             self.dnsAmpFrame.pack()
@@ -487,9 +392,6 @@ class PageChainAttacks :
                 pass
             elif attackTypes == "STP Attack" :
                 pass
-            
-            elif attackTypes == "Syn Flooding" :
-                self.chainAttackThreads.append(threading.Thread(target = lambda : startSynFlood(self.synFloodTargetIpEntry.get(), self.synFloodPortEntry.get(), self.synFloodTerminalContentFrame, self.synFloodErrorOutputContentFrame)))
             elif attackTypes == "ICMP Attack" :
                 pass
             elif attackTypes == "SeqNum. Predic. Attack" :

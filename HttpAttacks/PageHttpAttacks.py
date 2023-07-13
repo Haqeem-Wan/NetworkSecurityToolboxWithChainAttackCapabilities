@@ -1,28 +1,18 @@
 from tkinter import *
-from HttpAttacks.PageHttpSessionHijacking.FrameHttpSessionHijacking import *
-from HttpAttacks.PageBrokenAuth.FrameBrokenAuth import *
-from HttpAttacks.PageSensitiveDataExpo.FrameSensitiveDataExpo import *
-from HttpAttacks.PageXss.FrameXss import *
+from HttpAttacks.PageHttpManInTheMIddle.FrameHttpSessionHijacking import *
 
 class PageHttpAttacks:
     def __init__ (self, frame):
         self.httpAttacksFrame = frame
-        self.navHttpAttacksFrame = Frame(self.httpAttacksFrame, width=1280, height=40, background="#454545")
-        self.attackFrame = Frame(self.httpAttacksFrame, width=1280, height=630, background="#454545")
+        self.navHttpAttacksFrame = Frame(self.httpAttacksFrame, width=1280, height=40, background="#800800")
+        self.attackFrame = Frame(self.httpAttacksFrame, width=1280, height=630, background="#800800")
 
-        self.httpSessionHijackingButton = Button(self.navHttpAttacksFrame, height=100, width = 29, font="BahnschriftLight 12", bg="#333333", fg="#ffffff", 
-                                      activebackground="#333333", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3, relief="raised")
-        self.brokenAuthButton = Button(self.navHttpAttacksFrame, height=100, width = 29, font="BahnschriftLight 12", bg="#333333", fg="#ffffff", 
-                                       activebackground="#333333", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3, relief="raised")
-        self.senDataExpButton = Button(self.navHttpAttacksFrame, height=100, width = 29, font="BahnschriftLight 12", bg="#333333", fg="#ffffff", 
-                                       activebackground="#333333", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3, relief="raised")
-        self.xssButton = Button(self.navHttpAttacksFrame, height=100, width = 29, font="BahnschriftLight 12", bg="#333333", fg="#ffffff", 
-                                activebackground="#333333", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3, relief="raised")
+        self.httpSessionHijackingButton = Button(self.navHttpAttacksFrame, height=100, width = 130, font="BahnschriftLight 12", bg="#bf0d00", fg="#ffffff", 
+                                      activebackground="#bf0d00", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3, relief="raised")
 
-        self.navHttpAttacksOptions = ["HTTP Session Hijacking", "Broken Auth.", "Sensitive Data Expo.", "Cross-Site Scripting (XSS)"]
-        self.navHttpAttacksLinks = [self.showFrameHttpSessionHijacking, self.showFrameBrokenAuth, 
-        self.showFrameSensitiveDataExpo, self.showFrameXss]
-        self.navHttpAttackButtons = [self.httpSessionHijackingButton, self.brokenAuthButton, self.senDataExpButton, self.xssButton]
+        self.navHttpAttacksOptions = ["HTTP Session Hijacking"]
+        self.navHttpAttacksLinks = [self.showFrameHttpSessionHijacking]
+        self.navHttpAttackButtons = [self.httpSessionHijackingButton]
         
         for i in range(len(self.navHttpAttacksOptions)):
             self.navHttpAttackButtons[i].config(text=self.navHttpAttacksOptions[i])
@@ -38,35 +28,11 @@ class PageHttpAttacks:
 
     def showFrameHttpSessionHijacking(self):
         self.deletePages()
-        self.httpSessionHijackingFrame = Frame(self.attackFrame, width=1280, height=580, background="#454545")
+        self.httpSessionHijackingFrame = Frame(self.attackFrame, width=1280, height=580, background="#800800")
         self.httpSessionHijackingContents = FrameHttpSessionHijacking(self.attackFrame)
         self.httpSessionHijackingFrame.pack()
 
         self.configureButtons("HTTP Session Hijacking")
-    
-    def showFrameBrokenAuth(self) :
-        self.deletePages()
-        self.icmpAttacksFrame = Frame(self.attackFrame, width=1280, height=580, background="#454545")
-        self.icmpAttacksContents = FrameBrokenAuth(self.attackFrame)
-        self.icmpAttacksFrame.pack()
-
-        self.configureButtons("Broken Auth.")
-
-    def showFrameSensitiveDataExpo(self) :
-        self.deletePages()
-        self.seqNumAttacksFrame = Frame(self.attackFrame, width=1280, height=580, background="#454545")
-        self.seqNumAttacksContents = FrameSensitiveDataExpo(self.attackFrame)
-        self.seqNumAttacksFrame.pack()
-
-        self.configureButtons("Sensitive Data Expo.")
-    
-    def showFrameXss(self):
-        self.deletePages()
-        self.tcpSessionHijackingFrame = Frame(self.attackFrame, width=1280, height=580, background="#454545")
-        self.tcpSessionHijackingContents = FrameXss(self.attackFrame)
-        self.tcpSessionHijackingFrame.pack()
-
-        self.configureButtons("Cross-Site Scripting (XSS)")
 
     def configureButtons(self, buttonPressed) :
         for i in range(len(self.navHttpAttacksOptions)):

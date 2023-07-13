@@ -5,7 +5,7 @@ import threading
 import subprocess
 
 def startSynFlood(targetIp, port,terminalContentFrame, errorOutputContentFrame, colorConfig = "#252525") :
-    global synFloodThreads, terminalLabel, wiresharkLabel, errorOutputLabel
+    global synFloodThreads, terminalLabel, errorOutputLabel
 
     synFloodThreads = threading.Thread(target = lambda : sendSynPackets(targetIp, port))
 

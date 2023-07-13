@@ -1,24 +1,18 @@
 from tkinter import *
-from WifiHacking.PageDos.FrameDos import *
-from WifiHacking.PageEvilTwinAttack.FrameEvilTwinAttack import *
 from WifiHacking.PageWpaWpa2Cracking.FrameWpaWpa2Cracking import *
 
 class PageWifiHacking:
     def __init__ (self, frame):
         self.wifiHackingFrame = frame
-        self.navWifiHackingFrame = Frame(self.wifiHackingFrame, width=1280, height=40, background="#454545")
-        self.attackFrame = Frame(self.wifiHackingFrame, width=1280, height=630, background="#454545")
+        self.navWifiHackingFrame = Frame(self.wifiHackingFrame, width=1280, height=40, background="#87005d")
+        self.attackFrame = Frame(self.wifiHackingFrame, width=1280, height=630, background="#87005d")
 
-        self.dosButton = Button(self.navWifiHackingFrame, height=100, width = 40, font="BahnschriftLight 12", bg="#333333", fg="#ffffff", 
-                                activebackground="#333333", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3,relief="raised")
-        self.evilTwinButton = Button(self.navWifiHackingFrame, height=100, width = 40, font="BahnschriftLight 12", bg="#333333", fg="#ffffff", 
-                                     activebackground="#333333", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3,relief="raised")
-        self.wpaWpa2Button = Button(self.navWifiHackingFrame, height=100, width = 40, font="BahnschriftLight 12", bg="#333333", fg="#ffffff", 
-                                    activebackground="#333333", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3,relief="raised")
+        self.wpaWpa2Button = Button(self.navWifiHackingFrame, height=100, width = 130, font="BahnschriftLight 12", bg="#b3007b", fg="#ffffff", 
+                                    activebackground="#b3007b", activeforeground="#9e9e9e", highlightthickness=0, bd=0, borderwidth=3,relief="raised")
 
-        self.navWifiHackingOptions = ["Denial of Service (DoS)", "Evil Twin Attack", "WPA / WPA2 Cracking"]
-        self.navWifiHackingLinks = [self.showFrameDos, self.showFrameEvilTwinAttack, self.showFrameWpaWpa2Cracking]
-        self.navWifiHackingButtons = [self.dosButton, self.evilTwinButton, self.wpaWpa2Button]
+        self.navWifiHackingOptions = ["WPA / WPA2 Cracking"]
+        self.navWifiHackingLinks = [self.showFrameWpaWpa2Cracking]
+        self.navWifiHackingButtons = [self.wpaWpa2Button]
         
         for i in range(len(self.navWifiHackingOptions)):
             self.navWifiHackingButtons[i].config(text=self.navWifiHackingOptions[i])
@@ -30,27 +24,11 @@ class PageWifiHacking:
         self.attackFrame.pack_propagate(0)
         self.attackFrame.pack()
 
-        self.showFrameDos()
-
-    def showFrameDos(self):
-        self.deletePages()
-        self.dosFrame = Frame(self.attackFrame, width=1280, height=580, background="#454545")
-        self.synFloodingContents = FrameDos(self.attackFrame)
-        self.dosFrame.pack()
-
-        self.configureButtons("Denial of Service (DoS)")
-    
-    def showFrameEvilTwinAttack(self) :
-        self.deletePages()
-        self.evilTwinAttackFrame = Frame(self.attackFrame, width=1280, height=580, background="#454545")
-        self.icmpAttacksContents = FrameEvilTwinAttack(self.attackFrame)
-        self.evilTwinAttackFrame.pack()
-
-        self.configureButtons("Evil Twin Attack")
+        self.showFrameWpaWpa2Cracking()
 
     def showFrameWpaWpa2Cracking(self) :
         self.deletePages()
-        self.wpaWpa2CrackingFrame = Frame(self.attackFrame, width=1280, height=580, background="#454545")
+        self.wpaWpa2CrackingFrame = Frame(self.attackFrame, width=1280, height=580, background="#87005d")
         self.seqNumAttacksContents = FrameWpaWpa2Cracking(self.attackFrame)
         self.wpaWpa2CrackingFrame.pack()
 

@@ -1,41 +1,41 @@
 from tkinter import *
 from tkinter.ttk import Separator
-from WifiHacking.PageWpaWpa2Cracking.funcFrameWpaWpa2Cracking import *
+from HttpAttacks.PageHttpMitm.funcFrameHttpMitm import *
 
-class FrameWpaWpa2Cracking:
+class FrameHttpSessionHijacking:
     def __init__ (self, frame):
         self.attackFrame = frame
 
-        self.interfaceLabel = Label(self.attackFrame, text="Network Interface         :", fg="#ffffff", bg="#87005d", font="bahnschrift 15")
-        self.interfaceLabel.place(x = 85, y = 20)
+        self.targetIpLabel = Label(self.attackFrame, text="Target IP Address         :", fg="#ffffff", bg="#800800", font="bahnschrift 15")
+        self.targetIpLabel.place(x = 85, y = 20)
+
+        self.targetIpEntry = Entry(self.attackFrame, width = 40, font="bahnschrift 15", fg="#ffffff", bg="#252525")
+        self.targetIpEntry.place(x = 435, y = 20)
+
+        self.targetDefaultGatewayLabel = Label(self.attackFrame, text="Default Gateway           :", fg="#ffffff", bg="#800800", font="bahnschrift 15")
+        self.targetDefaultGatewayLabel.place(x = 85, y = 70)
+
+        self.targetDefaultGatewayEntry = Entry(self.attackFrame, width = 40, font="bahnschrift 15", fg="#ffffff", bg="#252525")
+        self.targetDefaultGatewayEntry.place(x = 435, y = 70)
+
+        self.interfaceLabel = Label(self.attackFrame, text="Interface                       :", fg="#ffffff", bg="#800800", font="bahnschrift 15")
+        self.interfaceLabel.place(x = 85, y = 120)
 
         self.interfaceEntry = Entry(self.attackFrame, width = 40, font="bahnschrift 15", fg="#ffffff", bg="#252525")
-        self.interfaceEntry.place(x = 435, y = 20)
-
-        self.targetBssidLabel = Label(self.attackFrame, text="Target BSSID                 :", fg="#ffffff", bg="#87005d", font="bahnschrift 15")
-        self.targetBssidLabel.place(x = 85, y = 70)
-
-        self.targetBssidEntry = Entry(self.attackFrame, width = 40, font="bahnschrift 15", fg="#ffffff", bg="#252525")
-        self.targetBssidEntry.place(x = 435, y = 70)
-
-        self.targetChannelLabel = Label(self.attackFrame, text="Target Channel             :", fg="#ffffff", bg="#87005d", font="bahnschrift 15")
-        self.targetChannelLabel.place(x = 85, y = 120)
-
-        self.targetChannelEntry = Entry(self.attackFrame, width = 40, font="bahnschrift 15", fg="#ffffff", bg="#252525")
-        self.targetChannelEntry.place(x = 435, y = 120)
+        self.interfaceEntry.place(x = 435, y = 120)
 
 
 
         self.separator = Separator(self.attackFrame, orient="horizontal")
         self.separator.pack(fill = X, expand = TRUE, pady = 175)
 
-        self.terminalLabel = Label(self.attackFrame, text="Terminal", fg="#ffffff", bg="#87005d", font="bahnschrift 15")
+        self.terminalLabel = Label(self.attackFrame, text="Terminal", fg="#ffffff", bg="#800800", font="bahnschrift 15")
         self.terminalLabel.place(x = 285, y = 180)
 
-        self.wiresharkLabel = Label(self.attackFrame, text="Wireshark", fg="#ffffff", bg="#87005d", font="bahnschrift 15")
+        self.wiresharkLabel = Label(self.attackFrame, text="Wireshark", fg="#ffffff", bg="#800800", font="bahnschrift 15")
         self.wiresharkLabel.place(x = 890, y = 180)
 
-        self.errorNotesLabel = Label(self.attackFrame, text="Errors and Notes", fg="#ffffff", bg="#87005d", font="bahnschrift 15")
+        self.errorNotesLabel = Label(self.attackFrame, text="Errors and Notes", fg="#ffffff", bg="#800800", font="bahnschrift 15")
         self.errorNotesLabel.place(x = 550, y = 480)
 
         self.terminalFrame = Frame(self.attackFrame, width=500, height=260, background="#252525", highlightbackground="#ffffff", highlightthickness=2)
@@ -96,6 +96,8 @@ class FrameWpaWpa2Cracking:
         self.errorOutputScrollCanvas.create_window((0,0), window = self.errorOutputContentFrame, anchor = NW)
         self.errorOutputContentFrame.bind("<Configure>", lambda e : self.errorOutputScrollCanvas.configure(scrollregion=self.errorOutputScrollCanvas.bbox("all")))
 
+
+
         self.startButton = Button(self.attackFrame, height=3, width=5, font="bahnschrift 15", text="Start", fg="#ffffff", bg="#252525", 
                                   command=lambda : self.switch_button_mode("Start"))
         self.startButton.place(x = 1010, y = 18)
@@ -115,8 +117,8 @@ class FrameWpaWpa2Cracking:
             self.stopButton.config(relief = "raised")
             self.stopButton.config(state = "normal")
 
-            startWpaWpa2Cracking(self.interfaceEntry.get(), self.targetBssidEntry.get(), self.targetChannelEntry.get(), 
-                                 self.terminalContentFrame, self.wiresharkContentFrame, self.errorOutputContentFrame)
+            startHttpMitm(self.targetIpEntry.get(), self.targetDefaultGatewayEntry.get(), self.interfaceEntry.get(),
+                                      self.terminalContentFrame, self.wiresharkContentFrame, self.errorOutputContentFrame)
 
         elif(whichButton == "Stop") :
             self.startButton.config(relief = "raised")
@@ -124,4 +126,4 @@ class FrameWpaWpa2Cracking:
             self.stopButton.config(relief = "sunken")
             self.stopButton.config(state = "disabled")
 
-            stopWpaWpa2Cracking(self.interfaceEntry.get())
+            stopHttpMitm(self.targetIpEntry.get(), self.targetDefaultGatewayEntry.get())

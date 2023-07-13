@@ -4,7 +4,10 @@ import re
 from tkinter import *
 
 def getIpAddress(interface) :
-    ipAddr = ni.ifaddresses(interface)[ni.AF_INET][0]['addr']
+    try :
+        ipAddr = ni.ifaddresses(interface)[ni.AF_INET][0]['addr']
+    except Exception as e:
+        ipAddr = "Interface Not Found / Running!  "
     return ipAddr
 
 def portScanner(targetIp, frame) :

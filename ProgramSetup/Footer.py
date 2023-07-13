@@ -8,4 +8,4 @@ class Footer:
 
     def addIpAddr(ipAddress) :
         ipAddressLabel = Label(footerFrameSet, text="IP : "+ipAddress, font="bahnschrift 15", fg="#CFCFCF", bg="#333333")
-        ipAddressLabel.place(x=1055, y=8)
+        ipAddressLabel.pack(side=RIGHT)
