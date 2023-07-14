@@ -71,11 +71,11 @@ class FrameArp:
 
         self.startButton = Button(self.attackFrame, height=3, width=5, font="bahnschrift 15", text="Start", fg="#ffffff", bg="#252525", 
                                   command=lambda : self.switch_button_mode("Start"))
-        self.startButton.place(x = 1010, y = 18)
+        self.startButton.place(x = 1010, y = 43)
 
         self.stopButton = Button(self.attackFrame, height=3, width=5, font="bahnschrift 15", text="Stop", fg="#ffffff", bg="#252525", 
                                  command=lambda : self.switch_button_mode("Stop"))
-        self.stopButton.place(x = 1102, y = 18)
+        self.stopButton.place(x = 1102, y = 43)
 
         self.stopButton.config(relief = "sunken")
         self.stopButton.config(state = "disabled")

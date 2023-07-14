@@ -27,3 +27,8 @@
 # How To Run This Program
 > run main.py as sudo
 > EG : "sudo python3 main.py"
+
+# NOTICE!
+> Please use this program only for educational purposes and not with malicious intentions or goals
+> Please only use this program within a controlled environment such as between virtual machines or physical machines that you own
+> The creator of this program and the parties behind it are not liable for any damage or crime that is done with this program

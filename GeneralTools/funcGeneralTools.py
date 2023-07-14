@@ -1,6 +1,5 @@
 import netifaces as ni
 import subprocess
-import re
 from tkinter import *
 
 def getIpAddress(interface) :

@@ -64,6 +64,3 @@ def reader(proc):
         if output:
             ansiStripOutput = ansi_escape.sub('', output)
             terminalLabel["text"] += "$ " + ansiStripOutput.strip() + "\n"
-
-def arpErrorHandling(error) :
-    errorOutputLabel["text"] += str(error) + "\n"

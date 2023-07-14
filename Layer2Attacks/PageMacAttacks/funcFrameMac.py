@@ -42,7 +42,7 @@ def stopMac() :
     except (AttributeError, RuntimeError):
         errorOutputLabel["text"] += traceback.format_exc()
     except Exception as e:
-        errorOutputLabel["text"] += "ERROR : \n" + e + "\n"
+        errorOutputLabel["text"] += "ERROR : \n" + str(e) + "\n"
 
 def runMacSpoofAttack() :
     global macThreads, macIsRunning

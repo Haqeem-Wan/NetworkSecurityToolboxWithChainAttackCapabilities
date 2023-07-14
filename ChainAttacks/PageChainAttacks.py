@@ -88,10 +88,13 @@ class PageChainAttacks :
         self.chosenAttackTypes = []
 
         self.executeChainAttackButton = Button(self.attacksScrollFrame, height=2, width=96, font="bahnschrift 15", 
-                                          text="Execute Chain Attack!", fg="#ffffff", bg="#771902", command = lambda : self.executeChainAttack())
+                                          text="Execute Chain Attack!", fg="#ffffff", bg="#771902", command = lambda : self.switch_button_mode("Execute"))
 
         self.terminateChainAttackButton = Button(self.attacksScrollFrame, height=2, width=96, font="bahnschrift 15", 
-                                          text="Terminate Chain Attack!", fg="#ffffff", bg="#771902", command = lambda : self.terminateChainAttack())
+                                          text="Terminate Chain Attack!", fg="#ffffff", bg="#771902", command = lambda : self.switch_button_mode("Terminate"))
+        
+        self.terminateChainAttackButton.config(relief = "sunken")
+        self.terminateChainAttackButton.config(state = "disabled")
         
         self.terminateChainAttackButton.pack(side=BOTTOM, fill = X)
         self.executeChainAttackButton.pack(side=BOTTOM, fill = X)
@@ -921,6 +924,24 @@ class PageChainAttacks :
             self.wpaWpa2CrackErrorOutputContentFrame.bind("<Configure>", lambda e : wpaWpa2CrackErrorOutputScrollCanvas.configure(scrollregion=wpaWpa2CrackErrorOutputScrollCanvas.bbox("all")))
 
         self.chosenAttackTypes.append(chosenAttackType)
+
+    def switch_button_mode(self, whichButton) :
+
+        if(whichButton == "Execute") :
+            self.executeChainAttackButton.config(relief = "sunken")
+            self.executeChainAttackButton.config(state = "disabled")
+            self.terminateChainAttackButton.config(relief = "raised")
+            self.terminateChainAttackButton.config(state = "normal")
+
+            self.executeChainAttack()
+
+        elif(whichButton == "Terminate") :
+            self.executeChainAttackButton.config(relief = "raised")
+            self.executeChainAttackButton.config(state = "normal")
+            self.terminateChainAttackButton.config(relief = "sunken")
+            self.terminateChainAttackButton.config(state = "disabled")
+
+            self.terminateChainAttack()
 
     def executeChainAttack(self) :
         self.chainAttackThreads = []
