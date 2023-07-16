@@ -68,12 +68,12 @@ def startSynFloodChain(queue, targetIp, port, terminalContentFrame, errorOutputC
     queue.put(synFloodChainProcess)
 
 def stopSynFloodChain(chainTerminalContentFrame, chainErrorContentFrame) :
-    chainTerminalLabel = Label(chainTerminalContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=278)
-    chainErrorOutputLabel = Label(chainErrorContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=278)
-    chainTerminalLabel.pack(anchor = NW)
-    chainErrorOutputLabel.pack(anchor = NW)
-
     try:
+        chainTerminalLabel = Label(chainTerminalContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=278)
+        chainErrorOutputLabel = Label(chainErrorContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=278)
+        chainTerminalLabel.pack(anchor = NW)
+        chainErrorOutputLabel.pack(anchor = NW)
+    
         chainTerminalLabel["text"] += "\n$ Stopping Syn Flood Attack...\n\n"
         chainTerminalLabel["text"] += "$ Syn Flood Attack successfully stopped!\n"
     except (AttributeError, RuntimeError):
