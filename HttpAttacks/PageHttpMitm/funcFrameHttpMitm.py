@@ -52,10 +52,10 @@ def executeHttpMitm(interface):
 
     ferretMitmProcess = subprocess.Popen(["ferret-sidejack", "-i", interface], 
                                          stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    ferretMitmThread = threading.Thread(target=reader, args=(ferretMitmProcess,))
+    ferretMitmThread = threading.Thread(target=reader, args=(ferretMitmProcess,terminalLabel,))
     ferretMitmThread.start()
 
-def reader(proc):
+def reader(proc, terminalLabel):
     ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
     while True:
         output = proc.stdout.readline().decode('utf8', errors='strict')
@@ -64,3 +64,35 @@ def reader(proc):
         if output:
             ansiStripOutput = ansi_escape.sub('', output)
             terminalLabel["text"] += "$ " + ansiStripOutput.strip() + "\n"
+
+def startHttpMitmChain(queue, interface, terminalContentFrame, errorOutputContentFrame) :
+    terminalLabel = Label(terminalContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=278)
+    errorOutputLabel = Label(errorOutputContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=278)
+    terminalLabel.pack(anchor = NW)
+    errorOutputLabel.pack(anchor = NW)
+
+    terminalLabel["text"] += "$ Running HTTP Man-In-The-Middle Attack...\n\n"
+
+    try :
+        ferretMitmProcess = subprocess.Popen(["ferret-sidejack", "-i", interface], 
+                                            stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        ferretMitmThread = threading.Thread(target=reader, args=(ferretMitmProcess,terminalLabel,))
+        ferretMitmThread.start()
+
+        queue.put((ferretMitmProcess, ferretMitmThread))
+    except Exception as e :
+        errorOutputLabel["text"] += "ERROR : \n" + str(e) + "\n"
+
+def stopHttpMitmChain(chainTerminalContentFrame, chainErrorContentFrame) :
+    chainTerminalLabel = Label(chainTerminalContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=278)
+    chainErrorOutputLabel = Label(chainErrorContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=278)
+    chainTerminalLabel.pack(anchor = NW)
+    chainErrorOutputLabel.pack(anchor = NW)
+
+    try:
+        chainTerminalLabel["text"] += "\n$ Stopping HTTP Man-In-The-Middle Attack...\n\n"
+        chainTerminalLabel["text"] += "$ HTTP Man-In-The-Middle Attack successfully stopped!\n"
+    except (AttributeError, RuntimeError):
+        chainErrorOutputLabel["text"] += traceback.format_exc()
+    except Exception as e:
+        chainErrorOutputLabel["text"] += "ERROR : \n" + str(e) + "\n"

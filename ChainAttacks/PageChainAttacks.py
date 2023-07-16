@@ -1,6 +1,8 @@
 from tkinter import *
 from tkinter.ttk import Combobox, Style
 import threading
+from queue import Queue
+import signal
 
 from Layer2Attacks.PageCamAttacks.FrameCam import *
 from Layer2Attacks.PageDhcpAttacks.FrameDhcp import *
@@ -270,7 +272,6 @@ class PageChainAttacks :
             dhcpAttackErrorOutputScrollCanvas.create_window((0,0), window = self.dhcpAttackErrorOutputContentFrame, anchor = NW)
             self.dhcpAttackErrorOutputContentFrame.bind("<Configure>", lambda e : dhcpAttackErrorOutputScrollCanvas.configure(scrollregion=dhcpAttackErrorOutputScrollCanvas.bbox("all")))
 
-        # Issue
         elif chosenAttackType == "ARP Poisoning Attack" :
             arpPoisonFrame = Frame(self.attacksScrollFrame, width=1280, height=200, background="#612601", borderwidth=3, relief="raised")
             arpPoisonFrame.pack()
@@ -823,21 +824,26 @@ class PageChainAttacks :
                 self.chainAttackThreads.append(self.macAddressSpoofThreads)
 
             elif attackTypes == "Syn Flooding" :
-                self.synFloodThreads = threading.Thread(target = lambda : startSynFlood(self.synFloodTargetIpEntry.get(), self.synFloodPortEntry.get(), self.synFloodTerminalContentFrame, self.synFloodErrorOutputContentFrame))
+                self.synFloodChainQueue = Queue()
+                self.synFloodThreads = threading.Thread(target = startSynFloodChain(self.synFloodChainQueue,self.synFloodTargetIpEntry.get(), self.synFloodPortEntry.get(), self.synFloodTerminalContentFrame, self.synFloodErrorOutputContentFrame))
                 self.chainAttackThreads.append(self.synFloodThreads)
             elif attackTypes == "ICMP Attack" :
-                self.icmpThreads = threading.Thread(target = lambda : startIcmpAttack(self.icmpAttackTargetIpEntry.get(), self.icmpAttackTerminalContentFrame, self.icmpAttackErrorOutputContentFrame))
+                self.icmpFloodQueue = Queue()
+                self.icmpThreads = threading.Thread(target = startIcmpAttackChain(self.icmpFloodQueue, self.icmpAttackTargetIpEntry.get(), self.icmpAttackTerminalContentFrame, self.icmpAttackErrorOutputContentFrame))
                 self.chainAttackThreads.append(self.icmpThreads)
 
             elif attackTypes == "DNS Amplification" :
-                self.dnsAmpThreads = threading.Thread(target = lambda : startDnsAmplification(self.dnsAmpTargetIpEntry.get(), self.dnsAmpPacketEntry.get(), self.dnsAmpTerminalContentFrame, self.dnsAmpErrorOutputContentFrame))
+                self.dnsAmplificationQueue = Queue()
+                self.dnsAmpThreads = threading.Thread(target = startDnsAmplificationChain(self.dnsAmplificationQueue, self.dnsAmpTargetIpEntry.get(), self.dnsAmpPacketEntry.get(), self.dnsAmpTerminalContentFrame, self.dnsAmpErrorOutputContentFrame))
                 self.chainAttackThreads.append(self.dnsAmpThreads)
             elif attackTypes == "DNS Spoofing" :
-                self.dnsSpoofThreads = threading.Thread(target = lambda : startDnsSpoofing(self.dnsSpoofInterfaceEntry, self.dnsSpoofTargetIpEntry.get(), self.dnsSpoofTargetDomainsEntry, self.dnsSpoofTerminalContentFrame, self.dnsSpoofErrorOutputContentFrame))
+                self.dnsSpoofQueue = Queue()
+                self.dnsSpoofThreads = threading.Thread(target = lambda : startDnsSpoofingChain(self.dnsSpoofQueue, self.dnsSpoofInterfaceEntry.get(), self.dnsSpoofTargetIpEntry.get(), self.dnsSpoofTargetDomainsEntry.get(), self.dnsSpoofTerminalContentFrame, self.dnsSpoofErrorOutputContentFrame))
                 self.chainAttackThreads.append(self.dnsSpoofThreads)
 
             elif attackTypes == "HTTP-Man-In-The-Middle" :
-                self.httpMitmThreads = threading.Thread(target = lambda : startHttpMitm(self.httpMitmInterfaceEntry.get(), self.httpMitmTerminalContentFrame, self.httpMitmErrorOutputContentFrame))
+                self.httpMitmQueue = Queue()
+                self.httpMitmThreads = threading.Thread(target = lambda : startHttpMitmChain(self.httpMitmQueue, self.httpMitmInterfaceEntry.get(), self.httpMitmTerminalContentFrame, self.httpMitmErrorOutputContentFrame))
                 self.chainAttackThreads.append(self.httpMitmThreads)
 
             elif attackTypes == "WPA/WPA2-Cracking" :
@@ -849,35 +855,61 @@ class PageChainAttacks :
     
     def terminateChainAttack(self) :
         for attackTypes in self.chosenAttackTypes :
+            #Done
             if attackTypes == "CAM Table Overflow" :
                 self.camThreads.join(0)
                 self.camThreads = None
+            #Check
             elif attackTypes == "DHCP Starvation Attack" :
                 self.dhcpThreads.join(0)
                 self.dhcpThreads = None
+            #Check
             elif attackTypes == "ARP Poisoning Attack" :
                 self.arpPoisonThreads.join(0)
                 self.arpPoisonThreads = None
+            #Done
             elif attackTypes == "MAC Address Spoofing" :
                 stopMacChain(self.macAddressSpoofTerminalContentFrame, self.macAddressSpoofErrorOutputContentFrame)
                 self.macAddressSpoofThreads.join(0)
                 self.macAddressSpoofThreads = None
 
+            #Done
             elif attackTypes == "Syn Flooding" :
+                stopSynFloodChain(self.synFloodTerminalContentFrame, self.synFloodErrorOutputContentFrame)
+                synFloodProcess = self.synFloodChainQueue.get()
+                synFloodProcess.send_signal(signal.SIGINT)
                 self.synFloodThreads.join(0)
                 self.synFloodThreads = None
+            #Done
             elif attackTypes == "ICMP Attack" :
+                stopIcmpAttackChain(self.icmpAttackTerminalContentFrame, self.icmpAttackErrorOutputContentFrame)
+                icmpFloodProcess = self.icmpFloodQueue.get()
+                icmpFloodProcess.send_signal(signal.SIGINT)
                 self.icmpThreads.join(0)
                 self.icmpThreads = None
 
+            #Done
             elif attackTypes == "DNS Amplification" :
+                stopDnsAmplificationChain(self.dnsAmpTerminalContentFrame, self.dnsAmpErrorOutputContentFrame)
+                dnsAmpProcess = self.dnsAmplificationQueue.get()
+                dnsAmpProcess.send_signal(signal.SIGINT)
                 self.dnsAmpThreads.join(0)
                 self.dnsAmpThreads = None
+            #Done
             elif attackTypes == "DNS Spoofing" :
+                stopDnsSpoofingChain(self.dnsSpoofTerminalContentFrame, self.dnsSpoofErrorOutputContentFrame)
+                dnsSpoofProcess, dnsSpoofThread = self.dnsSpoofQueue.get()
+                dnsSpoofProcess.send_signal(signal.SIGINT)
+                dnsSpoofThread.join(timeout=0.05)
                 self.dnsSpoofThreads.join(0)
                 self.dnsSpoofThreads = None
 
+            #Done
             elif attackTypes == "HTTP-Man-In-The-Middle" :
+                stopHttpMitmChain(self.httpMitmTerminalContentFrame, self.httpMitmErrorOutputContentFrame)
+                httpMitmProcess, httpMitmThread = self.httpMitmQueue.get()
+                httpMitmProcess.send_signal(signal.SIGINT)
+                httpMitmThread.join(0)
                 self.httpMitmThreads.join(0)
                 self.httpMitmThreads = None
 

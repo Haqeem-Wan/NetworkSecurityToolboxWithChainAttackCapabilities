@@ -76,6 +76,7 @@ def arpLoop(targetIp, defaultGatewayIp):
             spoof(targetIp, defaultGatewayIp)
             spoof(defaultGatewayIp, targetIp)
             time.sleep(2)
+        print("COMPLETED")
     except Exception as e:
         errorOutputLabel["text"] += "ERROR ARP LOOP: \n" + str(e) + "\n"
 

