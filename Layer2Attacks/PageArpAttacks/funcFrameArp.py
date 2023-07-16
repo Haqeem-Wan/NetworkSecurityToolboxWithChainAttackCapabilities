@@ -44,6 +44,27 @@ def stopArp(targetIp, defaultGatewayIp) :
     except Exception as e:
         errorOutputLabel["text"] += "ERROR STOP : \n" + str(e) + "\n"
 
+def stopArpChain(targetIp, defaultGatewayIp, chainTerminalContentFrame, chainErrorContentFrame) :
+    global arpThreads, arpIsrunning
+
+    chainTerminalLabel = Label(chainTerminalContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=278)
+    chainErrorOutputLabel = Label(chainErrorContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=278)
+    chainTerminalLabel.pack(anchor = NW)
+    chainErrorOutputLabel.pack(anchor = NW)
+
+
+    try:
+        chainTerminalLabel["text"] += "$ Stopping Arp Poisoning Attack...\n"
+        chainTerminalLabel["text"] += "$ Restoring default ARP values...\n"
+        arpIsrunning = False
+        arpThreads.join(0)
+        arpThreads = None
+        restore(defaultGatewayIp, targetIp)
+        restore(targetIp, defaultGatewayIp)
+        chainTerminalLabel["text"] += "$ ARP Poisoning Attack successfully stopped!\n"
+    except Exception as e:
+        chainErrorOutputLabel["text"] += "ERROR STOP : \n" + str(e) + "\n"
+
 def runArpAttack(targetIp, defaultGatewayIp):
     global arpThreads, arpIsrunning
     arpIsrunning = True

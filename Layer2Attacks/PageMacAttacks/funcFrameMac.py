@@ -9,9 +9,8 @@ import random
 from tkinter import *
 
 def startMac(terminalContentFrame, errorOutputContentFrame, colorConfig = "#252525") :
-    global macIsRunning, macThreads, terminalLabel, errorOutputLabel
+    global macThreads, terminalLabel, errorOutputLabel
 
-    macIsRunning = False
     macThreads = threading.Thread(target = lambda : spoof_mac_address())
 
     terminalLabel = Label(terminalContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=480)
@@ -20,6 +19,7 @@ def startMac(terminalContentFrame, errorOutputContentFrame, colorConfig = "#2525
     errorOutputLabel.configure(bg = colorConfig)
 
     terminalLabel["text"] += "$ Running MAC Spoofing Attack...\n\n"
+    #terminalLabel["text"] += "\n$ Test 12345678910.11.12.13.14.15.16.17.18.19.20.21.22.23.24.25.26.27.28.29.30.31.32.33.34.35.36.37.38.39.40\n"
 
     runMacSpoofAttack()
 
@@ -27,8 +27,8 @@ def startMac(terminalContentFrame, errorOutputContentFrame, colorConfig = "#2525
     errorOutputLabel.pack(anchor = NW)
 
 def stopMac() :
-    global macThreads, macIsRunning
-    stopMacThreads = threading.Thread(target = lambda : revert_mac_address())
+    global macThreads
+    stopMacThreads = threading.Thread(target = lambda : revert_mac_address(terminalLabel))
 
     try:
         terminalLabel["text"] += "\n$ Stopping MAC Spoofing Attack...\n\n"
@@ -44,9 +44,31 @@ def stopMac() :
     except Exception as e:
         errorOutputLabel["text"] += "ERROR : \n" + str(e) + "\n"
 
+def stopMacChain(chainTerminalContentFrame, chainErrorContentFrame) :
+    chainTerminalLabel = Label(chainTerminalContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=278)
+    chainErrorOutputLabel = Label(chainErrorContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=278)
+
+    chainStopMacThreads = threading.Thread(target = lambda : revert_mac_address(chainTerminalLabel))
+
+    chainTerminalLabel.pack(anchor = NW)
+    chainErrorOutputLabel.pack(anchor = NW)
+
+    try:
+        chainTerminalLabel["text"] += "\n$ Stopping MAC Spoofing Attack...\n\n"
+
+        chainStopMacThreads.start()
+
+        chainTerminalLabel["text"] += "$ MAC Spoofing Attack successfully stopped!\n"
+        
+        chainStopMacThreads.join(0)
+        chainStopMacThreads = None
+    except (AttributeError, RuntimeError):
+        chainErrorOutputLabel["text"] += traceback.format_exc()
+    except Exception as e:
+        chainErrorOutputLabel["text"] += "ERROR : \n" + str(e) + "\n"
+
 def runMacSpoofAttack() :
-    global macThreads, macIsRunning
-    macIsRunning = True
+    global macThreads
     macThreads.start()
 
 def spoof_mac_address():
@@ -60,7 +82,7 @@ def spoof_mac_address():
 
     terminalLabel["text"] += "$ New MAC Address : " + get_current_mac_address() +"\n"
 
-def revert_mac_address() :
+def revert_mac_address(terminalLabel) :
     
     terminalLabel["text"] += "$ Old MAC Address : " + get_current_mac_address() +"\n"
 

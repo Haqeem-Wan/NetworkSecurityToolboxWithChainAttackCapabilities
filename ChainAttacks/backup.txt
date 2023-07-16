@@ -180,9 +180,16 @@ class PageChainAttacks :
             camTerminalVerticalScrollbar = Scrollbar(camTerminalScrollCanvas, orient=VERTICAL, command = camTerminalScrollCanvas.yview)
             camTerminalVerticalScrollbar.pack(side = RIGHT, fill = Y)
 
+            camTerminalHorizontalScrollbar = Scrollbar(camTerminalScrollCanvas, orient=HORIZONTAL, command = camTerminalScrollCanvas.xview)
+            camTerminalHorizontalScrollbar.pack(side = BOTTOM, fill = X)
+
             camTerminalScrollCanvas.configure(yscrollcommand=camTerminalVerticalScrollbar.set)
             camTerminalScrollCanvas.bind("<Configure>", lambda e : camTerminalScrollCanvas.configure(scrollregion=camTerminalScrollCanvas.bbox("all")))
             camTerminalScrollCanvas.bind_all("<MouseWheel>", lambda e : camTerminalScrollCanvas.yview_scroll(-1, "units"))
+
+            camTerminalScrollCanvas.configure(xscrollcommand=camTerminalHorizontalScrollbar.set)
+            camTerminalScrollCanvas.bind("<Configure>", lambda e : camTerminalScrollCanvas.configure(scrollregion=camTerminalScrollCanvas.bbox("all")))
+            camTerminalScrollCanvas.bind_all("<MouseWheel>", lambda e : camTerminalScrollCanvas.xview_scroll(-1, "units"))
 
             self.camTerminalContentFrame = Frame(camTerminalScrollCanvas, background="#252525", highlightbackground="#ffffff")
             camTerminalScrollCanvas.create_window((0,0), window = self.camTerminalContentFrame, anchor = NW)
@@ -203,9 +210,16 @@ class PageChainAttacks :
             camErrorOutputVerticalScrollbar = Scrollbar(camErrorOutputScrollCanvas, orient=VERTICAL, command = camErrorOutputScrollCanvas.yview)
             camErrorOutputVerticalScrollbar.pack(side = RIGHT, fill = Y)
 
+            camErrorOutputHorizontalScrollbar = Scrollbar(camErrorOutputScrollCanvas, orient=HORIZONTAL, command = camErrorOutputScrollCanvas.xview)
+            camErrorOutputHorizontalScrollbar.pack(side = BOTTOM, fill = X)
+
             camErrorOutputScrollCanvas.configure(yscrollcommand=camErrorOutputVerticalScrollbar.set)
             camErrorOutputScrollCanvas.bind("<Configure>", lambda e : camErrorOutputScrollCanvas.configure(scrollregion=camErrorOutputScrollCanvas.bbox("all")))
             camErrorOutputFrame.bind_all("<MouseWheel>", lambda e : camErrorOutputScrollCanvas.yview_scroll(-1, "units"))
+
+            camErrorOutputScrollCanvas.configure(xscrollcommand=camErrorOutputHorizontalScrollbar.set)
+            camErrorOutputScrollCanvas.bind("<Configure>", lambda e : camErrorOutputScrollCanvas.configure(scrollregion=camErrorOutputScrollCanvas.bbox("all")))
+            camErrorOutputFrame.bind_all("<MouseWheel>", lambda e : camErrorOutputScrollCanvas.xview_scroll(-1, "units"))
 
             self.camErrorOutputContentFrame = Frame(camErrorOutputScrollCanvas, background="#252525", highlightbackground="#ffffff")
             camErrorOutputScrollCanvas.create_window((0,0), window = self.camErrorOutputContentFrame, anchor = NW)
@@ -239,9 +253,16 @@ class PageChainAttacks :
             dhcpAttackTerminalVerticalScrollbar = Scrollbar(dhcpAttackTerminalScrollCanvas, orient=VERTICAL, command = dhcpAttackTerminalScrollCanvas.yview)
             dhcpAttackTerminalVerticalScrollbar.pack(side = RIGHT, fill = Y)
 
+            dhcpAttackTerminalHorizontalScrollbar = Scrollbar(dhcpAttackTerminalScrollCanvas, orient=HORIZONTAL, command = dhcpAttackTerminalScrollCanvas.xview)
+            dhcpAttackTerminalHorizontalScrollbar.pack(side = BOTTOM, fill = X)
+
             dhcpAttackTerminalScrollCanvas.configure(yscrollcommand=dhcpAttackTerminalVerticalScrollbar.set)
             dhcpAttackTerminalScrollCanvas.bind("<Configure>", lambda e : dhcpAttackTerminalScrollCanvas.configure(scrollregion=dhcpAttackTerminalScrollCanvas.bbox("all")))
             dhcpAttackTerminalScrollCanvas.bind_all("<MouseWheel>", lambda e : dhcpAttackTerminalScrollCanvas.yview_scroll(-1, "units"))
+
+            dhcpAttackTerminalScrollCanvas.configure(xscrollcommand=dhcpAttackTerminalHorizontalScrollbar.set)
+            dhcpAttackTerminalScrollCanvas.bind("<Configure>", lambda e : dhcpAttackTerminalScrollCanvas.configure(scrollregion=dhcpAttackTerminalScrollCanvas.bbox("all")))
+            dhcpAttackTerminalScrollCanvas.bind_all("<MouseWheel>", lambda e : dhcpAttackTerminalScrollCanvas.xview_scroll(-1, "units"))
 
             self.dhcpAttackTerminalContentFrame = Frame(dhcpAttackTerminalScrollCanvas, background="#252525", highlightbackground="#ffffff")
             dhcpAttackTerminalScrollCanvas.create_window((0,0), window = self.dhcpAttackTerminalContentFrame, anchor = NW)
@@ -262,15 +283,21 @@ class PageChainAttacks :
             dhcpAttackErrorOutputVerticalScrollbar = Scrollbar(dhcpAttackErrorOutputScrollCanvas, orient=VERTICAL, command = dhcpAttackErrorOutputScrollCanvas.yview)
             dhcpAttackErrorOutputVerticalScrollbar.pack(side = RIGHT, fill = Y)
 
+            dhcpAttackErrorOutputHorizontalScrollbar = Scrollbar(dhcpAttackErrorOutputScrollCanvas, orient=HORIZONTAL, command = dhcpAttackErrorOutputScrollCanvas.xview)
+            dhcpAttackErrorOutputHorizontalScrollbar.pack(side = BOTTOM, fill = X)
+
             dhcpAttackErrorOutputScrollCanvas.configure(yscrollcommand=dhcpAttackErrorOutputVerticalScrollbar.set)
             dhcpAttackErrorOutputScrollCanvas.bind("<Configure>", lambda e : dhcpAttackErrorOutputScrollCanvas.configure(scrollregion=dhcpAttackErrorOutputScrollCanvas.bbox("all")))
             dhcpAttackErrorOutputFrame.bind_all("<MouseWheel>", lambda e : dhcpAttackErrorOutputScrollCanvas.yview_scroll(-1, "units"))
+
+            dhcpAttackErrorOutputScrollCanvas.configure(xscrollcommand=dhcpAttackErrorOutputHorizontalScrollbar.set)
+            dhcpAttackErrorOutputScrollCanvas.bind("<Configure>", lambda e : dhcpAttackErrorOutputScrollCanvas.configure(scrollregion=dhcpAttackErrorOutputScrollCanvas.bbox("all")))
+            dhcpAttackErrorOutputFrame.bind_all("<MouseWheel>", lambda e : dhcpAttackErrorOutputScrollCanvas.xview_scroll(-1, "units"))
 
             self.dhcpAttackErrorOutputContentFrame = Frame(dhcpAttackErrorOutputScrollCanvas, background="#252525", highlightbackground="#ffffff")
             dhcpAttackErrorOutputScrollCanvas.create_window((0,0), window = self.dhcpAttackErrorOutputContentFrame, anchor = NW)
             self.dhcpAttackErrorOutputContentFrame.bind("<Configure>", lambda e : dhcpAttackErrorOutputScrollCanvas.configure(scrollregion=dhcpAttackErrorOutputScrollCanvas.bbox("all")))
 
-        # Issue
         elif chosenAttackType == "ARP Poisoning Attack" :
             arpPoisonFrame = Frame(self.attacksScrollFrame, width=1280, height=200, background="#612601", borderwidth=3, relief="raised")
             arpPoisonFrame.pack()
@@ -305,9 +332,16 @@ class PageChainAttacks :
             arpPoisonTerminalVerticalScrollbar = Scrollbar(arpPoisonTerminalScrollCanvas, orient=VERTICAL, command = arpPoisonTerminalScrollCanvas.yview)
             arpPoisonTerminalVerticalScrollbar.pack(side = RIGHT, fill = Y)
 
+            arpPoisonTerminalHorizontalScrollbar = Scrollbar(arpPoisonTerminalScrollCanvas, orient=HORIZONTAL, command = arpPoisonTerminalScrollCanvas.xview)
+            arpPoisonTerminalHorizontalScrollbar.pack(side = BOTTOM, fill = X)
+
             arpPoisonTerminalScrollCanvas.configure(yscrollcommand=arpPoisonTerminalVerticalScrollbar.set)
             arpPoisonTerminalScrollCanvas.bind("<Configure>", lambda e : arpPoisonTerminalScrollCanvas.configure(scrollregion=arpPoisonTerminalScrollCanvas.bbox("all")))
             arpPoisonTerminalScrollCanvas.bind_all("<MouseWheel>", lambda e : arpPoisonTerminalScrollCanvas.yview_scroll(-1, "units"))
+
+            arpPoisonTerminalScrollCanvas.configure(xscrollcommand=arpPoisonTerminalHorizontalScrollbar.set)
+            arpPoisonTerminalScrollCanvas.bind("<Configure>", lambda e : arpPoisonTerminalScrollCanvas.configure(scrollregion=arpPoisonTerminalScrollCanvas.bbox("all")))
+            arpPoisonTerminalScrollCanvas.bind_all("<MouseWheel>", lambda e : arpPoisonTerminalScrollCanvas.xview_scroll(-1, "units"))
 
             self.arpPoisonTerminalContentFrame = Frame(arpPoisonTerminalScrollCanvas, background="#252525", highlightbackground="#ffffff")
             arpPoisonTerminalScrollCanvas.create_window((0,0), window = self.arpPoisonTerminalContentFrame, anchor = NW)
@@ -328,9 +362,16 @@ class PageChainAttacks :
             arpPoisonErrorOutputVerticalScrollbar = Scrollbar(arpPoisonErrorOutputScrollCanvas, orient=VERTICAL, command = arpPoisonErrorOutputScrollCanvas.yview)
             arpPoisonErrorOutputVerticalScrollbar.pack(side = RIGHT, fill = Y)
 
+            arpPoisonErrorOutputHorizontalScrollbar = Scrollbar(arpPoisonErrorOutputScrollCanvas, orient=HORIZONTAL, command = arpPoisonErrorOutputScrollCanvas.xview)
+            arpPoisonErrorOutputHorizontalScrollbar.pack(side = BOTTOM, fill = X)
+
             arpPoisonErrorOutputScrollCanvas.configure(yscrollcommand=arpPoisonErrorOutputVerticalScrollbar.set)
             arpPoisonErrorOutputScrollCanvas.bind("<Configure>", lambda e : arpPoisonErrorOutputScrollCanvas.configure(scrollregion=arpPoisonErrorOutputScrollCanvas.bbox("all")))
             arpPoisonErrorOutputFrame.bind_all("<MouseWheel>", lambda e : arpPoisonErrorOutputScrollCanvas.yview_scroll(-1, "units"))
+
+            arpPoisonErrorOutputScrollCanvas.configure(xscrollcommand=arpPoisonErrorOutputHorizontalScrollbar.set)
+            arpPoisonErrorOutputScrollCanvas.bind("<Configure>", lambda e : arpPoisonErrorOutputScrollCanvas.configure(scrollregion=arpPoisonErrorOutputScrollCanvas.bbox("all")))
+            arpPoisonErrorOutputFrame.bind_all("<MouseWheel>", lambda e : arpPoisonErrorOutputScrollCanvas.xview_scroll(-1, "units"))
 
             self.arpPoisonErrorOutputContentFrame = Frame(arpPoisonErrorOutputScrollCanvas, background="#252525", highlightbackground="#ffffff")
             arpPoisonErrorOutputScrollCanvas.create_window((0,0), window = self.arpPoisonErrorOutputContentFrame, anchor = NW)
@@ -363,9 +404,17 @@ class PageChainAttacks :
             macAddressSpoofTerminalVerticalScrollbar.pack_propagate(0)
             macAddressSpoofTerminalVerticalScrollbar.pack(side = RIGHT, fill = Y)
 
+            macAddressSpoofTerminalHorizontalScrollbar = Scrollbar(macAddressSpoofTerminalScrollCanvas, orient=HORIZONTAL, command = macAddressSpoofTerminalScrollCanvas.xview)
+            macAddressSpoofTerminalHorizontalScrollbar.pack_propagate(0)
+            macAddressSpoofTerminalHorizontalScrollbar.pack(side = BOTTOM, fill = X)
+
             macAddressSpoofTerminalScrollCanvas.configure(yscrollcommand=macAddressSpoofTerminalVerticalScrollbar.set)
             macAddressSpoofTerminalScrollCanvas.bind("<Configure>", lambda e : macAddressSpoofTerminalScrollCanvas.configure(scrollregion=macAddressSpoofTerminalScrollCanvas.bbox("all")))
             macAddressSpoofTerminalScrollCanvas.bind_all("<MouseWheel>", lambda e : macAddressSpoofTerminalScrollCanvas.yview_scroll(-1, "units"))
+
+            macAddressSpoofTerminalScrollCanvas.configure(xscrollcommand=macAddressSpoofTerminalHorizontalScrollbar.set)
+            macAddressSpoofTerminalScrollCanvas.bind("<Configure>", lambda e : macAddressSpoofTerminalScrollCanvas.configure(scrollregion=macAddressSpoofTerminalScrollCanvas.bbox("all")))
+            macAddressSpoofTerminalScrollCanvas.bind_all("<MouseWheel>", lambda e : macAddressSpoofTerminalScrollCanvas.xview_scroll(-1, "units"))
 
             self.macAddressSpoofTerminalContentFrame = Frame(macAddressSpoofTerminalScrollCanvas, background="#252525", highlightbackground="#ffffff")
             macAddressSpoofTerminalScrollCanvas.create_window((0,0), window = self.macAddressSpoofTerminalContentFrame, anchor = NW)
@@ -386,9 +435,16 @@ class PageChainAttacks :
             macAddressSpoofErrorOutputVerticalScrollbar = Scrollbar(macAddressSpoofErrorOutputScrollCanvas, orient=VERTICAL, command = macAddressSpoofErrorOutputScrollCanvas.yview)
             macAddressSpoofErrorOutputVerticalScrollbar.pack(side = RIGHT, fill = Y)
 
+            macAddressSpoofErrorOutputHorizontalScrollbar = Scrollbar(macAddressSpoofErrorOutputScrollCanvas, orient=HORIZONTAL, command = macAddressSpoofErrorOutputScrollCanvas.xview)
+            macAddressSpoofErrorOutputHorizontalScrollbar.pack(side = BOTTOM, fill = X)
+
             macAddressSpoofErrorOutputScrollCanvas.configure(yscrollcommand=macAddressSpoofErrorOutputVerticalScrollbar.set)
             macAddressSpoofErrorOutputScrollCanvas.bind("<Configure>", lambda e : macAddressSpoofErrorOutputScrollCanvas.configure(scrollregion=macAddressSpoofErrorOutputScrollCanvas.bbox("all")))
             macAddressSpoofErrorOutputFrame.bind_all("<MouseWheel>", lambda e : macAddressSpoofErrorOutputScrollCanvas.yview_scroll(-1, "units"))
+
+            macAddressSpoofErrorOutputScrollCanvas.configure(xscrollcommand=macAddressSpoofErrorOutputHorizontalScrollbar.set)
+            macAddressSpoofErrorOutputScrollCanvas.bind("<Configure>", lambda e : macAddressSpoofErrorOutputScrollCanvas.configure(scrollregion=macAddressSpoofErrorOutputScrollCanvas.bbox("all")))
+            macAddressSpoofErrorOutputFrame.bind_all("<MouseWheel>", lambda e : macAddressSpoofErrorOutputScrollCanvas.xview_scroll(-1, "units"))
 
             self.macAddressSpoofErrorOutputContentFrame = Frame(macAddressSpoofErrorOutputScrollCanvas, background="#252525", highlightbackground="#ffffff")
             macAddressSpoofErrorOutputScrollCanvas.create_window((0,0), window = self.macAddressSpoofErrorOutputContentFrame, anchor = NW)
@@ -428,9 +484,16 @@ class PageChainAttacks :
             synFloodTerminalVerticalScrollbar = Scrollbar(synFloodTerminalScrollCanvas, orient=VERTICAL, command = synFloodTerminalScrollCanvas.yview)
             synFloodTerminalVerticalScrollbar.pack(side = RIGHT, fill = Y)
 
+            synFloodTerminalHorizontalScrollbar = Scrollbar(synFloodTerminalScrollCanvas, orient=HORIZONTAL, command = synFloodTerminalScrollCanvas.xview)
+            synFloodTerminalHorizontalScrollbar.pack(side = BOTTOM, fill = X)
+
             synFloodTerminalScrollCanvas.configure(yscrollcommand=synFloodTerminalVerticalScrollbar.set)
             synFloodTerminalScrollCanvas.bind("<Configure>", lambda e : synFloodTerminalScrollCanvas.configure(scrollregion=synFloodTerminalScrollCanvas.bbox("all")))
             synFloodTerminalScrollCanvas.bind_all("<MouseWheel>", lambda e : synFloodTerminalScrollCanvas.yview_scroll(-1, "units"))
+
+            synFloodTerminalScrollCanvas.configure(xscrollcommand=synFloodTerminalHorizontalScrollbar.set)
+            synFloodTerminalScrollCanvas.bind("<Configure>", lambda e : synFloodTerminalScrollCanvas.configure(scrollregion=synFloodTerminalScrollCanvas.bbox("all")))
+            synFloodTerminalScrollCanvas.bind_all("<MouseWheel>", lambda e : synFloodTerminalScrollCanvas.xview_scroll(-1, "units"))
 
             self.synFloodTerminalContentFrame = Frame(synFloodTerminalScrollCanvas, background="#252525", highlightbackground="#ffffff")
             synFloodTerminalScrollCanvas.create_window((0,0), window = self.synFloodTerminalContentFrame, anchor = NW)
@@ -451,9 +514,16 @@ class PageChainAttacks :
             synFloodErrorOutputVerticalScrollbar = Scrollbar(synFloodErrorOutputScrollCanvas, orient=VERTICAL, command = synFloodErrorOutputScrollCanvas.yview)
             synFloodErrorOutputVerticalScrollbar.pack(side = RIGHT, fill = Y)
 
+            synFloodErrorOutputHorizontalScrollbar = Scrollbar(synFloodErrorOutputScrollCanvas, orient=HORIZONTAL, command = synFloodErrorOutputScrollCanvas.xview)
+            synFloodErrorOutputHorizontalScrollbar.pack(side = BOTTOM, fill = X)
+
             synFloodErrorOutputScrollCanvas.configure(yscrollcommand=synFloodErrorOutputVerticalScrollbar.set)
             synFloodErrorOutputScrollCanvas.bind("<Configure>", lambda e : synFloodErrorOutputScrollCanvas.configure(scrollregion=synFloodErrorOutputScrollCanvas.bbox("all")))
             synFloodErrorOutputFrame.bind_all("<MouseWheel>", lambda e : synFloodErrorOutputScrollCanvas.yview_scroll(-1, "units"))
+
+            synFloodErrorOutputScrollCanvas.configure(xscrollcommand=synFloodErrorOutputHorizontalScrollbar.set)
+            synFloodErrorOutputScrollCanvas.bind("<Configure>", lambda e : synFloodErrorOutputScrollCanvas.configure(scrollregion=synFloodErrorOutputScrollCanvas.bbox("all")))
+            synFloodErrorOutputFrame.bind_all("<MouseWheel>", lambda e : synFloodErrorOutputScrollCanvas.xview_scroll(-1, "units"))
 
             self.synFloodErrorOutputContentFrame = Frame(synFloodErrorOutputScrollCanvas, background="#252525", highlightbackground="#ffffff")
             synFloodErrorOutputScrollCanvas.create_window((0,0), window = self.synFloodErrorOutputContentFrame, anchor = NW)
@@ -487,9 +557,16 @@ class PageChainAttacks :
             icmpAttackTerminalVerticalScrollbar = Scrollbar(icmpAttackTerminalScrollCanvas, orient=VERTICAL, command = icmpAttackTerminalScrollCanvas.yview)
             icmpAttackTerminalVerticalScrollbar.pack(side = RIGHT, fill = Y)
 
+            icmpAttackTerminalHorizontalScrollbar = Scrollbar(icmpAttackTerminalScrollCanvas, orient=HORIZONTAL, command = icmpAttackTerminalScrollCanvas.xview)
+            icmpAttackTerminalHorizontalScrollbar.pack(side = BOTTOM, fill = X)
+
             icmpAttackTerminalScrollCanvas.configure(yscrollcommand=icmpAttackTerminalVerticalScrollbar.set)
             icmpAttackTerminalScrollCanvas.bind("<Configure>", lambda e : icmpAttackTerminalScrollCanvas.configure(scrollregion=icmpAttackTerminalScrollCanvas.bbox("all")))
             icmpAttackTerminalScrollCanvas.bind_all("<MouseWheel>", lambda e : icmpAttackTerminalScrollCanvas.yview_scroll(-1, "units"))
+
+            icmpAttackTerminalScrollCanvas.configure(xscrollcommand=icmpAttackTerminalHorizontalScrollbar.set)
+            icmpAttackTerminalScrollCanvas.bind("<Configure>", lambda e : icmpAttackTerminalScrollCanvas.configure(scrollregion=icmpAttackTerminalScrollCanvas.bbox("all")))
+            icmpAttackTerminalScrollCanvas.bind_all("<MouseWheel>", lambda e : icmpAttackTerminalScrollCanvas.xview_scroll(-1, "units"))
 
             self.icmpAttackTerminalContentFrame = Frame(icmpAttackTerminalScrollCanvas, background="#252525", highlightbackground="#ffffff")
             icmpAttackTerminalScrollCanvas.create_window((0,0), window = self.icmpAttackTerminalContentFrame, anchor = NW)
@@ -510,9 +587,16 @@ class PageChainAttacks :
             icmpAttackErrorOutputVerticalScrollbar = Scrollbar(icmpAttackErrorOutputScrollCanvas, orient=VERTICAL, command = icmpAttackErrorOutputScrollCanvas.yview)
             icmpAttackErrorOutputVerticalScrollbar.pack(side = RIGHT, fill = Y)
 
+            icmpAttackErrorOutputHorizontalScrollbar = Scrollbar(icmpAttackErrorOutputScrollCanvas, orient=HORIZONTAL, command = icmpAttackErrorOutputScrollCanvas.xview)
+            icmpAttackErrorOutputHorizontalScrollbar.pack(side = BOTTOM, fill = X)
+
             icmpAttackErrorOutputScrollCanvas.configure(yscrollcommand=icmpAttackErrorOutputVerticalScrollbar.set)
             icmpAttackErrorOutputScrollCanvas.bind("<Configure>", lambda e : icmpAttackErrorOutputScrollCanvas.configure(scrollregion=icmpAttackErrorOutputScrollCanvas.bbox("all")))
             icmpAttackErrorOutputFrame.bind_all("<MouseWheel>", lambda e : icmpAttackErrorOutputScrollCanvas.yview_scroll(-1, "units"))
+
+            icmpAttackErrorOutputScrollCanvas.configure(xscrollcommand=icmpAttackErrorOutputHorizontalScrollbar.set)
+            icmpAttackErrorOutputScrollCanvas.bind("<Configure>", lambda e : icmpAttackErrorOutputScrollCanvas.configure(scrollregion=icmpAttackErrorOutputScrollCanvas.bbox("all")))
+            icmpAttackErrorOutputFrame.bind_all("<MouseWheel>", lambda e : icmpAttackErrorOutputScrollCanvas.xview_scroll(-1, "units"))
 
             self.icmpAttackErrorOutputContentFrame = Frame(icmpAttackErrorOutputScrollCanvas, background="#252525", highlightbackground="#ffffff")
             icmpAttackErrorOutputScrollCanvas.create_window((0,0), window = self.icmpAttackErrorOutputContentFrame, anchor = NW)
@@ -552,9 +636,16 @@ class PageChainAttacks :
             dnsAmpTerminalVerticalScrollbar = Scrollbar(dnsAmpTerminalScrollCanvas, orient=VERTICAL, command = dnsAmpTerminalScrollCanvas.yview)
             dnsAmpTerminalVerticalScrollbar.pack(side = RIGHT, fill = Y)
 
+            dnsAmpTerminalHorizontalScrollbar = Scrollbar(dnsAmpTerminalScrollCanvas, orient=HORIZONTAL, command = dnsAmpTerminalScrollCanvas.xview)
+            dnsAmpTerminalHorizontalScrollbar.pack(side = BOTTOM, fill = X)
+
             dnsAmpTerminalScrollCanvas.configure(yscrollcommand=dnsAmpTerminalVerticalScrollbar.set)
             dnsAmpTerminalScrollCanvas.bind("<Configure>", lambda e : dnsAmpTerminalScrollCanvas.configure(scrollregion=dnsAmpTerminalScrollCanvas.bbox("all")))
             dnsAmpTerminalScrollCanvas.bind_all("<MouseWheel>", lambda e : dnsAmpTerminalScrollCanvas.yview_scroll(-1, "units"))
+
+            dnsAmpTerminalScrollCanvas.configure(xscrollcommand=dnsAmpTerminalHorizontalScrollbar.set)
+            dnsAmpTerminalScrollCanvas.bind("<Configure>", lambda e : dnsAmpTerminalScrollCanvas.configure(scrollregion=dnsAmpTerminalScrollCanvas.bbox("all")))
+            dnsAmpTerminalScrollCanvas.bind_all("<MouseWheel>", lambda e : dnsAmpTerminalScrollCanvas.xview_scroll(-1, "units"))
 
             self.dnsAmpTerminalContentFrame = Frame(dnsAmpTerminalScrollCanvas, background="#252525", highlightbackground="#ffffff")
             dnsAmpTerminalScrollCanvas.create_window((0,0), window = self.dnsAmpTerminalContentFrame, anchor = NW)
@@ -575,9 +666,16 @@ class PageChainAttacks :
             dnsAmpErrorOutputVerticalScrollbar = Scrollbar(dnsAmpErrorOutputScrollCanvas, orient=VERTICAL, command = dnsAmpErrorOutputScrollCanvas.yview)
             dnsAmpErrorOutputVerticalScrollbar.pack(side = RIGHT, fill = Y)
 
+            dnsAmpErrorOutputHorizontalScrollbar = Scrollbar(dnsAmpErrorOutputScrollCanvas, orient=HORIZONTAL, command = dnsAmpErrorOutputScrollCanvas.xview)
+            dnsAmpErrorOutputHorizontalScrollbar.pack(side = BOTTOM, fill = X)
+
             dnsAmpErrorOutputScrollCanvas.configure(yscrollcommand=dnsAmpErrorOutputVerticalScrollbar.set)
             dnsAmpErrorOutputScrollCanvas.bind("<Configure>", lambda e : dnsAmpErrorOutputScrollCanvas.configure(scrollregion=dnsAmpErrorOutputScrollCanvas.bbox("all")))
             dnsAmpErrorOutputFrame.bind_all("<MouseWheel>", lambda e : dnsAmpErrorOutputScrollCanvas.yview_scroll(-1, "units"))
+
+            dnsAmpErrorOutputScrollCanvas.configure(xscrollcommand=dnsAmpErrorOutputHorizontalScrollbar.set)
+            dnsAmpErrorOutputScrollCanvas.bind("<Configure>", lambda e : dnsAmpErrorOutputScrollCanvas.configure(scrollregion=dnsAmpErrorOutputScrollCanvas.bbox("all")))
+            dnsAmpErrorOutputFrame.bind_all("<MouseWheel>", lambda e : dnsAmpErrorOutputScrollCanvas.xview_scroll(-1, "units"))
 
             self.dnsAmpErrorOutputContentFrame = Frame(dnsAmpErrorOutputScrollCanvas, background="#252525", highlightbackground="#ffffff")
             dnsAmpErrorOutputScrollCanvas.create_window((0,0), window = self.dnsAmpErrorOutputContentFrame, anchor = NW)
@@ -625,9 +723,16 @@ class PageChainAttacks :
             dnsSpoofTerminalVerticalScrollbar = Scrollbar(dnsSpoofTerminalScrollCanvas, orient=VERTICAL, command = dnsSpoofTerminalScrollCanvas.yview)
             dnsSpoofTerminalVerticalScrollbar.pack(side = RIGHT, fill = Y)
 
+            dnsSpoofTerminalHorizontalScrollbar = Scrollbar(dnsSpoofTerminalScrollCanvas, orient=HORIZONTAL, command = dnsSpoofTerminalScrollCanvas.xview)
+            dnsSpoofTerminalHorizontalScrollbar.pack(side = BOTTOM, fill = X)
+
             dnsSpoofTerminalScrollCanvas.configure(yscrollcommand=dnsSpoofTerminalVerticalScrollbar.set)
             dnsSpoofTerminalScrollCanvas.bind("<Configure>", lambda e : dnsSpoofTerminalScrollCanvas.configure(scrollregion=dnsSpoofTerminalScrollCanvas.bbox("all")))
             dnsSpoofTerminalScrollCanvas.bind_all("<MouseWheel>", lambda e : dnsSpoofTerminalScrollCanvas.yview_scroll(-1, "units"))
+
+            dnsSpoofTerminalScrollCanvas.configure(xscrollcommand=dnsSpoofTerminalHorizontalScrollbar.set)
+            dnsSpoofTerminalScrollCanvas.bind("<Configure>", lambda e : dnsSpoofTerminalScrollCanvas.configure(scrollregion=dnsSpoofTerminalScrollCanvas.bbox("all")))
+            dnsSpoofTerminalScrollCanvas.bind_all("<MouseWheel>", lambda e : dnsSpoofTerminalScrollCanvas.xview_scroll(-1, "units"))
 
             self.dnsSpoofTerminalContentFrame = Frame(dnsSpoofTerminalScrollCanvas, background="#252525", highlightbackground="#ffffff")
             dnsSpoofTerminalScrollCanvas.create_window((0,0), window = self.dnsSpoofTerminalContentFrame, anchor = NW)
@@ -648,9 +753,16 @@ class PageChainAttacks :
             dnsSpoofErrorOutputVerticalScrollbar = Scrollbar(dnsSpoofErrorOutputScrollCanvas, orient=VERTICAL, command = dnsSpoofErrorOutputScrollCanvas.yview)
             dnsSpoofErrorOutputVerticalScrollbar.pack(side = RIGHT, fill = Y)
 
+            dnsSpoofErrorOutputHorizontalScrollbar = Scrollbar(dnsSpoofErrorOutputScrollCanvas, orient=HORIZONTAL, command = dnsSpoofErrorOutputScrollCanvas.xview)
+            dnsSpoofErrorOutputHorizontalScrollbar.pack(side = BOTTOM, fill = X)
+
             dnsSpoofErrorOutputScrollCanvas.configure(yscrollcommand=dnsSpoofErrorOutputVerticalScrollbar.set)
             dnsSpoofErrorOutputScrollCanvas.bind("<Configure>", lambda e : dnsSpoofErrorOutputScrollCanvas.configure(scrollregion=dnsSpoofErrorOutputScrollCanvas.bbox("all")))
             dnsSpoofErrorOutputFrame.bind_all("<MouseWheel>", lambda e : dnsSpoofErrorOutputScrollCanvas.yview_scroll(-1, "units"))
+
+            dnsSpoofErrorOutputScrollCanvas.configure(xscrollcommand=dnsSpoofErrorOutputHorizontalScrollbar.set)
+            dnsSpoofErrorOutputScrollCanvas.bind("<Configure>", lambda e : dnsSpoofErrorOutputScrollCanvas.configure(scrollregion=dnsSpoofErrorOutputScrollCanvas.bbox("all")))
+            dnsSpoofErrorOutputFrame.bind_all("<MouseWheel>", lambda e : dnsSpoofErrorOutputScrollCanvas.xview_scroll(-1, "units"))
 
             self.dnsSpoofErrorOutputContentFrame = Frame(dnsSpoofErrorOutputScrollCanvas, background="#252525", highlightbackground="#ffffff")
             dnsSpoofErrorOutputScrollCanvas.create_window((0,0), window = self.dnsSpoofErrorOutputContentFrame, anchor = NW)
@@ -684,9 +796,16 @@ class PageChainAttacks :
             httpMitmTerminalVerticalScrollbar = Scrollbar(httpMitmTerminalScrollCanvas, orient=VERTICAL, command = httpMitmTerminalScrollCanvas.yview)
             httpMitmTerminalVerticalScrollbar.pack(side = RIGHT, fill = Y)
 
+            httpMitmTerminalHorizontalScrollbar = Scrollbar(httpMitmTerminalScrollCanvas, orient=HORIZONTAL, command = httpMitmTerminalScrollCanvas.xview)
+            httpMitmTerminalHorizontalScrollbar.pack(side = BOTTOM, fill = X)
+
             httpMitmTerminalScrollCanvas.configure(yscrollcommand=httpMitmTerminalVerticalScrollbar.set)
             httpMitmTerminalScrollCanvas.bind("<Configure>", lambda e : httpMitmTerminalScrollCanvas.configure(scrollregion=httpMitmTerminalScrollCanvas.bbox("all")))
             httpMitmTerminalScrollCanvas.bind_all("<MouseWheel>", lambda e : httpMitmTerminalScrollCanvas.yview_scroll(-1, "units"))
+
+            httpMitmTerminalScrollCanvas.configure(xscrollcommand=httpMitmTerminalHorizontalScrollbar.set)
+            httpMitmTerminalScrollCanvas.bind("<Configure>", lambda e : httpMitmTerminalScrollCanvas.configure(scrollregion=httpMitmTerminalScrollCanvas.bbox("all")))
+            httpMitmTerminalScrollCanvas.bind_all("<MouseWheel>", lambda e : httpMitmTerminalScrollCanvas.xview_scroll(-1, "units"))
 
             self.httpMitmTerminalContentFrame = Frame(httpMitmTerminalScrollCanvas, background="#252525", highlightbackground="#ffffff")
             httpMitmTerminalScrollCanvas.create_window((0,0), window = self.httpMitmTerminalContentFrame, anchor = NW)
@@ -707,9 +826,16 @@ class PageChainAttacks :
             httpMitmErrorOutputVerticalScrollbar = Scrollbar(httpMitmErrorOutputScrollCanvas, orient=VERTICAL, command = httpMitmErrorOutputScrollCanvas.yview)
             httpMitmErrorOutputVerticalScrollbar.pack(side = RIGHT, fill = Y)
 
+            httpMitmErrorOutputHorizontalScrollbar = Scrollbar(httpMitmErrorOutputScrollCanvas, orient=HORIZONTAL, command = httpMitmErrorOutputScrollCanvas.xview)
+            httpMitmErrorOutputHorizontalScrollbar.pack(side = BOTTOM, fill = X)
+
             httpMitmErrorOutputScrollCanvas.configure(yscrollcommand=httpMitmErrorOutputVerticalScrollbar.set)
             httpMitmErrorOutputScrollCanvas.bind("<Configure>", lambda e : httpMitmErrorOutputScrollCanvas.configure(scrollregion=httpMitmErrorOutputScrollCanvas.bbox("all")))
             httpMitmErrorOutputFrame.bind_all("<MouseWheel>", lambda e : httpMitmErrorOutputScrollCanvas.yview_scroll(-1, "units"))
+
+            httpMitmErrorOutputScrollCanvas.configure(xscrollcommand=httpMitmErrorOutputHorizontalScrollbar.set)
+            httpMitmErrorOutputScrollCanvas.bind("<Configure>", lambda e : httpMitmErrorOutputScrollCanvas.configure(scrollregion=httpMitmErrorOutputScrollCanvas.bbox("all")))
+            httpMitmErrorOutputFrame.bind_all("<MouseWheel>", lambda e : httpMitmErrorOutputScrollCanvas.xview_scroll(-1, "units"))
 
             self.httpMitmErrorOutputContentFrame = Frame(httpMitmErrorOutputScrollCanvas, background="#252525", highlightbackground="#ffffff")
             httpMitmErrorOutputScrollCanvas.create_window((0,0), window = self.httpMitmErrorOutputContentFrame, anchor = NW)
@@ -755,9 +881,16 @@ class PageChainAttacks :
             wpaWpa2CrackTerminalVerticalScrollbar = Scrollbar(wpaWpa2CrackTerminalScrollCanvas, orient=VERTICAL, command = wpaWpa2CrackTerminalScrollCanvas.yview)
             wpaWpa2CrackTerminalVerticalScrollbar.pack(side = RIGHT, fill = Y)
 
+            wpaWpa2CrackTerminalHorizontalScrollbar = Scrollbar(wpaWpa2CrackTerminalScrollCanvas, orient=HORIZONTAL, command = wpaWpa2CrackTerminalScrollCanvas.xview)
+            wpaWpa2CrackTerminalHorizontalScrollbar.pack(side = BOTTOM, fill = X)
+
             wpaWpa2CrackTerminalScrollCanvas.configure(yscrollcommand=wpaWpa2CrackTerminalVerticalScrollbar.set)
             wpaWpa2CrackTerminalScrollCanvas.bind("<Configure>", lambda e : wpaWpa2CrackTerminalScrollCanvas.configure(scrollregion=wpaWpa2CrackTerminalScrollCanvas.bbox("all")))
             wpaWpa2CrackTerminalScrollCanvas.bind_all("<MouseWheel>", lambda e : wpaWpa2CrackTerminalScrollCanvas.yview_scroll(-1, "units"))
+
+            wpaWpa2CrackTerminalScrollCanvas.configure(xscrollcommand=wpaWpa2CrackTerminalHorizontalScrollbar.set)
+            wpaWpa2CrackTerminalScrollCanvas.bind("<Configure>", lambda e : wpaWpa2CrackTerminalScrollCanvas.configure(scrollregion=wpaWpa2CrackTerminalScrollCanvas.bbox("all")))
+            wpaWpa2CrackTerminalScrollCanvas.bind_all("<MouseWheel>", lambda e : wpaWpa2CrackTerminalScrollCanvas.xview_scroll(-1, "units"))
 
             self.wpaWpa2CrackTerminalContentFrame = Frame(wpaWpa2CrackTerminalScrollCanvas, background="#252525", highlightbackground="#ffffff")
             wpaWpa2CrackTerminalScrollCanvas.create_window((0,0), window = self.wpaWpa2CrackTerminalContentFrame, anchor = NW)
@@ -778,9 +911,16 @@ class PageChainAttacks :
             wpaWpa2CrackErrorOutputVerticalScrollbar = Scrollbar(wpaWpa2CrackErrorOutputScrollCanvas, orient=VERTICAL, command = wpaWpa2CrackErrorOutputScrollCanvas.yview)
             wpaWpa2CrackErrorOutputVerticalScrollbar.pack(side = RIGHT, fill = Y)
 
+            wpaWpa2CrackErrorOutputHorizontalScrollbar = Scrollbar(wpaWpa2CrackErrorOutputScrollCanvas, orient=HORIZONTAL, command = wpaWpa2CrackErrorOutputScrollCanvas.xview)
+            wpaWpa2CrackErrorOutputHorizontalScrollbar.pack(side = BOTTOM, fill = X)
+
             wpaWpa2CrackErrorOutputScrollCanvas.configure(yscrollcommand=wpaWpa2CrackErrorOutputVerticalScrollbar.set)
             wpaWpa2CrackErrorOutputScrollCanvas.bind("<Configure>", lambda e : wpaWpa2CrackErrorOutputScrollCanvas.configure(scrollregion=wpaWpa2CrackErrorOutputScrollCanvas.bbox("all")))
             wpaWpa2CrackErrorOutputFrame.bind_all("<MouseWheel>", lambda e : wpaWpa2CrackErrorOutputScrollCanvas.yview_scroll(-1, "units"))
+
+            wpaWpa2CrackErrorOutputScrollCanvas.configure(xscrollcommand=wpaWpa2CrackErrorOutputHorizontalScrollbar.set)
+            wpaWpa2CrackErrorOutputScrollCanvas.bind("<Configure>", lambda e : wpaWpa2CrackErrorOutputScrollCanvas.configure(scrollregion=wpaWpa2CrackErrorOutputScrollCanvas.bbox("all")))
+            wpaWpa2CrackErrorOutputFrame.bind_all("<MouseWheel>", lambda e : wpaWpa2CrackErrorOutputScrollCanvas.xview_scroll(-1, "units"))
 
             self.wpaWpa2CrackErrorOutputContentFrame = Frame(wpaWpa2CrackErrorOutputScrollCanvas, background="#252525", highlightbackground="#ffffff")
             wpaWpa2CrackErrorOutputScrollCanvas.create_window((0,0), window = self.wpaWpa2CrackErrorOutputContentFrame, anchor = NW)
@@ -859,9 +999,9 @@ class PageChainAttacks :
                 self.arpPoisonThreads.join(0)
                 self.arpPoisonThreads = None
             elif attackTypes == "MAC Address Spoofing" :
-                stopMacChain(self.macAddressSpoofTerminalContentFrame, self.macAddressSpoofErrorOutputContentFrame)
-                self.macAddressSpoofThreads.join(0)
-                self.macAddressSpoofThreads = None
+                stopMacChain(self.macAddressSpoofThreads, self.macAddressSpoofTerminalContentFrame, self.macAddressSpoofErrorOutputContentFrame)
+                #self.macAddressSpoofThreads.join(0)
+                #self.macAddressSpoofThreads = None
 
             elif attackTypes == "Syn Flooding" :
                 self.synFloodThreads.join(0)
